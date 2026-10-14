@@ -1,0 +1,134 @@
+"""API error types and the single error envelope used by every failure response.
+
+Every error has the shape ``{"error": {"code", "message", "fields"?, ...}}``.
+Unexpected exceptions are logged and reported as ``INTERNAL_ERROR`` without details.
+"""
+
+import logging
+import math
+from typing import Any
+
+from django.http import Http404, HttpRequest, JsonResponse
+from django.utils.cache import add_never_cache_headers
+from rest_framework import exceptions, status
+from rest_framework.response import Response
+
+logger = logging.getLogger(__name__)
+
+INTERNAL_ERROR_MESSAGE = "An unexpected error occurred. Please try again."
+
+
+class ApiError(Exception):
+    """An expected failure that is reported to the client with a stable code."""
+
+    status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code: str = "INTERNAL_ERROR"
+    default_message: str = INTERNAL_ERROR_MESSAGE
+
+    def __init__(
+        self,
+        message: str | None = None,
+        *,
+        fields: dict[str, list[str]] | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        self.message = message or self.default_message
+        self.fields = fields
+        self.extra = extra or {}
+        super().__init__(self.message)
+
+
+def error_body(
+    code: str,
+    message: str,
+    fields: dict[str, list[str]] | None = None,
+    extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    error: dict[str, Any] = {"code": code, "message": message}
+    if fields:
+        error["fields"] = fields
+    if extra:
+        error.update(extra)
+    return {"error": error}
+
+
+def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
+    """DRF exception handler that maps every exception to the error envelope."""
+    if isinstance(exc, ApiError):
+        return Response(error_body(exc.code, exc.message, exc.fields, exc.extra), exc.status_code)
+
+    if isinstance(exc, exceptions.ValidationError):
+        fields = _field_messages(exc.detail)
+        first_message = next(iter(fields.values()))[0] if fields else "Invalid request."
+        return Response(
+            error_body("VALIDATION_ERROR", first_message, fields), status.HTTP_400_BAD_REQUEST
+        )
+
+    if isinstance(exc, exceptions.ParseError):
+        return Response(
+            error_body("VALIDATION_ERROR", "The request body is not valid JSON."),
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    if isinstance(exc, exceptions.Throttled):
+        response = Response(
+            error_body("RATE_LIMITED", "Too many requests. Please wait a moment and try again."),
+            status.HTTP_429_TOO_MANY_REQUESTS,
+        )
+        # ``wait`` is set by Throttled.__init__ but missing from the type stubs.
+        wait: float | None = getattr(exc, "wait", None)
+        if wait is not None:
+            response["Retry-After"] = str(math.ceil(wait))
+        return response
+
+    if isinstance(exc, Http404):
+        return Response(
+            error_body("NOT_FOUND", "The requested resource was not found."),
+            status.HTTP_404_NOT_FOUND,
+        )
+
+    if isinstance(exc, exceptions.APIException):
+        return Response(error_body(str(exc.default_code).upper(), str(exc.detail)), exc.status_code)
+
+    view = context.get("view")
+    logger.exception("Unhandled error in %s", type(view).__name__ if view else "unknown view")
+    return Response(
+        error_body("INTERNAL_ERROR", INTERNAL_ERROR_MESSAGE),
+        status.HTTP_500_INTERNAL_SERVER_ERROR,
+    )
+
+
+def _field_messages(detail: Any, prefix: str = "") -> dict[str, list[str]]:
+    """Flatten DRF error details into ``{"field" or "parent.child": [messages]}``."""
+    if isinstance(detail, dict):
+        messages: dict[str, list[str]] = {}
+        for key, value in detail.items():
+            name = f"{prefix}.{key}" if prefix else str(key)
+            if isinstance(value, dict):
+                messages.update(_field_messages(value, name))
+            else:
+                messages[name] = _as_strings(value)
+        return messages
+    return {prefix or "non_field_errors": _as_strings(detail)}
+
+
+def _as_strings(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [message for item in value for message in _as_strings(item)]
+    return [str(value)]
+
+
+def not_found_view(request: HttpRequest, exception: Exception) -> JsonResponse:
+    """Django-level 404 handler for URLs outside any API view."""
+    response = JsonResponse(
+        error_body("NOT_FOUND", "The requested resource was not found."), status=404
+    )
+    add_never_cache_headers(response)
+    return response
+
+
+def server_error_view(request: HttpRequest) -> JsonResponse:
+    """Django-level 500 handler for errors raised outside DRF views."""
+    response = JsonResponse(error_body("INTERNAL_ERROR", INTERNAL_ERROR_MESSAGE), status=500)
+    add_never_cache_headers(response)
+    return response
