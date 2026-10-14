@@ -1,5 +1,6 @@
 """Test-only views that raise each kind of error the API must report."""
 
+from django.http import Http404
 from django.urls import path
 from rest_framework import exceptions, serializers
 from rest_framework.request import Request
@@ -41,6 +42,21 @@ class ThrottledView(ApiView):
         raise exceptions.Throttled(wait=12.3)
 
 
+class ThrottledWithoutWaitView(ApiView):
+    def get(self, request: Request) -> Response:
+        raise exceptions.Throttled()
+
+
+class MissingView(ApiView):
+    def get(self, request: Request) -> Response:
+        raise Http404
+
+
+class NonFieldValidationView(ApiView):
+    def get(self, request: Request) -> Response:
+        raise serializers.ValidationError("Origin and destination must be different places.")
+
+
 class CrashView(ApiView):
     def get(self, request: Request) -> Response:
         raise RuntimeError("secret internal detail")
@@ -50,5 +66,8 @@ urlpatterns = [
     path("api-error", ApiErrorView.as_view()),
     path("validation", ValidationView.as_view()),
     path("throttled", ThrottledView.as_view()),
+    path("throttled-without-wait", ThrottledWithoutWaitView.as_view()),
+    path("missing", MissingView.as_view()),
+    path("non-field", NonFieldValidationView.as_view()),
     path("crash", CrashView.as_view()),
 ]

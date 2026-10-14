@@ -1,0 +1,49 @@
+{
+  "summary": {
+    "query": "denver",
+    "queryType": "NON_NEAR",
+    "queryTime": 42,
+    "numResults": 2,
+    "offset": 0,
+    "totalResults": 2,
+    "fuzzyLevel": 1
+  },
+  "results": [
+    {
+      "type": "Geography",
+      "id": "US/GEO/p0/1",
+      "entityType": "Municipality",
+      "address": {
+        "municipality": "Denver",
+        "countrySubdivision": "CO",
+        "countrySubdivisionName": "Colorado",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "Denver, CO"
+      },
+      "position": {
+        "lat": 39.74001,
+        "lon": -104.99202
+      }
+    },
+    {
+      "type": "Geography",
+      "id": "US/GEO/p0/2",
+      "entityType": "Municipality",
+      "address": {
+        "municipality": "Denver City",
+        "countrySubdivision": "TX",
+        "countrySubdivisionName": "Texas",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "Denver City, TX"
+      },
+      "position": {
+        "lat": 32.96456,
+        "lon": -102.82905
+      }
+    }
+  ]
+}
