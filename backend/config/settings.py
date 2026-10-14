@@ -84,7 +84,17 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "UNAUTHENTICATED_USER": None,
     "EXCEPTION_HANDLER": "planner.errors.api_exception_handler",
+    # Best-effort protection per server instance; each viewer's own Open-Meteo limit and
+    # the per-plan location budget are what keep the external services within quota.
+    "DEFAULT_THROTTLE_RATES": {
+        "plan": os.environ.get("API_THROTTLE_PLANS", "20/min"),
+        "assess": os.environ.get("API_THROTTLE_ASSESSMENTS", "60/min"),
+        "geocode": os.environ.get("API_THROTTLE_GEOCODES", "60/min"),
+    },
 }
+
+# Routing and geocoding. Without a key the planning endpoints report SERVICE_NOT_CONFIGURED.
+TOMTOM_API_KEY = os.environ.get("TOMTOM_API_KEY", "")
 
 if not DEBUG:
     # TLS is terminated by the hosting platform, which forwards the original scheme.

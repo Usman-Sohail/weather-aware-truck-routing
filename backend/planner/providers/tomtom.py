@@ -138,9 +138,9 @@ def _parse_place(result: Mapping[str, Any]) -> Place:
     lon, lat = float(position["lon"]), float(position["lat"])
     freeform = address.get("freeformAddress") or address["municipality"]
     country = address.get("country")
-    label = f"{freeform}, {country}" if country and country not in freeform else freeform
+    name = f"{freeform}, {country}" if country and country not in freeform else freeform
     return Place(
-        label=label,
+        name=name,
         position=(lon, lat),
         country_code=address["countryCode"],
         time_zone=get_tz(lon, lat) or "UTC",
