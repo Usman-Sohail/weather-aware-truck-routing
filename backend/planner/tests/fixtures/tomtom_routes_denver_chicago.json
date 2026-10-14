@@ -1,0 +1,279 @@
+{
+  "formatVersion": "0.0.12",
+  "routes": [
+    {
+      "summary": {
+        "lengthInMeters": 1612345,
+        "travelTimeInSeconds": 55800,
+        "trafficDelayInSeconds": 0,
+        "departureTime": "2026-10-16T08:00:00-06:00",
+        "arrivalTime": "2026-10-17T00:00:00-05:00"
+      },
+      "legs": [
+        {
+          "summary": {
+            "lengthInMeters": 1612345,
+            "travelTimeInSeconds": 55800
+          },
+          "points": [
+            {
+              "latitude": 39.7392,
+              "longitude": -104.9903
+            },
+            {
+              "latitude": 40.25,
+              "longitude": -103.8
+            },
+            {
+              "latitude": 40.98,
+              "longitude": -102.3
+            },
+            {
+              "latitude": 41.12,
+              "longitude": -100.76
+            },
+            {
+              "latitude": 40.92,
+              "longitude": -98.34
+            },
+            {
+              "latitude": 40.81,
+              "longitude": -96.7
+            },
+            {
+              "latitude": 41.26,
+              "longitude": -95.93
+            },
+            {
+              "latitude": 41.59,
+              "longitude": -93.62
+            },
+            {
+              "latitude": 41.66,
+              "longitude": -91.53
+            },
+            {
+              "latitude": 41.52,
+              "longitude": -90.58
+            },
+            {
+              "latitude": 41.8781,
+              "longitude": -87.6298
+            }
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "startPointIndex": 0,
+          "endPointIndex": 10,
+          "sectionType": "TRAVEL_MODE",
+          "travelMode": "truck"
+        }
+      ],
+      "progress": [
+        {
+          "pointIndex": 0,
+          "travelTimeInSeconds": 0,
+          "distanceInMeters": 0
+        },
+        {
+          "pointIndex": 4,
+          "travelTimeInSeconds": 22320,
+          "distanceInMeters": 644938
+        },
+        {
+          "pointIndex": 7,
+          "travelTimeInSeconds": 39060,
+          "distanceInMeters": 1128642
+        },
+        {
+          "pointIndex": 10,
+          "travelTimeInSeconds": 55800,
+          "distanceInMeters": 1612345
+        }
+      ]
+    },
+    {
+      "summary": {
+        "lengthInMeters": 1701220,
+        "travelTimeInSeconds": 58920,
+        "trafficDelayInSeconds": 0,
+        "departureTime": "2026-10-16T08:00:00-06:00",
+        "arrivalTime": "2026-10-17T00:00:00-05:00"
+      },
+      "legs": [
+        {
+          "summary": {
+            "lengthInMeters": 1701220,
+            "travelTimeInSeconds": 58920
+          },
+          "points": [
+            {
+              "latitude": 39.7392,
+              "longitude": -104.9903
+            },
+            {
+              "latitude": 39.27,
+              "longitude": -103.25
+            },
+            {
+              "latitude": 39.35,
+              "longitude": -101.7
+            },
+            {
+              "latitude": 38.88,
+              "longitude": -99.33
+            },
+            {
+              "latitude": 38.84,
+              "longitude": -97.61
+            },
+            {
+              "latitude": 39.05,
+              "longitude": -95.68
+            },
+            {
+              "latitude": 39.1,
+              "longitude": -94.58
+            },
+            {
+              "latitude": 40.2,
+              "longitude": -93.6
+            },
+            {
+              "latitude": 41.1,
+              "longitude": -92.3
+            },
+            {
+              "latitude": 41.5,
+              "longitude": -90.2
+            },
+            {
+              "latitude": 41.8781,
+              "longitude": -87.6298
+            }
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "startPointIndex": 0,
+          "endPointIndex": 10,
+          "sectionType": "TRAVEL_MODE",
+          "travelMode": "truck"
+        }
+      ],
+      "progress": [
+        {
+          "pointIndex": 0,
+          "travelTimeInSeconds": 0,
+          "distanceInMeters": 0
+        },
+        {
+          "pointIndex": 5,
+          "travelTimeInSeconds": 29460,
+          "distanceInMeters": 850610
+        },
+        {
+          "pointIndex": 10,
+          "travelTimeInSeconds": 58920,
+          "distanceInMeters": 1701220
+        }
+      ]
+    },
+    {
+      "summary": {
+        "lengthInMeters": 1655870,
+        "travelTimeInSeconds": 57310,
+        "trafficDelayInSeconds": 0,
+        "departureTime": "2026-10-16T08:00:00-06:00",
+        "arrivalTime": "2026-10-17T00:00:00-05:00"
+      },
+      "legs": [
+        {
+          "summary": {
+            "lengthInMeters": 1655870,
+            "travelTimeInSeconds": 57310
+          },
+          "points": [
+            {
+              "latitude": 39.7392,
+              "longitude": -104.9903
+            },
+            {
+              "latitude": 40.4,
+              "longitude": -104.1
+            },
+            {
+              "latitude": 40.8,
+              "longitude": -102.9
+            },
+            {
+              "latitude": 40.9,
+              "longitude": -101.1
+            },
+            {
+              "latitude": 40.7,
+              "longitude": -99.08
+            },
+            {
+              "latitude": 40.8,
+              "longitude": -96.68
+            },
+            {
+              "latitude": 41.25,
+              "longitude": -95.85
+            },
+            {
+              "latitude": 41.4,
+              "longitude": -94.2
+            },
+            {
+              "latitude": 41.9,
+              "longitude": -92.4
+            },
+            {
+              "latitude": 41.7,
+              "longitude": -89.9
+            },
+            {
+              "latitude": 41.8781,
+              "longitude": -87.6298
+            }
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "startPointIndex": 0,
+          "endPointIndex": 10,
+          "sectionType": "TRAVEL_MODE",
+          "travelMode": "truck"
+        }
+      ],
+      "progress": [
+        {
+          "pointIndex": 0,
+          "travelTimeInSeconds": 0,
+          "distanceInMeters": 0
+        },
+        {
+          "pointIndex": 3,
+          "travelTimeInSeconds": 17193,
+          "distanceInMeters": 496761
+        },
+        {
+          "pointIndex": 6,
+          "travelTimeInSeconds": 34386,
+          "distanceInMeters": 993522
+        },
+        {
+          "pointIndex": 10,
+          "travelTimeInSeconds": 57310,
+          "distanceInMeters": 1655870
+        }
+      ]
+    }
+  ]
+}

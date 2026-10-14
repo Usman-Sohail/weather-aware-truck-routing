@@ -38,6 +38,30 @@ class ApiError(Exception):
         super().__init__(self.message)
 
 
+class NoRouteError(ApiError):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    code = "NO_ROUTE"
+    default_message = "No truck route was found between these places."
+
+
+class ProviderUnavailableError(ApiError):
+    status_code = status.HTTP_502_BAD_GATEWAY
+    code = "PROVIDER_ERROR"
+    default_message = "The routing service is unavailable right now. Please try again shortly."
+
+
+class ProviderRateLimitedError(ApiError):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    code = "PROVIDER_RATE_LIMITED"
+    default_message = "The routing service is busy. Please wait a minute and try again."
+
+
+class ProviderTimeoutError(ApiError):
+    status_code = status.HTTP_504_GATEWAY_TIMEOUT
+    code = "PROVIDER_TIMEOUT"
+    default_message = "The routing service took too long to respond. Please try again."
+
+
 def error_body(
     code: str,
     message: str,

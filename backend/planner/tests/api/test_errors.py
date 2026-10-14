@@ -64,3 +64,30 @@ def test_unexpected_exception_hides_internal_details(api_client: APIClient) -> N
     assert response.json()["error"]["code"] == "INTERNAL_ERROR"
     assert "secret internal detail" not in response.content.decode()
     assert "Traceback" not in response.content.decode()
+
+
+def test_throttled_request_without_a_wait_has_no_retry_after(api_client: APIClient) -> None:
+    response = api_client.get("/throttled-without-wait")
+
+    assert response.status_code == 429
+    assert "Retry-After" not in response
+
+
+def test_not_found_inside_a_view_uses_envelope(api_client: APIClient) -> None:
+    response = api_client.get("/missing")
+
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "NOT_FOUND"
+
+
+def test_non_field_validation_errors_are_reported_under_non_field_errors(
+    api_client: APIClient,
+) -> None:
+    response = api_client.get("/non-field")
+
+    assert response.status_code == 400
+    assert response.json()["error"] == {
+        "code": "VALIDATION_ERROR",
+        "message": "Origin and destination must be different places.",
+        "fields": {"non_field_errors": ["Origin and destination must be different places."]},
+    }
