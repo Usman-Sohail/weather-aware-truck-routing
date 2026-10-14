@@ -44,6 +44,12 @@ class NoRouteError(ApiError):
     default_message = "No truck route was found between these places."
 
 
+class InvalidWeatherDataError(ApiError):
+    status_code = status.HTTP_400_BAD_REQUEST
+    code = "INVALID_WEATHER_DATA"
+    default_message = "The forecast data could not be read. Please plan the trip again."
+
+
 class ProviderUnavailableError(ApiError):
     status_code = status.HTTP_502_BAD_GATEWAY
     code = "PROVIDER_ERROR"
