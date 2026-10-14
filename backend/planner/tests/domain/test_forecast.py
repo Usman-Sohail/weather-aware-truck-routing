@@ -223,6 +223,8 @@ def test_hours_up_to_the_horizon_are_kept_and_later_hours_are_unknown() -> None:
     [
         lambda: forecast_hour_for(datetime(2026, 10, 16, 14, 0)),
         lambda: forecast_window(utc(2026, 10, 16), utc(2026, 10, 16), datetime(2026, 10, 15)),
+        lambda: forecast_window(utc(2026, 10, 16), datetime(2026, 10, 17), utc(2026, 10, 15)),
+        lambda: resolve_departure(datetime(2026, 10, 16, 8), DENVER, datetime(2026, 10, 15)),
     ],
 )
 def test_naive_datetimes_are_rejected(call: Callable[[], object]) -> None:

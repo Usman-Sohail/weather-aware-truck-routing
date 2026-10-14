@@ -132,18 +132,51 @@ def assess(
         elif wind > RiskLevel.LOW:
             reasons.append(f"{wind_name} {_format(wind_value)} mph → {wind.label}")
 
-    rain = _classify_hazard(sample.rain_in_hr, classify_rain, "Rain", reasons)
+    rain, rain_lower_bound = _assess_rain(sample, reasons)
     snow = _classify_hazard(sample.snowfall_in, classify_snow, "Snowfall", reasons)
 
-    known = [level for level in (wind, rain, snow) if level is not None]
+    known = [level for level in (wind, rain_lower_bound, snow) if level is not None]
     return Assessment(
         wind=wind,
         rain=rain,
         snow=snow,
         level=max(known) if known else None,
-        complete=len(known) == 3,
+        complete=wind is not None and rain is not None and snow is not None,
         reasons=tuple(reasons),
     )
+
+
+def _assess_rain(
+    sample: WeatherSample, reasons: list[str]
+) -> tuple[RiskLevel | None, RiskLevel | None]:
+    """Return the rain level (``None`` unless both inputs are known) and a lower bound.
+
+    Rain is rain plus showers. Both are non-negative, so when only one is known it is a
+    lower bound on the total and still counts towards the checkpoint level.
+    """
+    rain, showers = sample.rain_in, sample.showers_in
+    if rain is not None and showers is not None:
+        level = classify_rain(rain + showers)
+        if level > RiskLevel.LOW:
+            reasons.append(f"Rain {_format(rain + showers)} in/hr → {level.label}")
+        return level, level
+    if rain is not None:
+        known, missing = rain, "showers"
+    elif showers is not None:
+        known, missing = showers, "large-scale rain"
+    else:
+        reasons.append("Rain forecast unavailable")
+        return None, None
+
+    lower_bound = classify_rain(known)
+    if lower_bound > RiskLevel.LOW:
+        reasons.append(
+            f"Rain at least {_format(known)} in/hr ({missing} forecast unavailable) "
+            f"→ {lower_bound.label}"
+        )
+    else:
+        reasons.append(f"Rain forecast incomplete ({missing} unavailable)")
+    return None, lower_bound
 
 
 def _classify_hazard(

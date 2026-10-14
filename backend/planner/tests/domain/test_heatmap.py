@@ -86,3 +86,22 @@ def test_a_cell_with_missing_inputs_is_unknown_unless_a_known_hazard_is_above_lo
     frames = heatmap_frames([calm_but_no_gust, snowy_but_no_gust], WINDOW, DEPARTURE, 50_000)
 
     assert frames[0] == (None, 3)
+
+
+def test_a_known_heavy_rain_input_shows_even_when_showers_are_missing() -> None:
+    zeros = tuple(Decimal(0) for _ in range(WINDOW.hours))
+    nothing = tuple(None for _ in range(WINDOW.hours))
+    heavy = tuple(Decimal("1.5") for _ in range(WINDOW.hours))
+    light = tuple(Decimal("0.05") for _ in range(WINDOW.hours))
+
+    frames = heatmap_frames(
+        [
+            HourlyForecast(zeros, zeros, heavy, nothing, zeros),
+            HourlyForecast(zeros, zeros, light, nothing, zeros),
+        ],
+        WINDOW,
+        DEPARTURE,
+        load_lb=0,
+    )
+
+    assert frames[0] == (4, None)

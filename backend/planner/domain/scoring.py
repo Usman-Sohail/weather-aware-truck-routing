@@ -5,7 +5,9 @@ never outrank a safer one. The order is:
 
 1. routes with no forecast data at all are never recommended;
 2. routes with any No Travel checkpoint rank after routes without one;
-3. routes with missing forecast data rank after complete routes;
+3. routes with a checkpoint that has no forecast rank after routes forecast everywhere
+   (a checkpoint missing only some inputs counts at its known lower-bound level instead,
+   and makes the recommendation provisional);
 4. then fewest No Travel miles, fewest Severe miles, fewest High miles, lowest average
    risk and shortest travel time, as in the brief;
 5. the routing provider's order breaks a complete tie.
@@ -47,6 +49,7 @@ class RouteMetrics:
     checkpoints_by_level: Mapping[str, int]
     avg_risk: Decimal | None
     has_data: bool
+    has_unknown: bool
     has_no_travel: bool
     no_travel_checkpoints: int
     incomplete: bool
@@ -58,8 +61,14 @@ class RouteMetrics:
 
     def miles_text(self, key: str) -> str:
         """Miles at a level as displayed: "<1" when checkpoints exist but round to 0."""
-        miles = self.miles[key]
-        return "<1" if miles == 0 and self.checkpoints_by_level[key] > 0 else str(miles)
+        return "<1" if self._under_one_mile(key) else str(self.miles[key])
+
+    def miles_rank(self, key: str) -> Decimal:
+        """Miles on the displayed scale 0 < "<1" < 1 < 2 ..., used for ranking."""
+        return Decimal("0.5") if self._under_one_mile(key) else Decimal(self.miles[key])
+
+    def _under_one_mile(self, key: str) -> bool:
+        return self.miles[key] == 0 and self.checkpoints_by_level[key] > 0
 
 
 @dataclass(frozen=True)
@@ -99,6 +108,7 @@ def route_metrics(
         checkpoints_by_level=counts,
         avg_risk=_round(weighted_risk / known_miles, "0.1") if known_miles > 0 else None,
         has_data=counts[UNKNOWN] < len(checkpoints),
+        has_unknown=counts[UNKNOWN] > 0,
         has_no_travel=counts[RiskLevel.NO_TRAVEL.key] > 0,
         no_travel_checkpoints=counts[RiskLevel.NO_TRAVEL.key],
         incomplete=any(not assessment.complete for _, assessment in checkpoints),
@@ -110,14 +120,16 @@ def _round(value: Decimal, places: str) -> Decimal:
     return value.quantize(Decimal(places), rounding=ROUND_HALF_UP)
 
 
-def _ranking_key(m: RouteMetrics) -> tuple[bool, bool, bool, int, int, int, Decimal, int, int]:
+def _ranking_key(
+    m: RouteMetrics,
+) -> tuple[bool, bool, bool, Decimal, Decimal, Decimal, Decimal, int, int]:
     return (
         not m.has_data,
         m.has_no_travel,
-        m.incomplete,
-        m.miles["no_travel"],
-        m.miles["severe"],
-        m.miles["high"],
+        m.has_unknown,
+        m.miles_rank("no_travel"),
+        m.miles_rank("severe"),
+        m.miles_rank("high"),
         m.avg_risk if m.avg_risk is not None else Decimal("Infinity"),
         m.travel_minutes,
         m.provider_index,
@@ -156,10 +168,13 @@ def recommend(routes: Sequence[RouteMetrics]) -> tuple[tuple[RouteMetrics, ...],
     sentences.append(main)
     if status == "no_safe_route":
         sentences.append("Consider a different departure time.")
-    if status == "provisional":
-        sentences.append(
-            "Some forecast data is missing for this route, so the recommendation is provisional."
+    if winner.incomplete:
+        consequence = (
+            "so this recommendation is provisional"
+            if status == "provisional"
+            else "so its exposure may be higher than shown"
         )
+        sentences.append(f"Some forecast inputs are missing for {winner.label}, {consequence}.")
     return ranked, Recommendation(winner.route_id, status, decided_by, tied_on, " ".join(sentences))
 
 
@@ -184,7 +199,13 @@ def _explain_decision(
         avoids = "has no known No Travel conditions" if winner.incomplete else "avoids No Travel"
         return f"{w} {avoids}; {r} has No Travel conditions at {count} {plural}."
     if decided_by == "coverage_gate":
-        return f"{w} has a complete forecast; {r} is missing forecast data for part of the trip."
+        count = runner_up.checkpoints_by_level[UNKNOWN]
+        plural = "checkpoint" if count == 1 else "checkpoints"
+        miles = runner_up.miles_text(UNKNOWN)
+        return (
+            f"{w} has a forecast at every checkpoint; {r} has no forecast at "
+            f"{count} {plural} ({miles} mi)."
+        )
     if decided_by == "provider_order":
         return f"{w} and {r} tie on every criterion; {w} is listed first by the routing provider."
 
@@ -205,7 +226,7 @@ def _explain_decision(
             f"({_duration(winner.travel_minutes)} vs {_duration(runner_up.travel_minutes)})."
         )
 
-    ties = [_describe_tie(winner, runner_up, c) for c in tied_on if c in _TIE_CRITERIA]
+    ties = [_describe_tie(winner, c) for c in tied_on if c in _TIE_CRITERIA]
     if ties:
         joined = ties[0] if len(ties) == 1 else ", ".join(ties[:-1]) + " and " + ties[-1]
         main += f" They tie on {joined}."
@@ -215,12 +236,12 @@ def _explain_decision(
 _TIE_CRITERIA = (*_MILES_CRITERIA, "average_risk")
 
 
-def _describe_tie(winner: RouteMetrics, runner_up: RouteMetrics, criterion: str) -> str:
+def _describe_tie(winner: RouteMetrics, criterion: str) -> str:
     if criterion == "average_risk":
         return f"average risk ({winner.avg_risk})"
+    # Ties compare on the displayed scale, so both routes show the same value.
     key, name = _MILES_CRITERIA[criterion]
-    shown = winner.miles_text(key), runner_up.miles_text(key)
-    return f"{name} ({shown[0]})" if shown[0] == shown[1] else f"{name} ({shown[0]} and {shown[1]})"
+    return f"{name} ({winner.miles_text(key)})"
 
 
 def _duration(minutes: int) -> str:

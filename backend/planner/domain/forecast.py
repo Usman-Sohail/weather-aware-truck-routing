@@ -87,7 +87,8 @@ class HourlyForecast:
 
 def forecast_window(departure: datetime, latest_eta: datetime, now: datetime) -> ForecastWindow:
     """Hours needed for every arrival and for the 0-48 h slider, within the horizon."""
-    _require_aware(now)
+    for moment in (departure, latest_eta, now):
+        _require_aware(moment)
     start = forecast_hour_for(departure)
     end = forecast_hour_for(max(departure + SLIDER_HOURS * HOUR, latest_eta))
     start_of_today = now.astimezone(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -123,6 +124,7 @@ def resolve_departure(local: datetime, zone: ZoneInfo, now: datetime) -> datetim
     """
     if local.tzinfo is not None:
         raise ValueError("Expected a local time without a time zone.")
+    _require_aware(now)
     aware = local.replace(tzinfo=zone, fold=0)
     departure = aware.astimezone(UTC)
     if departure.astimezone(zone).replace(tzinfo=None) != local:

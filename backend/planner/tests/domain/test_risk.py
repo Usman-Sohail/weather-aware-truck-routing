@@ -190,7 +190,7 @@ def test_missing_showers_makes_rain_unknown() -> None:
 
 
 def test_all_inputs_missing_is_unknown() -> None:
-    result = assess(sample(gust=None, rain=None, snow=None), load_lb=0)
+    result = assess(sample(gust=None, rain=None, showers=None, snow=None), load_lb=0)
 
     assert result.level is None
     assert not result.complete
@@ -276,7 +276,7 @@ def test_equivalent_decimal_forms_classify_the_same() -> None:
     assert classify_wind(Decimal("-0")) is LOW
 
 
-@pytest.mark.parametrize("value", [47, 47.0, Decimal("NaN"), Decimal("Infinity")])
+@pytest.mark.parametrize("value", [47, 47.0, Decimal("NaN"), Decimal("Infinity"), Decimal("-0.01")])
 def test_weather_values_must_be_finite_decimals(value: object) -> None:
     with pytest.raises(ValueError):
         WeatherSample(HOUR, value, None, None, None, None)  # type: ignore[arg-type]
@@ -287,3 +287,42 @@ def test_sustained_metric_ignores_a_missing_gust() -> None:
 
     assert result.wind is MODERATE
     assert result.complete
+
+
+def test_a_known_rain_input_is_a_lower_bound_when_the_other_is_missing() -> None:
+    result = assess(sample(rain="1.5", showers=None), load_lb=0)
+
+    assert result.rain is None
+    assert result.level is NO_TRAVEL
+    assert not result.complete
+    assert "Rain at least 1.5 in/hr (showers forecast unavailable) → No Travel" in result.reasons
+
+
+def test_known_showers_are_a_lower_bound_when_rain_is_missing() -> None:
+    result = assess(sample(rain=None, showers="0.6"), load_lb=0)
+
+    assert result.level is SEVERE
+    assert "Rain at least 0.6 in/hr (large-scale rain forecast unavailable) → Severe" in (
+        result.reasons
+    )
+
+
+def test_a_low_partial_rain_reading_is_reported_as_incomplete() -> None:
+    result = assess(sample(rain="0.05", showers=None), load_lb=0)
+
+    assert result.level is LOW
+    assert not result.complete
+    assert result.reasons == ("Rain forecast incomplete (showers unavailable)",)
+
+
+def test_negative_zero_is_accepted() -> None:
+    assert assess(sample(rain="-0"), load_lb=0).rain is LOW
+
+
+def test_rain_risk_never_decreases_with_showers_missing() -> None:
+    previous = LOW
+    for step in range(0, 301):
+        level = assess(sample(rain=str(Decimal(step) / 100), showers=None), load_lb=0).level
+        assert level is not None
+        assert level >= previous
+        previous = level

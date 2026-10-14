@@ -45,15 +45,10 @@ class WeatherSample:
     def __post_init__(self) -> None:
         for name in ("gust_mph", "wind_mph", "rain_in", "showers_in", "snowfall_in"):
             value = getattr(self, name)
-            if value is not None and not (isinstance(value, Decimal) and value.is_finite()):
-                raise ValueError(f"{name} must be a finite Decimal or None, not {value!r}.")
-
-    @property
-    def rain_in_hr(self) -> Decimal | None:
-        """Liquid precipitation: large-scale rain plus convective showers."""
-        if self.rain_in is None or self.showers_in is None:
-            return None
-        return self.rain_in + self.showers_in
+            if value is None:
+                continue
+            if not (isinstance(value, Decimal) and value.is_finite()) or value < 0:
+                raise ValueError(f"{name} must be a non-negative Decimal or None, not {value!r}.")
 
 
 @dataclass(frozen=True)

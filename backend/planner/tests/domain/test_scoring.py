@@ -200,7 +200,7 @@ def test_when_every_route_has_no_travel_the_least_risky_is_never_called_safe() -
 
 
 def test_a_route_with_missing_forecast_ranks_after_complete_routes() -> None:
-    incomplete = metrics("A", 0, 300, [(99, LOW, True), (1, LOW, False)])
+    incomplete = metrics("A", 0, 300, [(99, LOW, True), (1, None, False)])
     complete = metrics("B", 1, 600, [(50, LOW, True), (50, HIGH, True)])
 
     _, recommendation = recommend([incomplete, complete])
@@ -315,14 +315,17 @@ def test_a_level_that_rounds_to_zero_is_shown_as_under_one_mile() -> None:
     assert "They tie on No Travel miles (<1)." in recommendation.explanation
 
 
-def test_a_tie_between_different_displays_shows_both() -> None:
+def test_under_one_mile_ranks_between_zero_and_one() -> None:
     a = metrics("A", 0, 600, [(100, LOW, True), (0.2, SEVERE, True)])
     b = metrics("B", 1, 600, [(90, LOW, True), (10, HIGH, True)])
 
     _, recommendation = recommend([a, b])
 
-    assert recommendation.decided_by == "high_miles"
-    assert "Severe miles (<1 and 0)" in recommendation.explanation
+    assert recommendation.route_id == "B"
+    assert recommendation.decided_by == "severe_miles"
+    assert recommendation.explanation.startswith(
+        "Route B has fewer Severe miles than Route A (0 vs <1)."
+    )
 
 
 def test_an_incomplete_winner_is_not_said_to_avoid_no_travel() -> None:
@@ -383,7 +386,8 @@ def test_ranking_key_orders_routes_consistently() -> None:
         legs: list[Leg] = []
         for _ in range(4):
             level = rng.choice(levels)
-            legs.append((rng.choice([0.2, 5, 12.5, 25]), level, level is not None))
+            complete = level is not None and rng.random() > 0.2
+            legs.append((rng.choice([0.2, 5, 12.5, 25]), level, complete))
         routes.append(metrics(f"R{index}", index, rng.choice([600, 601, 900]), legs))
 
     ranked, _ = recommend(routes)
@@ -391,3 +395,81 @@ def test_ranking_key_orders_routes_consistently() -> None:
     for better, worse in pairwise(ranked):
         _, pair = recommend([worse, better])
         assert pair.route_id == better.route_id or not better.has_data
+
+
+# Coverage gate: only checkpoints with no forecast at all demote a route.
+
+
+def test_one_missing_input_never_outweighs_known_severe_miles() -> None:
+    severe_everywhere = metrics("A", 0, 600, [(500, SEVERE, True)])
+    clean_with_a_gap = metrics("B", 1, 600, [(499, LOW, True), (1, LOW, False)])
+
+    _, recommendation = recommend([severe_everywhere, clean_with_a_gap])
+
+    assert recommendation.route_id == "B"
+    assert recommendation.decided_by == "severe_miles"
+    assert recommendation.status == "provisional"
+    assert recommendation.explanation.endswith(
+        "Some forecast inputs are missing for Route B, so this recommendation is provisional."
+    )
+
+
+def test_partial_data_on_a_no_travel_route_says_exposure_may_be_higher() -> None:
+    complete = metrics("A", 0, 600, [(50, LOW, True), (50, NO_TRAVEL, True)])
+    partial = metrics("B", 1, 600, [(98, LOW, True), (1, NO_TRAVEL, True), (1, LOW, False)])
+
+    _, recommendation = recommend([complete, partial])
+
+    assert recommendation.route_id == "B"
+    assert recommendation.decided_by == "no_travel_miles"
+    assert recommendation.status == "no_safe_route"
+    assert "may be higher than shown" in recommendation.explanation
+    assert "provisional" not in recommendation.explanation
+
+
+def test_a_checkpoint_without_any_forecast_triggers_the_gate_even_on_a_tiny_share() -> None:
+    severe = metrics("A", 0, 600, [(75, LOW, True), (25, SEVERE, True)])
+    gap_at_destination = metrics("B", 1, 600, [(100, LOW, True), (0.3, None, False)])
+
+    _, recommendation = recommend([severe, gap_at_destination])
+
+    assert recommendation.route_id == "A"
+    assert recommendation.decided_by == "coverage_gate"
+    assert recommendation.status == "clear"
+    assert recommendation.explanation == (
+        "Route A has a forecast at every checkpoint; Route B has no forecast at "
+        "1 checkpoint (<1 mi)."
+    )
+
+
+def test_a_route_with_unknown_checkpoints_still_beats_known_no_travel() -> None:
+    gap = metrics("A", 0, 600, [(90, LOW, True), (10, None, False)])
+    no_travel = metrics("B", 1, 600, [(90, LOW, True), (10, NO_TRAVEL, True)])
+
+    _, recommendation = recommend([gap, no_travel])
+
+    assert recommendation.route_id == "A"
+    assert recommendation.decided_by == "no_travel_gate"
+    assert recommendation.status == "provisional"
+    assert "Route A has no known No Travel conditions" in recommendation.explanation
+
+
+def test_a_partial_checkpoint_counts_at_its_known_level() -> None:
+    partial_severe = metrics("A", 0, 600, [(90, LOW, True), (10, SEVERE, False)])
+    known_severe = metrics("B", 1, 600, [(95, LOW, True), (5, SEVERE, True)])
+
+    _, recommendation = recommend([partial_severe, known_severe])
+
+    assert recommendation.route_id == "B"
+    assert recommendation.decided_by == "severe_miles"
+
+
+def test_when_every_route_has_unknown_checkpoints_risk_decides() -> None:
+    a = metrics("A", 0, 600, [(80, LOW, True), (10, SEVERE, True), (10, None, False)])
+    b = metrics("B", 1, 600, [(85, LOW, True), (5, SEVERE, True), (10, None, False)])
+
+    _, recommendation = recommend([a, b])
+
+    assert recommendation.route_id == "B"
+    assert recommendation.decided_by == "severe_miles"
+    assert recommendation.status == "provisional"
