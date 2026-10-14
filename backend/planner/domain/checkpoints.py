@@ -7,6 +7,8 @@ from planner.domain.geometry import METERS_PER_MILE, locate_at_distance, locate_
 from planner.domain.types import Checkpoint, LonLat, RouteProfile
 
 FORECAST_LATTICE_DEG = 0.05
+# Interval points closer than this to the destination are the destination itself.
+_SAME_MILE_TOLERANCE = 1e-6
 
 
 def checkpoint_miles(length_mi: float, interval_mi: int) -> tuple[float, ...]:
@@ -17,7 +19,7 @@ def checkpoint_miles(length_mi: float, interval_mi: int) -> tuple[float, ...]:
         raise ValueError("Sampling interval must be positive.")
     miles: list[float] = [0]
     k = 1
-    while k * interval_mi < length_mi:
+    while k * interval_mi < length_mi - _SAME_MILE_TOLERANCE:
         miles.append(k * interval_mi)
         k += 1
     miles.append(length_mi)
@@ -66,7 +68,11 @@ def hourly_positions(profile: RouteProfile, hours: int) -> tuple[LonLat | None, 
 def snap(point: LonLat, step_deg: float = FORECAST_LATTICE_DEG) -> LonLat:
     """Round a position to the forecast lattice so nearby checkpoints share a forecast."""
     lon, lat = point
-    return (round(round(lon / step_deg) * step_deg, 6), round(round(lat / step_deg) * step_deg, 6))
+    # Adding 0.0 turns -0.0 into 0.0, so both serialise identically.
+    return (
+        round(round(lon / step_deg) * step_deg, 6) + 0.0,
+        round(round(lat / step_deg) * step_deg, 6) + 0.0,
+    )
 
 
 def forecast_locations(

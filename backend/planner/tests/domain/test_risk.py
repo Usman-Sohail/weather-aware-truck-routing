@@ -229,3 +229,61 @@ def test_risk_never_decreases_as_load_increases() -> None:
             assert level is not None
             assert level >= previous
             previous = level
+
+
+_LOAD_RULE_WINDS = {
+    "24.9": LOW,
+    "25": MODERATE,
+    "34.9": MODERATE,
+    "35": HIGH,
+    "44.9": HIGH,
+    "45": SEVERE,
+    "54.9": SEVERE,
+    "55": NO_TRAVEL,
+}
+
+
+@pytest.mark.parametrize("load_lb", [30_000, 30_001, 40_000, 40_001])
+@pytest.mark.parametrize("gust", list(_LOAD_RULE_WINDS))
+def test_load_rules_full_cross_product(gust: str, load_lb: int) -> None:
+    band = _LOAD_RULE_WINDS[gust]
+    wind = Decimal(gust)
+    expected = band
+    if Decimal(45) <= wind < Decimal(55) and load_lb > 30_000:
+        expected = NO_TRAVEL
+    elif Decimal(35) <= wind < Decimal(45) and load_lb > 40_000:
+        expected = SEVERE
+
+    assert apply_load_rules(wind, load_lb)[0] is expected
+
+
+@pytest.mark.parametrize(
+    ("rain", "showers", "expected"),
+    [
+        ("0.05", "0.05", MODERATE),
+        ("0.125", "0.125", HIGH),
+        ("0.50", "0.50", SEVERE),
+        ("0.501", "0.5", NO_TRAVEL),
+    ],
+)
+def test_rain_and_showers_summing_to_an_edge(rain: str, showers: str, expected: RiskLevel) -> None:
+    assert assess(sample(rain=rain, showers=showers), load_lb=0).rain is expected
+
+
+def test_equivalent_decimal_forms_classify_the_same() -> None:
+    assert classify_rain(Decimal("1.000")) is SEVERE
+    assert classify_snow(Decimal("3.00")) is SEVERE
+    assert classify_wind(Decimal("-0")) is LOW
+
+
+@pytest.mark.parametrize("value", [47, 47.0, Decimal("NaN"), Decimal("Infinity")])
+def test_weather_values_must_be_finite_decimals(value: object) -> None:
+    with pytest.raises(ValueError):
+        WeatherSample(HOUR, value, None, None, None, None)  # type: ignore[arg-type]
+
+
+def test_sustained_metric_ignores_a_missing_gust() -> None:
+    result = assess(sample(gust=None, wind="30"), load_lb=0, wind_metric="sustained")
+
+    assert result.wind is MODERATE
+    assert result.complete

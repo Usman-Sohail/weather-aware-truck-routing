@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -179,3 +180,63 @@ def test_window_rejects_a_departure_beyond_the_horizon() -> None:
 def test_resolve_departure_expects_a_local_time() -> None:
     with pytest.raises(ValueError, match="without a time zone"):
         resolve_departure(utc(2026, 10, 16, 8), DENVER, utc(2026, 10, 15))
+
+
+def test_departure_exactly_at_the_grace_limit_is_accepted() -> None:
+    now = utc(2026, 10, 15, 12, 0)
+    local = (now - timedelta(minutes=15)).astimezone(DENVER).replace(tzinfo=None)
+
+    assert resolve_departure(local, DENVER, now) == now - timedelta(minutes=15)
+
+
+def test_half_hour_zone_daylight_saving_edges() -> None:
+    st_johns = ZoneInfo("America/St_Johns")
+
+    with pytest.raises(DepartureError):
+        resolve_departure(datetime(2026, 3, 8, 2, 30), st_johns, utc(2026, 3, 5))
+    # 01:30 happens twice on 1 November 2026; the first is NDT (UTC-2:30).
+    assert resolve_departure(datetime(2026, 11, 1, 1, 30), st_johns, utc(2026, 10, 30)) == utc(
+        2026, 11, 1, 4, 0
+    )
+
+
+def test_zone_without_daylight_saving_accepts_every_local_time() -> None:
+    phoenix = ZoneInfo("America/Phoenix")
+
+    assert resolve_departure(datetime(2026, 3, 8, 2, 30), phoenix, utc(2026, 3, 5)) == utc(
+        2026, 3, 8, 9, 30
+    )
+
+
+def test_hours_up_to_the_horizon_are_kept_and_later_hours_are_unknown() -> None:
+    now = utc(2026, 10, 14, 10, 0)
+    departure = utc(2026, 10, 21, 12, 0)
+    window = forecast_window(departure, utc(2026, 11, 2), now=now)
+    forecast = _forecast(window.hours)
+
+    assert sample_at(forecast, window, utc(2026, 10, 28, 23, 30)).gust_mph is not None
+    assert sample_at(forecast, window, utc(2026, 10, 29, 0, 0)).gust_mph is None
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda: forecast_hour_for(datetime(2026, 10, 16, 14, 0)),
+        lambda: forecast_window(utc(2026, 10, 16), utc(2026, 10, 16), datetime(2026, 10, 15)),
+    ],
+)
+def test_naive_datetimes_are_rejected(call: Callable[[], object]) -> None:
+    with pytest.raises(ValueError, match="time-zone-aware"):
+        call()
+
+
+def test_sample_at_rejects_a_forecast_that_does_not_match_the_window() -> None:
+    window = ForecastWindow(utc(2026, 10, 16, 15), utc(2026, 10, 16, 18))
+
+    with pytest.raises(ValueError, match="does not match"):
+        sample_at(_forecast(3), window, utc(2026, 10, 16, 16))
+
+
+def test_hourly_series_must_have_equal_lengths() -> None:
+    with pytest.raises(ValueError):
+        HourlyForecast((Decimal(1),), (), (), (), ())

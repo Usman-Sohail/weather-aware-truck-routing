@@ -24,7 +24,13 @@ class DepartureError(ValueError):
     """A departure time that cannot be planned."""
 
 
+def _require_aware(moment: datetime) -> None:
+    if moment.tzinfo is None or moment.utcoffset() is None:
+        raise ValueError("Expected a time-zone-aware datetime.")
+
+
 def floor_hour(moment: datetime) -> datetime:
+    _require_aware(moment)
     return moment.astimezone(UTC).replace(minute=0, second=0, microsecond=0)
 
 
@@ -60,9 +66,28 @@ class HourlyForecast:
     showers_in: tuple[Decimal | None, ...]
     snowfall_in: tuple[Decimal | None, ...]
 
+    def __post_init__(self) -> None:
+        lengths = {
+            len(series)
+            for series in (
+                self.gust_mph,
+                self.wind_mph,
+                self.rain_in,
+                self.showers_in,
+                self.snowfall_in,
+            )
+        }
+        if len(lengths) != 1:
+            raise ValueError("Every hourly series must have the same length.")
+
+    @property
+    def hours(self) -> int:
+        return len(self.gust_mph)
+
 
 def forecast_window(departure: datetime, latest_eta: datetime, now: datetime) -> ForecastWindow:
     """Hours needed for every arrival and for the 0-48 h slider, within the horizon."""
+    _require_aware(now)
     start = forecast_hour_for(departure)
     end = forecast_hour_for(max(departure + SLIDER_HOURS * HOUR, latest_eta))
     start_of_today = now.astimezone(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -74,6 +99,8 @@ def forecast_window(departure: datetime, latest_eta: datetime, now: datetime) ->
 
 def sample_at(forecast: HourlyForecast, window: ForecastWindow, moment: datetime) -> WeatherSample:
     """Weather for ``moment``; values are missing (never substituted) outside the window."""
+    if forecast.hours != window.hours:
+        raise ValueError("The hourly forecast does not match the forecast window.")
     hour = forecast_hour_for(moment)
     i = window.index_of(hour)
     if i is None:

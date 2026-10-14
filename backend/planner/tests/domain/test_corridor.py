@@ -138,3 +138,25 @@ def test_approximate_cell_size_in_miles() -> None:
 def test_routes_too_spread_out_for_any_grid_are_too_large() -> None:
     with pytest.raises(TripTooLargeError):
         build_corridor([route((-122.3, 47.6), (-74.0, 40.7))], max_cells=5)
+
+
+def test_a_route_crossing_zero_latitude_and_longitude() -> None:
+    corridor = build_corridor([route((-0.5, -0.5), (0.5, 0.5))], max_cells=300)
+
+    columns = {column for column, _ in corridor.cells}
+    rows = {row for _, row in corridor.cells}
+    assert min(columns) < 0 < max(columns)
+    assert min(rows) < 0 < max(rows)
+
+
+def test_a_very_short_route_gets_its_cell_and_the_eight_around_it() -> None:
+    corridor = build_corridor([route((-104.95, 39.75), (-104.9499, 39.7501))], max_cells=300)
+
+    assert len(corridor.cells) == 9
+
+
+def test_relay_size_limit_edge() -> None:
+    check_relay_size(locations=1_000, hours=82)
+
+    with pytest.raises(TripTooLargeError):
+        check_relay_size(locations=1_000, hours=83)

@@ -42,6 +42,12 @@ class WeatherSample:
     showers_in: Decimal | None
     snowfall_in: Decimal | None
 
+    def __post_init__(self) -> None:
+        for name in ("gust_mph", "wind_mph", "rain_in", "showers_in", "snowfall_in"):
+            value = getattr(self, name)
+            if value is not None and not (isinstance(value, Decimal) and value.is_finite()):
+                raise ValueError(f"{name} must be a finite Decimal or None, not {value!r}.")
+
     @property
     def rain_in_hr(self) -> Decimal | None:
         """Liquid precipitation: large-scale rain plus convective showers."""

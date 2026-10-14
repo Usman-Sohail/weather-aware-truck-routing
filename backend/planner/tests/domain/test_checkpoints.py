@@ -119,3 +119,29 @@ def test_forecast_locations_are_shared_by_nearby_checkpoints() -> None:
 
     assert locations == ((-105.0, 39.75), (-104.5, 39.8), (-104.0, 39.5))
     assert indices == (0, 1, 0, 2)
+
+
+def test_float_drift_on_an_exact_multiple_adds_no_duplicate_destination() -> None:
+    length_mi = 25 * 17 * METERS_PER_MILE / METERS_PER_MILE
+
+    assert checkpoint_miles(length_mi, 25)[-2:] == (400, length_mi)
+
+
+@pytest.mark.parametrize("interval_mi", [10, 25, 50])
+def test_an_integer_metre_exact_multiple_ends_cleanly(interval_mi: int) -> None:
+    length_m = 402_336.0  # exactly 250 miles
+    points = ((0.0, 0.0), (0.0, length_m / 111_195.08))
+    profile = build_profile(points, (ProgressAnchor(0, 0, 0), ProgressAnchor(1, length_m, 9_000)))
+
+    checkpoints = place_checkpoints("A", profile, interval_mi, DEPARTURE)
+
+    assert checkpoints[-1].mile == pytest.approx(250)
+    assert checkpoints[-2].mile == 250 - interval_mi
+    assert sum(c.share_mi for c in checkpoints) == pytest.approx(250)
+
+
+def test_snapping_never_produces_negative_zero() -> None:
+    lon, lat = snap((-0.01, -0.01))
+
+    assert (lon, lat) == (0.0, 0.0)
+    assert str(lon) == "0.0" and str(lat) == "0.0"

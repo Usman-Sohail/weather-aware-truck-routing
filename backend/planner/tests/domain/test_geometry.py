@@ -155,3 +155,34 @@ def test_simplify_keeps_the_far_point_of_a_loop() -> None:
     loop = ((0.0, 0.0), (0.01, 0.5), (0.0, 0.0))
 
     assert simplify(loop, tolerance_m=30) == loop
+
+
+def test_lookup_at_an_interior_anchor() -> None:
+    points = tuple((0.0, float(i)) for i in range(3))
+    anchors = (
+        ProgressAnchor(0, 0, 0),
+        ProgressAnchor(1, 100_000, 3_000),
+        ProgressAnchor(2, 200_000, 4_000),
+    )
+    profile = build_profile(points, anchors)
+
+    assert locate_at_distance(profile, 100_000) == ((0.0, 1.0), 3_000.0)
+    assert locate_at_elapsed(profile, 3_500) == pytest.approx((0.0, 1.5))
+
+
+def test_hour_zero_is_the_origin_even_when_leading_points_share_time_zero() -> None:
+    points = ((0.0, 0.0), (0.0, 0.001), (0.0, 1.0))
+    anchors = (
+        ProgressAnchor(0, 0, 0),
+        ProgressAnchor(1, 100, 0),
+        ProgressAnchor(2, 111_000, 3_600),
+    )
+    profile = build_profile(points, anchors)
+
+    assert locate_at_elapsed(profile, 0) == (0.0, 0.0)
+
+
+def test_position_at_exactly_the_travel_time_is_the_destination(
+    straight_profile: RouteProfile,
+) -> None:
+    assert locate_at_elapsed(straight_profile, straight_profile.travel_time_s) == (0.0, 2.0)

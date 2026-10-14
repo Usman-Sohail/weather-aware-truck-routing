@@ -2,6 +2,8 @@ from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
+import pytest
+
 from planner.domain.forecast import HourlyForecast, forecast_window
 from planner.domain.heatmap import heatmap_frames
 
@@ -59,3 +61,28 @@ def test_missing_forecast_is_none_not_low() -> None:
     frames = heatmap_frames([cell], WINDOW, DEPARTURE, load_lb=0)
 
     assert frames[0] == (None,)
+
+
+@pytest.mark.parametrize("minute_second", [(0, 0), (59, 59)])
+def test_frame_48_uses_the_last_record_of_the_window(minute_second: tuple[int, int]) -> None:
+    departure = datetime(2026, 10, 16, 14, *minute_second, tzinfo=UTC)
+    window = forecast_window(departure, departure, now=departure)
+    gusts = ["0"] * window.hours
+    gusts[-1] = "50"
+
+    frames = heatmap_frames([forecast_with_gusts(gusts)], window, departure, load_lb=0)
+
+    assert frames[48] == (3,)
+    assert frames[47] == (0,)
+
+
+def test_a_cell_with_missing_inputs_is_unknown_unless_a_known_hazard_is_above_low() -> None:
+    zeros = tuple(Decimal(0) for _ in range(WINDOW.hours))
+    nothing = tuple(None for _ in range(WINDOW.hours))
+    deep_snow = tuple(Decimal("2.5") for _ in range(WINDOW.hours))
+    calm_but_no_gust = HourlyForecast(nothing, zeros, zeros, zeros, zeros)
+    snowy_but_no_gust = HourlyForecast(nothing, zeros, zeros, zeros, deep_snow)
+
+    frames = heatmap_frames([calm_but_no_gust, snowy_but_no_gust], WINDOW, DEPARTURE, 50_000)
+
+    assert frames[0] == (None, 3)

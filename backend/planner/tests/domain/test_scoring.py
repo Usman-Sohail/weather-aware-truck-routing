@@ -1,5 +1,6 @@
 import random
 from decimal import Decimal
+from itertools import pairwise
 
 import pytest
 
@@ -119,7 +120,7 @@ def test_fewest_high_miles_wins_when_severe_miles_tie() -> None:
         "severe_miles",
     )
     assert recommendation.explanation == (
-        "Route B has the fewest High miles (12 vs 37). "
+        "Route B has fewer High miles than Route A (12 vs 37). "
         "They tie on No Travel miles (0) and Severe miles (0)."
     )
 
@@ -132,7 +133,7 @@ def test_lowest_average_risk_wins_when_severe_and_high_miles_tie() -> None:
 
     assert recommendation.route_id == "B"
     assert recommendation.decided_by == "average_risk"
-    assert "Route B has the lowest average risk (0.2 vs 0.4 on a 0 to 4 scale)." in (
+    assert "Route B has a lower average risk than Route A (0.2 vs 0.4 on a 0 to 4 scale)." in (
         recommendation.explanation
     )
 
@@ -145,7 +146,9 @@ def test_shortest_travel_time_wins_when_risk_ties() -> None:
 
     assert recommendation.route_id == "B"
     assert recommendation.decided_by == "travel_time"
-    assert "Route B is the fastest (14 h 40 min vs 15 h 00 min)." in recommendation.explanation
+    assert (
+        "Route B is faster than Route A (14 h 40 min vs 15 h 00 min)." in recommendation.explanation
+    )
 
 
 def test_a_shorter_trip_never_outranks_a_safer_one() -> None:
@@ -177,7 +180,10 @@ def test_any_no_travel_checkpoint_ranks_a_route_last() -> None:
     assert recommendation.route_id == "B"
     assert recommendation.decided_by == "no_travel_gate"
     assert recommendation.status == "clear"
-    assert "Route A has them at 1 checkpoint" in recommendation.explanation
+    assert (
+        "Route B avoids No Travel; Route A has No Travel conditions at 1 checkpoint."
+        in recommendation.explanation
+    )
 
 
 def test_when_every_route_has_no_travel_the_least_risky_is_never_called_safe() -> None:
@@ -189,7 +195,7 @@ def test_when_every_route_has_no_travel_the_least_risky_is_never_called_safe() -
     assert recommendation.route_id == "B"
     assert recommendation.status == "no_safe_route"
     assert recommendation.decided_by == "no_travel_miles"
-    assert "fewest No Travel miles (3 vs 12)" in recommendation.explanation
+    assert "fewer No Travel miles than Route A (3 vs 12)" in recommendation.explanation
     assert "safe" not in recommendation.explanation.lower()
 
 
@@ -267,3 +273,121 @@ def test_ranking_does_not_depend_on_input_order() -> None:
 def test_recommend_requires_at_least_one_route() -> None:
     with pytest.raises(ValueError):
         recommend([])
+
+
+def test_explanations_compare_only_the_two_routes_they_name() -> None:
+    # The third route is faster but lost on Severe miles, so "fastest" would be false.
+    a = metrics("A", 0, 900, calm())
+    b = metrics("B", 1, 950, calm())
+    c = metrics("C", 2, 600, [(99, LOW, True), (1, SEVERE, True)])
+
+    _, recommendation = recommend([a, b, c])
+
+    assert recommendation.route_id == "A"
+    assert recommendation.explanation.startswith(
+        "Route A is faster than Route B (15 h 00 min vs 15 h 50 min)."
+    )
+    assert "fastest" not in recommendation.explanation
+    assert "fewest" not in recommendation.explanation
+
+
+def test_high_miles_comparison_ignores_a_third_route_that_lost_earlier() -> None:
+    a = metrics("A", 0, 600, [(88, LOW, True), (12, HIGH, True)])
+    b = metrics("B", 1, 600, [(63, LOW, True), (37, HIGH, True)])
+    c = metrics("C", 2, 600, [(90, LOW, True), (10, SEVERE, True)])
+
+    _, recommendation = recommend([a, b, c])
+
+    assert recommendation.explanation.startswith(
+        "Route A has fewer High miles than Route B (12 vs 37)."
+    )
+
+
+def test_a_level_that_rounds_to_zero_is_shown_as_under_one_mile() -> None:
+    a = metrics("A", 0, 600, [(90, LOW, True), (10, SEVERE, True), (0.2, NO_TRAVEL, True)])
+    b = metrics("B", 1, 600, [(80, LOW, True), (20, SEVERE, True), (0.3, NO_TRAVEL, True)])
+
+    _, recommendation = recommend([a, b])
+
+    assert a.miles["no_travel"] == 0
+    assert a.miles_text("no_travel") == "<1"
+    assert a.miles_text("high") == "0"
+    assert "They tie on No Travel miles (<1)." in recommendation.explanation
+
+
+def test_a_tie_between_different_displays_shows_both() -> None:
+    a = metrics("A", 0, 600, [(100, LOW, True), (0.2, SEVERE, True)])
+    b = metrics("B", 1, 600, [(90, LOW, True), (10, HIGH, True)])
+
+    _, recommendation = recommend([a, b])
+
+    assert recommendation.decided_by == "high_miles"
+    assert "Severe miles (<1 and 0)" in recommendation.explanation
+
+
+def test_an_incomplete_winner_is_not_said_to_avoid_no_travel() -> None:
+    a = metrics("A", 0, 600, [(90, LOW, True), (10, None, False)])
+    b = metrics("B", 1, 600, [(99, LOW, True), (1, NO_TRAVEL, True)])
+
+    _, recommendation = recommend([a, b])
+
+    assert recommendation.route_id == "A"
+    assert recommendation.status == "provisional"
+    assert "Route A has no known No Travel conditions" in recommendation.explanation
+
+
+def test_the_only_route_with_data_is_not_called_recommended_when_it_has_no_travel() -> None:
+    no_data = metrics("A", 0, 300, [(100, None, False)])
+    no_travel = metrics("B", 1, 600, [(50, LOW, True), (50, NO_TRAVEL, True)])
+
+    _, recommendation = recommend([no_data, no_travel])
+
+    assert "Route B is the only route with forecast data." in recommendation.explanation
+    assert "recommended" not in recommendation.explanation
+
+
+def test_unavailable_wording_for_a_single_route() -> None:
+    _, recommendation = recommend([metrics("A", 0, 600, [(100, None, False)])])
+
+    assert recommendation.explanation == (
+        "No forecast data is available for this route, so none is recommended."
+    )
+
+
+def test_identical_routes_do_not_crash_the_explanation() -> None:
+    a = metrics("A", 0, 600, calm())
+    twin = metrics("B", 0, 600, calm())
+
+    _, recommendation = recommend([a, twin])
+
+    assert recommendation.decided_by == "provider_order"
+
+
+def test_high_miles_can_decide_even_when_the_winner_has_higher_average_risk() -> None:
+    a = metrics("A", 0, 600, [(50, LOW, True), (40, MODERATE, True), (10, HIGH, True)])
+    b = metrics("B", 1, 600, [(80, LOW, True), (20, HIGH, True)])
+
+    _, recommendation = recommend([a, b])
+
+    assert a.avg_risk is not None and b.avg_risk is not None
+    assert a.avg_risk > b.avg_risk
+    assert recommendation.route_id == "A"
+    assert recommendation.decided_by == "high_miles"
+
+
+def test_ranking_key_orders_routes_consistently() -> None:
+    rng = random.Random(7)
+    levels = [LOW, MODERATE, HIGH, SEVERE, NO_TRAVEL, None]
+    routes = []
+    for index in range(40):
+        legs: list[Leg] = []
+        for _ in range(4):
+            level = rng.choice(levels)
+            legs.append((rng.choice([0.2, 5, 12.5, 25]), level, level is not None))
+        routes.append(metrics(f"R{index}", index, rng.choice([600, 601, 900]), legs))
+
+    ranked, _ = recommend(routes)
+
+    for better, worse in pairwise(ranked):
+        _, pair = recommend([worse, better])
+        assert pair.route_id == better.route_id or not better.has_data

@@ -102,6 +102,8 @@ def locate_at_elapsed(profile: RouteProfile, elapsed_s: float) -> LonLat | None:
 def _segment_at(axis: tuple[float, ...], value: float) -> tuple[int, float | None]:
     """Index of the segment containing ``value`` on a non-decreasing axis, and the fraction
     along it. The fraction is ``None`` when ``value`` is the end of the axis."""
+    if value <= axis[0]:
+        return 0, 0.0
     i = bisect_right(axis, value) - 1
     if i >= len(axis) - 1:
         return len(axis) - 1, None

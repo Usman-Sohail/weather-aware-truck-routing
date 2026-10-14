@@ -44,19 +44,22 @@ class RouteMetrics:
     route_id: str
     provider_index: int
     miles: Mapping[str, int]
+    checkpoints_by_level: Mapping[str, int]
     avg_risk: Decimal | None
+    has_data: bool
     has_no_travel: bool
     no_travel_checkpoints: int
     incomplete: bool
     travel_minutes: int
 
     @property
-    def has_data(self) -> bool:
-        return self.avg_risk is not None
-
-    @property
     def label(self) -> str:
         return f"Route {self.route_id}"
+
+    def miles_text(self, key: str) -> str:
+        """Miles at a level as displayed: "<1" when checkpoints exist but round to 0."""
+        miles = self.miles[key]
+        return "<1" if miles == 0 and self.checkpoints_by_level[key] > 0 else str(miles)
 
 
 @dataclass(frozen=True)
@@ -75,26 +78,29 @@ def route_metrics(
     checkpoints: Sequence[tuple[float, Assessment]],
 ) -> RouteMetrics:
     """Summarise a route from each checkpoint's mile share and assessment."""
-    miles = {level.key: Decimal(0) for level in RiskLevel} | {UNKNOWN: Decimal(0)}
+    keys = [level.key for level in RiskLevel] + [UNKNOWN]
+    miles = dict.fromkeys(keys, Decimal(0))
+    counts = dict.fromkeys(keys, 0)
     weighted_risk = Decimal(0)
     known_miles = Decimal(0)
     for share_mi, assessment in checkpoints:
         share = Decimal(str(share_mi))
-        if assessment.level is None:
-            miles[UNKNOWN] += share
-            continue
-        miles[assessment.level.key] += share
-        weighted_risk += share * assessment.level
-        known_miles += share
+        key = UNKNOWN if assessment.level is None else assessment.level.key
+        miles[key] += share
+        counts[key] += 1
+        if assessment.level is not None:
+            weighted_risk += share * assessment.level
+            known_miles += share
 
-    no_travel_checkpoints = sum(1 for _, a in checkpoints if a.level is RiskLevel.NO_TRAVEL)
     return RouteMetrics(
         route_id=route_id,
         provider_index=provider_index,
         miles={key: int(_round(value, "1")) for key, value in miles.items()},
+        checkpoints_by_level=counts,
         avg_risk=_round(weighted_risk / known_miles, "0.1") if known_miles > 0 else None,
-        has_no_travel=no_travel_checkpoints > 0,
-        no_travel_checkpoints=no_travel_checkpoints,
+        has_data=counts[UNKNOWN] < len(checkpoints),
+        has_no_travel=counts[RiskLevel.NO_TRAVEL.key] > 0,
+        no_travel_checkpoints=counts[RiskLevel.NO_TRAVEL.key],
         incomplete=any(not assessment.complete for _, assessment in checkpoints),
         travel_minutes=int(_round(Decimal(str(travel_time_s)) / 60, "1")),
     )
@@ -126,7 +132,8 @@ def recommend(routes: Sequence[RouteMetrics]) -> tuple[tuple[RouteMetrics, ...],
     winner = ranked[0]
 
     if not winner.has_data:
-        explanation = "No forecast data is available for these routes, so none is recommended."
+        subject = "this route" if len(ranked) == 1 else "these routes"
+        explanation = f"No forecast data is available for {subject}, so none is recommended."
         return ranked, Recommendation(None, "unavailable", None, (), explanation)
 
     status: Status = (
@@ -138,13 +145,8 @@ def recommend(routes: Sequence[RouteMetrics]) -> tuple[tuple[RouteMetrics, ...],
         main = f"{winner.label} is the only route found for this trip."
     else:
         runner_up = ranked[1]
-        decided_index = next(
-            i
-            for i, (a, b) in enumerate(
-                zip(_ranking_key(winner), _ranking_key(runner_up), strict=True)
-            )
-            if a != b
-        )
+        pairs = zip(_ranking_key(winner), _ranking_key(runner_up), strict=True)
+        decided_index = next((i for i, (a, b) in enumerate(pairs) if a != b), len(CRITERIA) - 1)
         decided_by, tied_on = CRITERIA[decided_index], CRITERIA[:decided_index]
         main = _explain_decision(winner, runner_up, decided_by, tied_on)
 
@@ -171,13 +173,16 @@ _MILES_CRITERIA = {
 def _explain_decision(
     winner: RouteMetrics, runner_up: RouteMetrics, decided_by: str, tied_on: tuple[str, ...]
 ) -> str:
+    """Explain the winner against the runner-up only, so every claim is a comparison
+    between the two routes named in it."""
     w, r = winner.label, runner_up.label
     if decided_by == "no_data_gate":
-        return f"{w} is recommended because {r} has no forecast data."
+        return f"{w} is the only route with forecast data."
     if decided_by == "no_travel_gate":
         count = runner_up.no_travel_checkpoints
         plural = "checkpoint" if count == 1 else "checkpoints"
-        return f"{w} avoids No Travel conditions; {r} has them at {count} {plural}."
+        avoids = "has no known No Travel conditions" if winner.incomplete else "avoids No Travel"
+        return f"{w} {avoids}; {r} has No Travel conditions at {count} {plural}."
     if decided_by == "coverage_gate":
         return f"{w} has a complete forecast; {r} is missing forecast data for part of the trip."
     if decided_by == "provider_order":
@@ -185,36 +190,37 @@ def _explain_decision(
 
     if decided_by in _MILES_CRITERIA:
         key, name = _MILES_CRITERIA[decided_by]
-        main = f"{w} has the fewest {name} ({winner.miles[key]} vs {runner_up.miles[key]})."
+        main = (
+            f"{w} has fewer {name} than {r} "
+            f"({winner.miles_text(key)} vs {runner_up.miles_text(key)})."
+        )
     elif decided_by == "average_risk":
         main = (
-            f"{w} has the lowest average risk "
+            f"{w} has a lower average risk than {r} "
             f"({winner.avg_risk} vs {runner_up.avg_risk} on a 0 to 4 scale)."
         )
     else:
         main = (
-            f"{w} is the fastest ({_duration(winner.travel_minutes)} "
-            f"vs {_duration(runner_up.travel_minutes)})."
+            f"{w} is faster than {r} "
+            f"({_duration(winner.travel_minutes)} vs {_duration(runner_up.travel_minutes)})."
         )
 
-    ties = [_describe_tie(winner, criterion) for criterion in tied_on if criterion in _TIE_NAMES]
+    ties = [_describe_tie(winner, runner_up, c) for c in tied_on if c in _TIE_CRITERIA]
     if ties:
         joined = ties[0] if len(ties) == 1 else ", ".join(ties[:-1]) + " and " + ties[-1]
         main += f" They tie on {joined}."
     return main
 
 
-_TIE_NAMES = {
-    **{c: name for c, (_, name) in _MILES_CRITERIA.items()},
-    "average_risk": "average risk",
-}
+_TIE_CRITERIA = (*_MILES_CRITERIA, "average_risk")
 
 
-def _describe_tie(route: RouteMetrics, criterion: str) -> str:
+def _describe_tie(winner: RouteMetrics, runner_up: RouteMetrics, criterion: str) -> str:
     if criterion == "average_risk":
-        return f"average risk ({route.avg_risk})"
+        return f"average risk ({winner.avg_risk})"
     key, name = _MILES_CRITERIA[criterion]
-    return f"{name} ({route.miles[key]})"
+    shown = winner.miles_text(key), runner_up.miles_text(key)
+    return f"{name} ({shown[0]})" if shown[0] == shown[1] else f"{name} ({shown[0]} and {shown[1]})"
 
 
 def _duration(minutes: int) -> str:
