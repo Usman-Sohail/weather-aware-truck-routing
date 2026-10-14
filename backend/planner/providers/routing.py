@@ -19,7 +19,7 @@ class RouteOption:
 class Place:
     """A geocoded place with the time zone used to read local departure times."""
 
-    label: str
+    name: str
     position: LonLat
     country_code: str
     time_zone: str

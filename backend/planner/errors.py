@@ -38,6 +38,42 @@ class ApiError(Exception):
         super().__init__(self.message)
 
 
+class InvalidContextError(ApiError):
+    status_code = status.HTTP_400_BAD_REQUEST
+    code = "INVALID_CONTEXT"
+    default_message = "This plan could not be verified. Please plan the trip again."
+
+
+class ContextExpiredError(ApiError):
+    status_code = status.HTTP_410_GONE
+    code = "CONTEXT_EXPIRED"
+    default_message = "This plan has expired. Please plan the trip again."
+
+
+class PayloadTooLargeError(ApiError):
+    status_code = status.HTTP_413_REQUEST_ENTITY_TOO_LARGE
+    code = "PAYLOAD_TOO_LARGE"
+    default_message = "The request is too large."
+
+
+class IntervalTooFineApiError(ApiError):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    code = "INTERVAL_TOO_FINE"
+    default_message = "This trip needs a larger sampling interval."
+
+
+class TripTooLargeApiError(ApiError):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    code = "TRIP_TOO_LARGE"
+    default_message = "This trip is too large to plan."
+
+
+class ServiceNotConfiguredError(ApiError):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    code = "SERVICE_NOT_CONFIGURED"
+    default_message = "Route planning is not configured on this server."
+
+
 class NoRouteError(ApiError):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
     code = "NO_ROUTE"

@@ -163,7 +163,7 @@ def test_geocode_request_and_parsing() -> None:
     query = sent_query()
     assert query["countrySet"] == ["US,CA"]
     assert query["limit"] == ["5"]
-    assert [place.label for place in places] == [
+    assert [place.name for place in places] == [
         "Denver, CO, United States",
         "Denver City, TX, United States",
     ]
