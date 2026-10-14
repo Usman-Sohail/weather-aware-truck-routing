@@ -1,0 +1,35 @@
+# Local working notes
+docs/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.sqlite3
+staticfiles/
+
+# Node / frontend
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+playwright-report/
+test-results/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
