@@ -31,7 +31,54 @@ A React + Django web app that helps a truck driver choose the safest of several 
 
 ## Local development
 
-_TODO: written in Phase 3 together with the project skeleton._
+### Prerequisites
+
+- Python 3.12
+- Node.js 22.12 or newer
+- A free [TomTom developer](https://developer.tomtom.com/) API key, needed for routing and geocoding
+
+### Setup
+
+```bash
+make setup            # backend virtual environment + frontend packages
+```
+
+Or step by step:
+
+```bash
+# Backend
+cd backend
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+cp .env.example .env  # then set TOMTOM_API_KEY (and a real DJANGO_SECRET_KEY)
+
+# Frontend
+cd ../frontend
+npm ci
+```
+
+### Run
+
+In two terminals:
+
+```bash
+make dev-backend      # Django API on http://127.0.0.1:8000
+make dev-frontend     # app on http://127.0.0.1:5173 (proxies /api to the backend)
+```
+
+### Checks
+
+```bash
+make check            # everything below, for both apps
+```
+
+| | Backend (`backend/`) | Frontend (`frontend/`) |
+|---|---|---|
+| Lint | `.venv/bin/ruff check .` | `npm run lint` |
+| Format | `.venv/bin/ruff format --check .` | `npm run format:check` |
+| Types | `.venv/bin/mypy .` | `npm run typecheck` |
+| Tests | `.venv/bin/python -m pytest` | `npm test` |
+| Build | n/a | `npm run build` |
 
 ## Data attribution
 
