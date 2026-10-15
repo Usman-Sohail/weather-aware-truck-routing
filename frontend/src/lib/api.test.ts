@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   ApiError,
@@ -16,6 +16,22 @@ function jsonResponse(body: unknown, status = 200): Response {
     headers: { 'Content-Type': 'application/json' },
   });
 }
+
+/** A fetch that never answers, and fails the way fetch does once its signal aborts. */
+function hangingFetch() {
+  return vi.fn(
+    (_url: string, init: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init.signal?.addEventListener('abort', () => {
+          reject(new DOMException('The operation was aborted.', 'AbortError'));
+        });
+      }),
+  );
+}
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe('requestJson', () => {
   it('returns the parsed body and sends JSON when a body is given', async () => {
@@ -95,6 +111,46 @@ describe('requestJson', () => {
     const error = await requestJson('/api/health').catch((caught: unknown) => caught);
 
     expect(isAbortError(error)).toBe(true);
+  });
+
+  it('gives up on a server that never answers, after longer than its own provider retries', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', hangingFetch());
+    let outcome: unknown = 'pending';
+
+    void requestJson('/api/routes').catch((caught: unknown) => (outcome = caught));
+    await vi.advanceTimersByTimeAsync(44_999);
+    expect(outcome).toBe('pending');
+    await vi.advanceTimersByTimeAsync(1);
+
+    expect(outcome).toMatchObject({
+      code: 'TIMEOUT',
+      message: 'The server took too long to answer. Please try again.',
+    });
+  });
+
+  it('gives up on a response whose body never finishes', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(new ReadableStream())));
+
+    const error = requestJson('/api/routes').catch((caught: unknown) => caught);
+    await vi.advanceTimersByTimeAsync(45_000);
+
+    expect(await error).toMatchObject({ code: 'TIMEOUT' });
+  });
+
+  it('keeps a cancelled request a cancellation, never a timeout', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', hangingFetch());
+    const controller = new AbortController();
+
+    const error = requestJson('/api/routes', { signal: controller.signal }).catch(
+      (caught: unknown) => caught,
+    );
+    controller.abort();
+    await vi.advanceTimersByTimeAsync(45_000);
+
+    expect(isAbortError(await error)).toBe(true);
   });
 });
 
@@ -181,6 +237,19 @@ describe('fetchForecast', () => {
     await expect(fetchForecast(request)).rejects.toMatchObject({
       code: 'WEATHER_UNAVAILABLE',
       status: 0,
+    });
+  });
+
+  it('gives up on a weather service that never answers', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', hangingFetch());
+
+    const error = fetchForecast(request).catch((caught: unknown) => caught);
+    await vi.advanceTimersByTimeAsync(30_000);
+
+    expect(await error).toMatchObject({
+      code: 'WEATHER_TIMEOUT',
+      message: 'The weather service took too long to answer. Please try again.',
     });
   });
 });
