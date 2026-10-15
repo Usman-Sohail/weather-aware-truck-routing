@@ -88,3 +88,14 @@
   color: var(--color-ink-muted);
   text-align: center;
 }
+
+.show {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-shield-blue);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}

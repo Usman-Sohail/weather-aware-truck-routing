@@ -165,6 +165,29 @@ describe('CheckpointLayer', () => {
     expect(screen.queryByRole('heading', { name: 'Route B, mile 25' })).not.toBeInTheDocument();
   });
 
+  it('opens a checkpoint asked for from the table, moving the map to it', () => {
+    const map = new FakeMap(ROUTE_LAYER_IDS);
+    const { update } = renderLayer(map);
+
+    update({ request: { checkpointId: 'B-1', returnFocus: null } });
+
+    expect(screen.getByRole('heading', { name: 'Route B, mile 25' })).toBeVisible();
+    expect(map.easeTo).toHaveBeenCalledWith(expect.objectContaining({ center: [-100, 40] }));
+  });
+
+  it('gives focus back to the table when that popup closes', () => {
+    const map = new FakeMap(ROUTE_LAYER_IDS);
+    const trigger = document.createElement('button');
+    document.body.append(trigger);
+    const { update } = renderLayer(map);
+    update({ request: { checkpointId: 'B-1', returnFocus: trigger } });
+
+    act(() => latestPopup()?.close());
+
+    expect(trigger).toHaveFocus();
+    trigger.remove();
+  });
+
   it('takes its layers and listeners off the map when it goes', () => {
     const map = new FakeMap(ROUTE_LAYER_IDS);
     const { unmount } = renderLayer(map);

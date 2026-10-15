@@ -25,6 +25,8 @@ export class FakeMap {
     }
   });
   readonly setPadding = vi.fn();
+  readonly easeTo = vi.fn();
+  readonly container = document.createElement('div');
   private subscriptions: { type: string; layerId: string; listener: Listener }[] = [];
 
   constructor(layerIds: readonly string[] = []) {
@@ -67,6 +69,14 @@ export class FakeMap {
 
   getCanvas() {
     return this.canvas;
+  }
+
+  getContainer() {
+    return this.container;
+  }
+
+  getZoom() {
+    return 5;
   }
 
   on(type: string, layerId: string, listener: Listener) {

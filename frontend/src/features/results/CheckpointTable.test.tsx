@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { readable } from '../../test/text';
 import { CheckpointTable } from './CheckpointTable';
@@ -72,5 +72,16 @@ describe('CheckpointTable', () => {
 
     expect(screen.getByRole('columnheader', { name: 'Arrives (MDT)' })).toBeVisible();
     expect(rows().map(([, arrives]) => arrives)).toEqual(['Sun, 12:30 AM', 'Sun, 2:30 AM MST']);
+  });
+
+  it('offers each checkpoint on the map', async () => {
+    const onShowOnMap = vi.fn();
+    const user = userEvent.setup();
+    render(<CheckpointTable route={ROUTE} timeZone="America/Denver" onShowOnMap={onShowOnMap} />);
+
+    const button = screen.getByRole('button', { name: 'Show mile 25 on the map' });
+    await user.click(button);
+
+    expect(onShowOnMap).toHaveBeenCalledWith('A-1', button);
   });
 });
