@@ -1,7 +1,7 @@
 .shell {
   display: grid;
   grid-template-rows: auto 1fr;
-  min-height: 100dvh;
+  height: 100dvh;
 }
 
 .header {
@@ -22,15 +22,25 @@
 
 .main {
   display: grid;
-  grid-template-columns: minmax(20rem, 26rem) 1fr;
+  grid-template-columns: minmax(20rem, var(--panel-width)) 1fr;
   min-height: 0;
 }
 
 .panel {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
   padding: var(--space-5);
   border-right: 1px solid var(--color-rule);
   background: var(--color-surface);
   overflow-y: auto;
+}
+
+.panelHeading {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 750;
+  line-height: 1.2;
 }
 
 .map {
@@ -50,7 +60,13 @@
     grid-template-rows: auto minmax(24rem, 1fr);
   }
 
+  .shell {
+    height: auto;
+    min-height: 100dvh;
+  }
+
   .panel {
+    overflow-y: visible;
     border-right: none;
     border-bottom: 1px solid var(--color-rule);
   }

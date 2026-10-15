@@ -41,6 +41,7 @@
 
   color: var(--color-ink);
   background: var(--color-paper);
+  accent-color: var(--color-shield-blue);
   font-family: var(--font-sans);
   font-size: 100%;
   line-height: 1.5;
