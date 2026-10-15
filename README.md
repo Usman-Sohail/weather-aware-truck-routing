@@ -7,6 +7,63 @@ A React + Django web app that helps a truck driver choose the safest of several 
 | Live application  | https://weather-aware-truck-routing-nine.vercel.app |
 | Walkthrough video | _TODO: added once recorded_                         |
 
+## Local development
+
+### Prerequisites
+
+- Python 3.12
+- Node.js 22.12 or newer
+- A free [TomTom developer](https://developer.tomtom.com/) API key for routing and geocoding
+
+### Setup
+
+```bash
+make setup            # backend virtual environment + frontend packages
+```
+
+Or step by step:
+
+```bash
+# Backend
+cd backend
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev]"
+cp .env.example .env  # then set TOMTOM_API_KEY (and a real DJANGO_SECRET_KEY)
+
+# Frontend
+cd ../frontend
+npm ci
+```
+
+### Run
+
+In two terminals:
+
+```bash
+make dev-backend      # Django API on http://127.0.0.1:8000
+make dev-frontend     # app on http://127.0.0.1:5173 (proxies /api to the backend)
+```
+
+### Checks
+
+```bash
+make check            # lint, format, types, tests and build, for both apps
+make e2e              # browser journeys against mocked services
+```
+
+|                  | Backend (`backend/`)              | Frontend (`frontend/`) |
+| ---------------- | --------------------------------- | ---------------------- |
+| Lint             | `.venv/bin/ruff check .`          | `npm run lint`         |
+| Format           | `.venv/bin/ruff format --check .` | `npm run format:check` |
+| Types            | `.venv/bin/mypy .`                | `npm run typecheck`    |
+| Tests            | `.venv/bin/python -m pytest`      | `npm test`             |
+| Browser journeys | n/a                               | `npm run test:e2e`     |
+| Build            | n/a                               | `npm run build`        |
+
+### What the tests cover
+
+The backend has 365 tests at 100% branch coverage: every threshold below, at and above its edge, the load rules across every wind band, the ranking order and its tie-breaks, daylight-saving departures, and each provider failure path. The frontend has 298 unit and component tests, plus Playwright journeys that answer every request from generated fixtures, so the browser tests never use a provider's quota.
+
 ## What it does
 
 1. The driver enters an origin, a destination, a departure day and time, a cargo weight in pounds, and how often to check the weather (every 10, 25 or 50 miles).
@@ -113,63 +170,6 @@ Colour on the map means risk and nothing else: routes are told apart by line pat
 - **Freezing rain, ice and visibility are not assessed.** The brief's rules cover wind, rain and snow, and the app does not invent rules beyond them.
 - **Rate limiting is best effort.** It counts requests per server instance in memory, which on serverless hosting means several instances count separately.
 - **Hourly forecasts and a 0.05° sampling lattice** mean two nearby checkpoints can share a forecast point, and a corridor cell can differ slightly from a checkpoint inside it.
-
-## Local development
-
-### Prerequisites
-
-- Python 3.12
-- Node.js 22.12 or newer
-- A free [TomTom developer](https://developer.tomtom.com/) API key for routing and geocoding
-
-### Setup
-
-```bash
-make setup            # backend virtual environment + frontend packages
-```
-
-Or step by step:
-
-```bash
-# Backend
-cd backend
-python3.12 -m venv .venv
-.venv/bin/python -m pip install -e ".[dev]"
-cp .env.example .env  # then set TOMTOM_API_KEY (and a real DJANGO_SECRET_KEY)
-
-# Frontend
-cd ../frontend
-npm ci
-```
-
-### Run
-
-In two terminals:
-
-```bash
-make dev-backend      # Django API on http://127.0.0.1:8000
-make dev-frontend     # app on http://127.0.0.1:5173 (proxies /api to the backend)
-```
-
-### Checks
-
-```bash
-make check            # lint, format, types, tests and build, for both apps
-make e2e              # browser journeys against mocked services
-```
-
-|                  | Backend (`backend/`)              | Frontend (`frontend/`) |
-| ---------------- | --------------------------------- | ---------------------- |
-| Lint             | `.venv/bin/ruff check .`          | `npm run lint`         |
-| Format           | `.venv/bin/ruff format --check .` | `npm run format:check` |
-| Types            | `.venv/bin/mypy .`                | `npm run typecheck`    |
-| Tests            | `.venv/bin/python -m pytest`      | `npm test`             |
-| Browser journeys | n/a                               | `npm run test:e2e`     |
-| Build            | n/a                               | `npm run build`        |
-
-### What the tests cover
-
-The backend has 365 tests at 100% branch coverage: every threshold below, at and above its edge, the load rules across every wind band, the ranking order and its tie-breaks, daylight-saving departures, and each provider failure path. The frontend has 298 unit and component tests, plus Playwright journeys that answer every request from generated fixtures, so the browser tests never use a provider's quota.
 
 ## Deployment
 
