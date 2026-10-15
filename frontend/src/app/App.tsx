@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import type { CheckpointRequest } from '../features/map/CheckpointLayer';
@@ -40,13 +40,27 @@ export function App() {
 
   function planTrip(trip: Trip) {
     setEditing(false);
+    // Results are a place the driver navigated to, so Back returns to the form.
+    window.history.pushState({ results: true }, '');
     void submit(trip);
   }
 
   function editTrip() {
+    openForm();
+    if (window.history.state?.results) window.history.back();
+  }
+
+  function openForm() {
     flushSync(() => setEditing(true));
     formArea.current?.querySelector('input')?.focus();
   }
+
+  const backToForm = useEffectEvent(() => openForm());
+
+  useEffect(() => {
+    window.addEventListener('popstate', backToForm);
+    return () => window.removeEventListener('popstate', backToForm);
+  }, []);
 
   return (
     <div className={styles.shell}>

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -293,5 +293,19 @@ describe('App', () => {
     expect(alert).toHaveFocus();
     expect(screen.getByLabelText('Starting place')).toBeVisible();
     expect(screen.queryByRole('group', { name: 'Trip summary' })).not.toBeInTheDocument();
+  });
+
+  it('returns to the form when the driver goes back', async () => {
+    mockServices();
+    const user = userEvent.setup();
+    render(<App />);
+    await planDenverToChicago(user);
+    expect(await screen.findByRole('heading', { name: 'Take Route B' })).toBeVisible();
+    expect(screen.getByLabelText('Starting place')).not.toBeVisible();
+
+    window.history.back();
+
+    await waitFor(() => expect(screen.getByLabelText('Starting place')).toBeVisible());
+    expect(screen.getByLabelText('Cargo weight')).toHaveValue('42000');
   });
 });

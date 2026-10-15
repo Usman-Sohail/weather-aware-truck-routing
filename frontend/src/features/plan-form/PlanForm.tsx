@@ -3,6 +3,7 @@ import { type FormEvent, useState } from 'react';
 import type { ApiError } from '../../lib/api';
 import { nextQuarterHour, wallClockInZone, zoneAbbreviation } from '../../lib/format';
 import type { IntervalMi, PlaceCandidate } from '../../types/api';
+import { DepartureField } from './DepartureField';
 import { PlaceField, type PlaceSearch } from './PlaceField';
 import styles from './PlanForm.module.css';
 import {
@@ -24,8 +25,10 @@ const FOCUS_TARGET: Record<TripField, string> = {
   load: 'load',
   interval: 'interval-25',
 };
-const DEPARTURE_GRACE_MS = 15 * 60 * 1000;
-const MAX_DEPARTURE_AHEAD_MS = 7 * 24 * 60 * 60 * 1000;
+// Today plus the seven days the API accepts.
+const DEPARTURE_DAYS = 8;
+// The API accepts a departure from 15 minutes ago.
+const GRACE_MS = 15 * 60 * 1000;
 
 interface PlanFormProps {
   onSubmit: (trip: Trip) => void;
@@ -90,8 +93,8 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
 
   const zone = values.origin?.time_zone ?? browserTimeZone();
   const departureHint = values.origin
-    ? `Local time in ${values.origin.name.split(',')[0]} (${zoneAbbreviation(zone, now())})`
-    : 'Local time at the starting place';
+    ? `Local time in ${values.origin.name.split(',')[0]} (${zoneAbbreviation(zone, now())}). Plan up to 7 days ahead.`
+    : 'Local time at the starting place. Plan up to 7 days ahead.';
   const departureError = errorFor('departure');
   const loadError = errorFor('load');
   const intervalError = errorFor('interval');
@@ -124,34 +127,30 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
         search={search}
       />
 
-      <div className={styles.field}>
-        <label htmlFor="departure" className={styles.label}>
-          Departure
-        </label>
+      <fieldset className={styles.field}>
+        <legend className={styles.label}>Departure</legend>
         <p id="departure-hint" className={styles.hint}>
           {departureHint}
         </p>
-        <input
-          id="departure"
-          type="datetime-local"
-          className={styles.input}
+        <DepartureField
           value={values.departureLocal}
-          min={wallClockInZone(new Date(now().getTime() - DEPARTURE_GRACE_MS), zone)}
-          max={wallClockInZone(new Date(now().getTime() + MAX_DEPARTURE_AHEAD_MS), zone)}
-          onChange={(event) => {
+          days={DEPARTURE_DAYS}
+          today={wallClockInZone(now(), zone).slice(0, 10)}
+          earliestToday={wallClockInZone(new Date(now().getTime() - GRACE_MS), zone).slice(11, 16)}
+          onChange={(departureLocal) => {
             markEdited('departure');
             setDepartureEdited(true);
-            setValues((previous) => ({ ...previous, departureLocal: event.target.value }));
+            setValues((previous) => ({ ...previous, departureLocal }));
           }}
-          aria-invalid={departureError ? true : undefined}
-          aria-describedby={departureError ? 'departure-hint departure-error' : 'departure-hint'}
+          invalid={departureError !== undefined}
+          describedBy={departureError ? 'departure-hint departure-error' : 'departure-hint'}
         />
         {departureError && (
           <p id="departure-error" className={styles.error}>
             {departureError}
           </p>
         )}
-      </div>
+      </fieldset>
 
       <div className={styles.field}>
         <label htmlFor="load" className={styles.label}>
