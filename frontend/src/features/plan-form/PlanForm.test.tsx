@@ -117,4 +117,13 @@ describe('PlanForm', () => {
       screen.queryByText('Ensure this value is less than or equal to 80000.'),
     ).not.toBeInTheDocument();
   });
+
+  it('takes only digits and thousands separators as the cargo weight', async () => {
+    const user = userEvent.setup();
+    renderForm();
+
+    await user.type(screen.getByLabelText('Cargo weight'), 'abc42,0x00 lb');
+
+    expect(screen.getByLabelText('Cargo weight')).toHaveValue('42,000');
+  });
 });

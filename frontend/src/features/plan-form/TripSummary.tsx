@@ -1,6 +1,12 @@
 import type { Ref } from 'react';
 
-import { formatLoad, formatMiles, formatWallClock, zoneAbbreviation } from '../../lib/format';
+import {
+  formatLoad,
+  formatMiles,
+  formatWallClock,
+  shortPlaceName,
+  zoneAbbreviation,
+} from '../../lib/format';
 import styles from './TripSummary.module.css';
 import type { Trip } from './validation';
 
@@ -18,8 +24,8 @@ export function TripSummary({ trip, onEdit, now = () => new Date(), ref }: TripS
   return (
     <div ref={ref} className={styles.summary} role="group" aria-label="Trip summary" tabIndex={-1}>
       <p className={styles.places}>
-        <strong>{shortName(trip.origin.name)}</strong> to{' '}
-        <strong>{shortName(trip.destination.name)}</strong>
+        <strong>{shortPlaceName(trip.origin.name)}</strong> to{' '}
+        <strong>{shortPlaceName(trip.destination.name)}</strong>
       </p>
       <p className={styles.details}>
         Departs {formatWallClock(trip.departureLocal)} {zone}. {formatLoad(trip.loadLb)} of cargo,
@@ -30,9 +36,4 @@ export function TripSummary({ trip, onEdit, now = () => new Date(), ref }: TripS
       </button>
     </div>
   );
-}
-
-/** "Denver, CO, United States" becomes "Denver, CO". */
-function shortName(name: string): string {
-  return name.split(',').slice(0, 2).join(',').trim();
 }
