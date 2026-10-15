@@ -1,0 +1,83 @@
+/* With MapLibre's 10px side padding, the popup comes to about 260px. */
+.popup {
+  display: grid;
+  gap: var(--space-3);
+  inline-size: 15rem;
+  max-inline-size: 100%;
+  /* The map's stylesheet sets its own font on everything inside the map. */
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-1);
+  /* Keeps the heading clear of MapLibre's close button. */
+  padding-right: var(--space-5);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.arrival {
+  margin: 0;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.verdict {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+.reasons {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hazards {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-rule);
+}
+
+.hazards > div {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+}
+
+.hazards dt {
+  color: var(--color-ink-muted);
+}
+
+.hazards dd {
+  margin: 0;
+}
+
+.readings {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+}
+
+.missing {
+  color: var(--color-ink-muted);
+}
