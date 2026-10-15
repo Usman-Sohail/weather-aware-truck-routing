@@ -50,7 +50,10 @@ export function DepartureField({
               aria-label={day.spoken}
             />
             <span className={styles.weekday}>{index === 0 ? 'Today' : day.weekday}</span>
-            <span className={styles.date}>{day.dayOfMonth}</span>
+            <span className={styles.date}>
+              {day.month && <span className={styles.month}>{day.month} </span>}
+              {day.dayOfMonth}
+            </span>
           </label>
         ))}
       </div>
@@ -74,10 +77,13 @@ interface DayOption {
   date: string;
   weekday: string;
   dayOfMonth: string;
+  /** Shown on the first day and whenever the month changes, so "1" is never bare. */
+  month: string | null;
   spoken: string;
 }
 
 const WEEKDAY = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
+const MONTH = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
 const SPOKEN = new Intl.DateTimeFormat('en-US', {
   weekday: 'long',
   month: 'long',
@@ -97,6 +103,7 @@ function dayOptions(today: string, days: number): DayOption[] {
       date: moment.toISOString().slice(0, 10),
       weekday: WEEKDAY.format(moment),
       dayOfMonth: String(moment.getUTCDate()),
+      month: offset === 0 || moment.getUTCDate() === 1 ? MONTH.format(moment) : null,
       spoken: SPOKEN.format(moment),
     };
   });
