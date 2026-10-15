@@ -1,7 +1,7 @@
 import { useId } from 'react';
 
 import { RiskBadge } from '../../components/RiskBadge';
-import { formatClock, formatReading } from '../../lib/format';
+import { formatClock, formatForecastHour, formatReading } from '../../lib/format';
 import type { RiskKey } from '../../types/api';
 import type { CheckpointView } from '../results/model';
 import styles from './CheckpointPopup.module.css';
@@ -19,8 +19,7 @@ interface Reading {
 }
 
 const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
-const NBSP = ' ';
-const HOUR_MS = 3_600_000;
+const NBSP = '\u00a0';
 
 export function CheckpointPopup({ checkpoint, routeId, timeZone }: CheckpointPopupProps) {
   const headingId = useId();
@@ -92,28 +91,12 @@ export function CheckpointPopup({ checkpoint, routeId, timeZone }: CheckpointPop
   );
 }
 
-// A forecast record is labelled with the end of the hour it covers.
 function forecastText(forecastHourUtc: string, leadHours: number, timeZone: string): string {
-  const end = new Date(forecastHourUtc);
-  const start = new Date(end.getTime() - HOUR_MS);
   const ahead =
     leadHours === 0
       ? 'less than an hour ahead'
       : `${leadHours}${NBSP}${leadHours === 1 ? 'hour' : 'hours'} ahead`;
-  return `Forecast for ${formatHour(start, timeZone)} to ${formatHour(end, timeZone)}, ${ahead}.`;
-}
-
-// Minutes appear only in zones offset by part of an hour, such as India's.
-function formatHour(date: Date, timeZone: string): string {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZone,
-  }).formatToParts(date);
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((candidate) => candidate.type === type)?.value ?? '';
-  const minute = part('minute');
-  return `${part('hour')}${minute === '00' ? '' : `:${minute}`}${NBSP}${part('dayPeriod')}`;
+  return `Forecast for ${formatForecastHour(forecastHourUtc, timeZone)}, ${ahead}.`;
 }
 
 function incompleteText(level: RiskKey): string {

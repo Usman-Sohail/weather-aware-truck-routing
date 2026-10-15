@@ -1,4 +1,4 @@
-import { formatClock } from '../../lib/format';
+import { formatClock, formatForecastHour } from '../../lib/format';
 
 export const SLIDER_HOURS = 48;
 
@@ -26,16 +26,15 @@ export interface HourInfo {
  */
 export function hourInfo(departureUtc: string, timeZone: string, k: number): HourInfo {
   const instant = Date.parse(departureUtc) + k * HOUR_MS;
-  const hourStart = Math.floor(instant / HOUR_MS) * HOUR_MS;
-  const hourEnd = hourStart + HOUR_MS;
+  const forecastHourUtc = isoUtc(Math.floor(instant / HOUR_MS) * HOUR_MS + HOUR_MS);
   const instantUtc = isoUtc(instant);
-  const forecastHours = hourSpan(hourStart, hourEnd, timeZone);
+  const forecastHours = formatForecastHour(forecastHourUtc, timeZone);
   return {
     k,
     instantUtc,
     offsetLabel: k === 0 ? 'Departure' : `Departure +${NBSP}${k}${NBSP}h`,
     clock: formatClock(instantUtc, timeZone),
-    forecastHourUtc: isoUtc(hourEnd),
+    forecastHourUtc,
     forecastLabel: `Forecast for ${forecastHours}`,
     spokenLabel: `${spokenOffset(k)}, ${spokenClock(instant, timeZone)}, forecast for ${forecastHours}`,
   };
@@ -89,18 +88,4 @@ function wallClock(ms: number, timeZone: string): WallClock {
 function spokenClock(ms: number, timeZone: string): string {
   const { weekday, hour, minute, dayPeriod, zone } = wallClock(ms, timeZone);
   return `${weekday} ${hour}:${minute} ${dayPeriod} ${zone}`;
-}
-
-/** "2 AM", with minutes only in zones whose offset is not whole hours: "11:30 AM". */
-function hourText({ hour, minute, dayPeriod }: WallClock): string {
-  return minute === '00' ? `${hour} ${dayPeriod}` : `${hour}:${minute} ${dayPeriod}`;
-}
-
-/** "2 AM to 3 AM"; across a clock change both zones are named, as "1 AM to 1 AM" would mislead. */
-function hourSpan(startMs: number, endMs: number, timeZone: string): string {
-  const start = wallClock(startMs, timeZone);
-  const end = wallClock(endMs, timeZone);
-  return start.zone === end.zone
-    ? `${hourText(start)} to ${hourText(end)}`
-    : `${hourText(start)} ${start.zone} to ${hourText(end)} ${end.zone}`;
 }

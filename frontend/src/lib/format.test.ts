@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   formatClock,
   formatDuration,
+  formatForecastHour,
   formatLoad,
   formatMiles,
   formatReading,
@@ -30,6 +31,26 @@ describe('formatDuration', () => {
     expect(formatDuration(60)).toBe(together('1 h 00 min'));
     expect(formatDuration(45)).toBe(together('45 min'));
     expect(formatDuration(0)).toBe(together('0 min'));
+  });
+});
+
+describe('formatForecastHour', () => {
+  it('names the hour a forecast record covers, which ends at its label', () => {
+    expect(formatForecastHour('2026-10-16T09:00:00Z', 'America/Denver')).toBe(
+      together('2 AM') + ' to ' + together('3 AM'),
+    );
+  });
+
+  it('keeps the minutes in zones offset by part of an hour', () => {
+    expect(formatForecastHour('2026-10-16T09:00:00Z', 'Asia/Kolkata')).toBe(
+      together('1:30 PM') + ' to ' + together('2:30 PM'),
+    );
+  });
+
+  it('names both zones across a clock change, where the hours alone would repeat', () => {
+    expect(formatForecastHour('2026-11-01T08:00:00Z', 'America/Denver')).toBe(
+      together('1 AM') + ' MDT to ' + together('1 AM') + ' MST',
+    );
   });
 });
 

@@ -8,7 +8,13 @@ const DEPARTURE = '2026-10-15T02:15:00Z';
 
 describe('hourInfo', () => {
   it('describes the departure itself at hour 0', () => {
-    expect(hourInfo(DEPARTURE, 'America/Denver', 0)).toEqual({
+    const info = hourInfo(DEPARTURE, 'America/Denver', 0);
+
+    expect({
+      ...info,
+      forecastLabel: readable(info.forecastLabel),
+      spokenLabel: readable(info.spokenLabel),
+    }).toEqual({
       k: 0,
       instantUtc: '2026-10-15T02:15:00Z',
       offsetLabel: 'Departure',
@@ -25,8 +31,8 @@ describe('hourInfo', () => {
     expect(info.instantUtc).toBe('2026-10-15T08:15:00Z');
     expect(info.offsetLabel).toBe('Departure +\u00a06\u00a0h');
     expect(info.clock).toBe('Thu, 2:15 AM MDT');
-    expect(info.forecastLabel).toBe('Forecast for 2 AM to 3 AM');
-    expect(info.spokenLabel).toBe(
+    expect(readable(info.forecastLabel)).toBe('Forecast for 2 AM to 3 AM');
+    expect(readable(info.spokenLabel)).toBe(
       'Departure plus 6 hours, Thursday 2:15 AM MDT, forecast for 2 AM to 3 AM',
     );
   });
@@ -35,7 +41,7 @@ describe('hourInfo', () => {
     const info = hourInfo(DEPARTURE, 'America/Denver', 1);
 
     expect(readable(info.offsetLabel)).toBe('Departure + 1 h');
-    expect(info.spokenLabel).toMatch(/^Departure plus 1 hour, /);
+    expect(readable(info.spokenLabel)).toMatch(/^Departure plus 1 hour, /);
   });
 
   it('reaches two days after departure at the end of the slider', () => {
@@ -54,7 +60,7 @@ describe('hourInfo', () => {
     for (const info of [onTheHour, twentyPast]) {
       // Records are labelled at the end of the hour they cover, as the API labels them.
       expect(info.forecastHourUtc).toBe('2026-10-15T15:00:00Z');
-      expect(info.forecastLabel).toBe('Forecast for 2 PM to 3 PM');
+      expect(readable(info.forecastLabel)).toBe('Forecast for 2 PM to 3 PM');
     }
   });
 
@@ -63,8 +69,8 @@ describe('hourInfo', () => {
     const info = hourInfo('2026-10-15T14:20:00Z', 'America/St_Johns', 0);
 
     expect(info.clock).toMatch(/^Thu, 11:50 AM /);
-    expect(info.forecastLabel).toBe('Forecast for 11:30 AM to 12:30 PM');
-    expect(info.spokenLabel).toMatch(/, forecast for 11:30 AM to 12:30 PM$/);
+    expect(readable(info.forecastLabel)).toBe('Forecast for 11:30 AM to 12:30 PM');
+    expect(readable(info.spokenLabel)).toMatch(/, forecast for 11:30 AM to 12:30 PM$/);
   });
 
   it('follows the clock change on a trip that crosses the end of daylight saving time', () => {
@@ -74,8 +80,8 @@ describe('hourInfo', () => {
     expect(hourInfo(departure, 'America/Denver', 0).clock).toBe('Sat, 10:15 PM MDT');
     const after = hourInfo(departure, 'America/Denver', 6);
     expect(after.clock).toBe('Sun, 3:15 AM MST');
-    expect(after.forecastLabel).toBe('Forecast for 3 AM to 4 AM');
-    expect(after.spokenLabel).toBe(
+    expect(readable(after.forecastLabel)).toBe('Forecast for 3 AM to 4 AM');
+    expect(readable(after.spokenLabel)).toBe(
       'Departure plus 6 hours, Sunday 3:15 AM MST, forecast for 3 AM to 4 AM',
     );
   });
@@ -85,6 +91,6 @@ describe('hourInfo', () => {
     const info = hourInfo('2026-11-01T04:15:00Z', 'America/Denver', 3);
 
     expect(info.clock).toBe('Sun, 1:15 AM MDT');
-    expect(info.forecastLabel).toBe('Forecast for 1 AM MDT to 1 AM MST');
+    expect(readable(info.forecastLabel)).toBe('Forecast for 1 AM MDT to 1 AM MST');
   });
 });

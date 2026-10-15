@@ -59,6 +59,41 @@ export function formatClock(iso: string, timeZone: string, withZone = true): str
   return formatWeekdayTime(new Date(iso), timeZone, withZone);
 }
 
+const HOUR_MS = 60 * 60 * 1000;
+const hourFormats = new Map<string, Intl.DateTimeFormat>();
+
+function hourOfDay(ms: number, timeZone: string): { time: string; zone: string } {
+  let format = hourFormats.get(timeZone);
+  if (!format) {
+    format = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone,
+      timeZoneName: 'short',
+    });
+    hourFormats.set(timeZone, format);
+  }
+  const parts = format.formatToParts(ms);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((candidate) => candidate.type === type)?.value ?? '';
+  const minute = part('minute');
+  return {
+    time: `${part('hour')}${minute === '00' ? '' : `:${minute}`}${NBSP}${part('dayPeriod')}`,
+    zone: part('timeZoneName'),
+  };
+}
+
+// A forecast record is labelled with the end of the hour it covers. Across a clock change
+// the hours alone can repeat ("1 AM to 1 AM"), so both zones are named.
+export function formatForecastHour(forecastHourUtc: string, timeZone: string): string {
+  const endMs = Date.parse(forecastHourUtc);
+  const start = hourOfDay(endMs - HOUR_MS, timeZone);
+  const end = hourOfDay(endMs, timeZone);
+  return start.zone === end.zone
+    ? `${start.time} to ${end.time}`
+    : `${start.time} ${start.zone} to ${end.time} ${end.zone}`;
+}
+
 /** The wall-clock time in ``timeZone`` as "YYYY-MM-DDTHH:MM", the departure input's format. */
 export function wallClockInZone(date: Date, timeZone: string): string {
   const parts = new Intl.DateTimeFormat('en-US', {

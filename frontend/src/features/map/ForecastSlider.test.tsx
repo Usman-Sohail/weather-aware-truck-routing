@@ -59,8 +59,7 @@ describe('ForecastSlider', () => {
     expect(slider).toHaveAttribute('min', '0');
     expect(slider).toHaveAttribute('max', '48');
     expect(slider).toHaveAttribute('step', '1');
-    expect(slider).toHaveAttribute(
-      'aria-valuetext',
+    expect(readable(slider.getAttribute('aria-valuetext'))).toBe(
       'Departure plus 6 hours, Thursday 2:15 AM MDT, forecast for 2 AM to 3 AM',
     );
     expect(screen.getByText('Departure + 6 h')).toBeVisible();
@@ -96,8 +95,7 @@ describe('ForecastSlider', () => {
 
     expect(reported()).toEqual([7, 8, 7, 6, 12, 6, 0]);
     expect(slider).toHaveValue('0');
-    expect(slider).toHaveAttribute(
-      'aria-valuetext',
+    expect(readable(slider.getAttribute('aria-valuetext'))).toBe(
       'Departure, Wednesday 8:15 PM MDT, forecast for 8 PM to 9 PM',
     );
   });
