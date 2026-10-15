@@ -8,6 +8,7 @@ import {
   formatReading,
   nextQuarterHour,
   wallClockInZone,
+  zoneAbbreviation,
 } from './format';
 
 describe('formatMiles', () => {
@@ -71,5 +72,13 @@ describe('nextQuarterHour', () => {
     expect(nextQuarterHour(new Date('2026-10-16T23:50:00Z')).toISOString()).toBe(
       '2026-10-17T00:00:00.000Z',
     );
+  });
+});
+
+describe('zoneAbbreviation', () => {
+  it('names the zone as it applies on the given date', () => {
+    expect(zoneAbbreviation('America/Denver', new Date('2026-10-16T14:00:00Z'))).toBe('MDT');
+    expect(zoneAbbreviation('America/Denver', new Date('2026-12-16T14:00:00Z'))).toBe('MST');
+    expect(zoneAbbreviation('America/Phoenix', new Date('2026-07-16T14:00:00Z'))).toBe('MST');
   });
 });

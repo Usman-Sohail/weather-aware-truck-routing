@@ -64,3 +64,11 @@ const QUARTER_HOUR_MS = 15 * 60 * 1000;
 export function nextQuarterHour(date: Date): Date {
   return new Date(Math.floor(date.getTime() / QUARTER_HOUR_MS) * QUARTER_HOUR_MS + QUARTER_HOUR_MS);
 }
+
+/** The zone's short name at ``date``, e.g. "MDT" or "MST" for America/Denver. */
+export function zoneAbbreviation(timeZone: string, date: Date): string {
+  const part = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'short' })
+    .formatToParts(date)
+    .find((candidate) => candidate.type === 'timeZoneName');
+  return part?.value ?? timeZone;
+}
