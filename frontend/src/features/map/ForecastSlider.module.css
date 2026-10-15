@@ -1,0 +1,119 @@
+.slider {
+  --thumb-size: 1.75rem;
+  --track-height: 0.375rem;
+
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 var(--space-3);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.offset {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+.clock {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 750;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.forecast {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+/* Taller than the thumb so its shadow is never clipped; the radius rounds the focus ring. */
+.range {
+  display: block;
+  width: 100%;
+  height: calc(var(--thumb-size) + var(--space-2));
+  margin: var(--space-1) 0 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Each engine drops any rule naming the other's pseudo-elements, so both get their own. */
+.range::-webkit-slider-runnable-track {
+  height: var(--track-height);
+  border-radius: 999px;
+  background: var(--color-rule-strong);
+}
+
+.range::-moz-range-track {
+  height: var(--track-height);
+  border-radius: 999px;
+  background: var(--color-rule-strong);
+}
+
+/* WebKit hangs the thumb from the top of the track; the negative margin centres it. */
+.range::-webkit-slider-thumb {
+  box-sizing: border-box;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  margin-top: calc((var(--track-height) - var(--thumb-size)) / 2);
+  border: 3px solid var(--color-surface);
+  border-radius: 50%;
+  background: var(--color-shield-blue);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 40%);
+  appearance: none;
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  border: 3px solid var(--color-surface);
+  border-radius: 50%;
+  background: var(--color-shield-blue);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 40%);
+}
+
+/* Inset by half a thumb, where the thumb's centre stops at each end. */
+.scale {
+  position: relative;
+  height: 1.25rem;
+  margin: calc(-1 * var(--space-1)) calc(var(--thumb-size) / 2) 0;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  padding-top: var(--space-1);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.tick::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 3px;
+  border-left: 1px solid var(--color-rule-strong);
+  content: '';
+}
