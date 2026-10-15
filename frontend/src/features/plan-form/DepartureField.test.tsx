@@ -18,10 +18,19 @@ function renderField(today: string, value = `${today}T08:00`) {
   return screen.getAllByRole('radio').map((day) => day.closest('label')?.textContent ?? '');
 }
 
+function months(): string[] {
+  return screen
+    .getAllByRole('radiogroup')
+    .flatMap((group) => [...group.querySelectorAll('p')].map((name) => name.textContent ?? ''));
+}
+
 describe('DepartureField', () => {
-  it('names the month once, where the days begin', () => {
-    expect(renderField('2026-10-15')).toEqual([
-      'TodayOct 15',
+  it('gathers the days under the month they belong to', () => {
+    const days = renderField('2026-10-15');
+
+    expect(months()).toEqual(['October 2026']);
+    expect(days).toEqual([
+      'Today15',
       'Fri16',
       'Sat17',
       'Sun18',
@@ -32,17 +41,17 @@ describe('DepartureField', () => {
     ]);
   });
 
-  it('names the month again when the days cross into it', () => {
-    expect(renderField('2026-10-29')).toEqual([
-      'TodayOct 29',
-      'Fri30',
-      'Sat31',
-      'SunNov 1',
-      'Mon2',
-      'Tue3',
-      'Wed4',
-      'Thu5',
-    ]);
+  it('starts a new month where the days cross into it', () => {
+    const days = renderField('2026-10-29');
+
+    expect(months()).toEqual(['October 2026', 'November 2026']);
+    expect(days).toEqual(['Today29', 'Fri30', 'Sat31', 'Sun1', 'Mon2', 'Tue3', 'Wed4', 'Thu5']);
+  });
+
+  it('names the year, including when the days reach another one', () => {
+    renderField('2026-12-29');
+
+    expect(months()).toEqual(['December 2026', 'January 2027']);
   });
 
   it('spells the whole date for screen readers', () => {
