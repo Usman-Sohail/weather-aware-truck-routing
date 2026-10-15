@@ -44,9 +44,10 @@
   background: var(--color-shield-blue-wash);
 }
 
+/* The ring hugs the card's border: an offset ring around a bordered box reads as a gap. */
 .route:has(input:focus-visible) {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 0;
 }
 
 .head {
@@ -68,7 +69,57 @@
 }
 
 .track {
+  position: relative;
   display: block;
+}
+
+/* Sits above the strip with its pointer on the stretch it names. */
+.tooltip {
+  --pointer-x: 50%;
+
+  position: absolute;
+  bottom: calc(100% + var(--space-2));
+  z-index: 2;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: 0 4px 12px rgb(31 42 48 / 16%);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+/* Near the ends of the strip the card shifts inward and its pointer follows the stretch. */
+.tooltip[data-align='start'] {
+  --pointer-x: 0.75rem;
+
+  transform: translateX(-0.75rem);
+}
+
+.tooltip[data-align='end'] {
+  --pointer-x: calc(100% - 0.75rem);
+
+  transform: translateX(calc(-100% + 0.75rem));
+}
+
+.tooltip::after {
+  position: absolute;
+  top: 100%;
+  left: var(--pointer-x);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  background: var(--color-surface);
+  content: '';
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .ribbon {
