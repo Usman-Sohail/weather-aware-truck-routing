@@ -49,7 +49,7 @@ Or step by step:
 # Backend
 cd backend
 python3.12 -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python -m pip install -e ".[dev]"
 cp .env.example .env  # then set TOMTOM_API_KEY (and a real DJANGO_SECRET_KEY)
 
 # Frontend
