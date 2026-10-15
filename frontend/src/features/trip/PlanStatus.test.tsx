@@ -22,18 +22,16 @@ describe('PlanStatus', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('lists the steps and marks the current one', () => {
+  it('shows which step is in progress and which are done', () => {
     render(<PlanStatus state={{ ...IDLE, status: 'working', step: 'forecast' }} />);
 
-    const steps = screen.getAllByRole('listitem');
-    expect(steps.map((step) => step.textContent)).toEqual([
-      'Finding truck routes (done)',
-      'Getting the forecast along each route',
-      'Assessing weather risk',
-    ]);
-    expect(steps[0]).toHaveAttribute('data-state', 'done');
-    expect(steps[1]).toHaveAttribute('aria-current', 'step');
-    expect(steps[2]).toHaveAttribute('data-state', 'waiting');
+    const [routing, forecast, assessing] = screen.getAllByRole('listitem');
+    expect(routing).toHaveTextContent('Finding truck routes (done)');
+    expect(routing).toHaveAttribute('data-state', 'done');
+    expect(forecast).toHaveTextContent('Getting the forecast along each route (in progress)');
+    expect(forecast).toHaveAttribute('aria-current', 'step');
+    expect(assessing).toHaveTextContent('Assessing weather risk');
+    expect(assessing).toHaveAttribute('data-state', 'waiting');
   });
 
   it('says why a plan failed and what to try', () => {

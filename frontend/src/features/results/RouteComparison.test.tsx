@@ -60,7 +60,6 @@ describe('RouteComparison', () => {
       (ribbon) => ribbon.style.width,
     );
     expect(widths).toEqual(['100%', '80%', '50%']);
-    expect(screen.getByTitle('High, mile 100 to 500')).toBeInTheDocument();
     expect(screen.getByText('0 mi')).toBeInTheDocument();
     expect(screen.getByText('1,000')).toBeInTheDocument();
   });
@@ -92,5 +91,26 @@ describe('RouteComparison', () => {
     expect(screen.getByText('Least risky')).toBeVisible();
     expect(screen.queryByText('Recommended')).not.toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /^Route B: .*\. Least risky\./ })).toBeChecked();
+  });
+
+  it('names the stretch under the pointer in a tooltip', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <RouteComparison routes={ROUTES} recommendation={CLEAR} selectedId="B" onSelect={() => {}} />,
+    );
+    const stretches = [...container.querySelectorAll<HTMLElement>('[data-ribbon="A"] > *')];
+    expect(stretches).toHaveLength(3);
+    const high = stretches[1] as HTMLElement;
+
+    await user.hover(high);
+
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+    expect(tooltip).toHaveTextContent('High');
+    expect(tooltip).toHaveTextContent('Miles 100 to 500');
+    expect(high).not.toHaveAttribute('title');
+
+    await user.unhover(high);
+
+    expect(screen.queryByRole('tooltip', { hidden: true })).not.toBeInTheDocument();
   });
 });

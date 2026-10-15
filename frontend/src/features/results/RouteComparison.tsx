@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
 import { RiskBadge } from '../../components/RiskBadge';
 import { RouteShield } from '../../components/RouteShield';
@@ -6,7 +6,7 @@ import { formatDuration, formatMiles } from '../../lib/format';
 import { RISK_LEVELS, riskInfo, UNKNOWN_RISK } from '../../lib/risk';
 import type { Recommendation } from '../../types/api';
 import { mileTicks, notableMiles, riskRuns } from './model';
-import type { RouteView } from './model';
+import type { RiskRun, RouteView } from './model';
 import styles from './RouteComparison.module.css';
 
 interface RouteComparisonProps {
@@ -30,6 +30,7 @@ export function RouteComparison({
   onSelect,
 }: RouteComparisonProps) {
   const groupName = useId();
+  const [hovered, setHovered] = useState<{ routeId: string; run: RiskRun } | null>(null);
   const longest = Math.max(...routes.map((route) => route.lengthMi));
   const tag = recommendationTag(recommendation);
 
@@ -66,6 +67,7 @@ export function RouteComparison({
                   className={styles.ribbon}
                   data-ribbon={route.id}
                   style={{ width: `${(route.lengthMi / longest) * 100}%` }}
+                  onMouseLeave={() => setHovered(null)}
                 >
                   {riskRuns(route).map((run) => {
                     const level = riskInfo(run.level);
@@ -74,11 +76,14 @@ export function RouteComparison({
                         key={run.startMi}
                         className={styles.run}
                         style={{ flexGrow: run.endMi - run.startMi, backgroundColor: level.color }}
-                        title={`${level.label}, mile ${Math.round(run.startMi)} to ${Math.round(run.endMi)}`}
+                        onMouseEnter={() => setHovered({ routeId: route.id, run })}
                       />
                     );
                   })}
                 </span>
+                {hovered?.routeId === route.id && (
+                  <StretchTooltip run={hovered.run} longest={longest} />
+                )}
               </span>
               <span className={styles.summary}>{risk}</span>
             </label>
@@ -102,6 +107,25 @@ export function RouteComparison({
         ))}
       </ul>
     </section>
+  );
+}
+
+// Pointer-only: the summary line and the checkpoint table carry the same facts.
+function StretchTooltip({ run, longest }: { run: RiskRun; longest: number }) {
+  const middle = ((run.startMi + run.endMi) / 2 / longest) * 100;
+  const align = middle < 20 ? 'start' : middle > 80 ? 'end' : 'center';
+  return (
+    <span
+      role="tooltip"
+      className={styles.tooltip}
+      data-align={align}
+      style={{ left: `${middle}%` }}
+    >
+      <RiskBadge level={run.level} size="small" />
+      <span>
+        Miles {wholeNumber.format(run.startMi)} to {wholeNumber.format(run.endMi)}
+      </span>
+    </span>
   );
 }
 
