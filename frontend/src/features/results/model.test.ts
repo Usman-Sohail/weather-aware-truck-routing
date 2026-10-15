@@ -144,7 +144,7 @@ describe('notableMiles', () => {
 
   it('lists the miles above Low, worst first, then miles without a forecast', () => {
     const route = metrics(
-      { low: 900, moderate: 120, high: 0.4, severe: 0, no_travel: 0, unknown: 15 },
+      { low: 900, moderate: 120, high: 0, severe: 0, no_travel: 0, unknown: 15 },
       { high: '<1' },
     );
 
@@ -153,6 +153,15 @@ describe('notableMiles', () => {
       { level: 'moderate', display: '120' },
       { level: 'unknown', display: '15' },
     ]);
+  });
+
+  it('keeps a stretch the API rounds to no miles but displays as "<1"', () => {
+    const route = metrics(
+      { low: 500, moderate: 0, high: 0, severe: 0, no_travel: 0, unknown: 0 },
+      { no_travel: '<1' },
+    );
+
+    expect(notableMiles(route)).toEqual([{ level: 'no_travel', display: '<1' }]);
   });
 
   it('is empty when the whole route is Low', () => {

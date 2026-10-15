@@ -49,9 +49,17 @@ export function testRoute(
   lengthMi: number,
   levels: RiskKey[],
   miles: Partial<Record<RiskKey, number>> = {},
+  // The API rounds miles to whole numbers and shows sub-mile stretches as "<1".
+  milesDisplay: Partial<Record<RiskKey, string>> = {},
 ): RouteView {
   const spacing = lengthMi / Math.max(levels.length - 1, 1);
   const allMiles = { ...NO_MILES, ...miles };
+  const display = Object.fromEntries(
+    Object.entries(allMiles).map(([key, value]) => [
+      key,
+      milesDisplay[key as RiskKey] ?? String(value),
+    ]),
+  ) as Record<RiskKey, string>;
   return {
     id,
     providerIndex: rank - 1,
@@ -64,15 +72,10 @@ export function testRoute(
       id,
       rank,
       miles: allMiles,
-      miles_display: Object.fromEntries(
-        Object.entries(allMiles).map(([key, value]) => [
-          key,
-          value > 0 && value < 1 ? '<1' : String(value),
-        ]),
-      ) as Record<RiskKey, string>,
+      miles_display: display,
       avg_risk: 0.1,
-      has_no_travel: allMiles.no_travel > 0,
-      has_unknown: allMiles.unknown > 0,
+      has_no_travel: display.no_travel !== '0',
+      has_unknown: display.unknown !== '0',
       incomplete: false,
       travel_minutes: Math.round((lengthMi * 50) / 60),
     },
