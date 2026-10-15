@@ -63,8 +63,34 @@ describe('PlanForm', () => {
     await user.type(screen.getByLabelText('Starting place'), 'Denver{Enter}');
     await screen.findByDisplayValue(DENVER.name);
 
-    expect(screen.getByLabelText('Departure')).toHaveValue('2026-10-15T12:15');
-    expect(screen.getByText('Local time in Denver (MDT)')).toBeVisible();
+    expect(screen.getByLabelText('Time')).toHaveValue('12:15 PM');
+    expect(screen.getByRole('radio', { name: 'Thursday, October 15' })).toBeChecked();
+    expect(screen.getByText(/Local time in Denver \(MDT\)/)).toBeVisible();
+  });
+
+  it('offers today and the seven days the API accepts', () => {
+    renderForm();
+
+    const days = screen.getAllByRole('radio', { name: /, October / });
+
+    expect(days).toHaveLength(8);
+    expect(days[0]).toBeChecked();
+    expect(screen.getByText('Today')).toBeVisible();
+    expect(screen.getByRole('radio', { name: 'Thursday, October 22' })).toBeVisible();
+  });
+
+  it('keeps the time when the driver picks another day', async () => {
+    const user = userEvent.setup();
+    const { onSubmit } = renderForm();
+
+    await choosePlaces(user);
+    await user.type(screen.getByLabelText('Cargo weight'), '42000');
+    await user.click(screen.getByRole('radio', { name: 'Saturday, October 17' }));
+    await user.click(screen.getByRole('button', { name: 'Compare routes' }));
+
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ departureLocal: '2026-10-17T12:15' }),
+    );
   });
 
   it('submits a complete trip', async () => {
@@ -89,13 +115,15 @@ describe('PlanForm', () => {
     const user = userEvent.setup();
     renderForm();
 
-    const departure = screen.getByLabelText('Departure');
-    await user.clear(departure);
-    await user.type(departure, '2026-10-16T06:30');
+    await user.click(screen.getByRole('radio', { name: 'Friday, October 16' }));
+    const time = screen.getByLabelText('Time');
+    await user.clear(time);
+    await user.type(time, '6:30 am');
     await user.type(screen.getByLabelText('Starting place'), 'Denver{Enter}');
     await screen.findByDisplayValue(DENVER.name);
 
-    expect(departure).toHaveValue('2026-10-16T06:30');
+    expect(time).toHaveValue('6:30 AM');
+    expect(screen.getByRole('radio', { name: 'Friday, October 16' })).toBeChecked();
   });
 
   it('shows API field errors next to their fields until the field is edited', async () => {

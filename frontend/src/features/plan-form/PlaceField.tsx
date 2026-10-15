@@ -113,21 +113,27 @@ export function PlaceField({
       <p id={hintId} className={styles.hint}>
         City, address or place in the US or Canada
       </p>
-      <input
-        id={id}
-        type="text"
-        autoComplete="off"
-        spellCheck={false}
-        className={styles.input}
-        value={text}
-        onChange={(event) => handleTextChange(event.target.value)}
-        onBlur={() => void runSearch()}
-        onKeyDown={handleKeyDown}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy}
-        data-selected={value ? true : undefined}
-      />
-      <p id={statusId} role="status" className={styles.status}>
+      <div className={styles.control}>
+        <input
+          id={id}
+          type="text"
+          autoComplete="off"
+          spellCheck={false}
+          className={styles.input}
+          value={text}
+          onChange={(event) => handleTextChange(event.target.value)}
+          onBlur={() => void runSearch()}
+          onKeyDown={handleKeyDown}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+        />
+        {lookup.status === 'searching' && <span className={styles.spinner} aria-hidden="true" />}
+      </div>
+      <p
+        id={statusId}
+        role="status"
+        className={lookup.status === 'searching' ? 'visually-hidden' : styles.status}
+      >
         {statusMessage(lookup)}
       </p>
       {alternatives.length > 0 && matches && (
