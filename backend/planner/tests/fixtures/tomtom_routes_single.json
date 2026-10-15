@@ -15,24 +15,8 @@
             "lengthInMeters": 106200,
             "travelTimeInSeconds": 4020
           },
-          "points": [
-            {
-              "latitude": 39.7392,
-              "longitude": -104.9903
-            },
-            {
-              "latitude": 39.95,
-              "longitude": -104.88
-            },
-            {
-              "latitude": 40.2,
-              "longitude": -104.82
-            },
-            {
-              "latitude": 40.5853,
-              "longitude": -104.8214
-            }
-          ]
+          "encodedPolyline": "_qpqFj|x_Sodh@kpToyo@_vJcgjAvG",
+          "encodedPolylinePrecision": 5
         }
       ],
       "sections": [

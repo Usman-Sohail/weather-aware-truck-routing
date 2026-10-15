@@ -1,0 +1,1272 @@
+{
+ "formatVersion": "0.0.12",
+ "routes": [
+  {
+   "summary": {
+    "lengthInMeters": 103571,
+    "travelTimeInSeconds": 4878,
+    "trafficDelayInSeconds": 478,
+    "trafficLengthInMeters": 11322,
+    "departureTime": "2026-10-14T18:13:57-06:00",
+    "arrivalTime": "2026-10-14T19:35:15-06:00"
+   },
+   "legs": [
+    {
+     "summary": {
+      "lengthInMeters": 103571,
+      "travelTimeInSeconds": 4878,
+      "trafficDelayInSeconds": 478,
+      "trafficLengthInMeters": 11322,
+      "departureTime": "2026-10-14T18:13:57-06:00",
+      "arrivalTime": "2026-10-14T19:35:15-06:00"
+     },
+     "encodedPolyline": "_qpqFd|x_Sa@AW?m@AC?QBOBQH?s@?ECYCOCMGOQ[EEIMSWIKEGCKCKCQAM?E?I@MBMBOFSHSZm@LUJQHYDUBW?u@?iA?i@?q@?qAYAy@@e@?OAe@?sBAg@?aCCcE?[?aC?{@AM?wAAo@@S?M?qD@uB?i@AiBAc@@G?i@?y@dACDEF_@j@OPIL_@j@KNYb@[`@GHUXILEFy@jAeAtAcArAq@fA]h@q@dAY`@g@n@_@f@c@j@[b@SZIJILcAxAq@|@QRY`@k@x@S^c@r@IN{@hAc@j@UXKLILy@dAMPUDKPQTMNMPs@dAaCjDWZaAvAc@l@EFGHCDED_@d@KNOPMNm@t@o@x@_@f@]b@MNUXm@~@kA`Be@r@m@dA[l@Of@Un@S`@a@bA{@vBSj@EBIFKJILGJO^]z@Uf@EHO\\O^Sh@Sl@ENGHGDG@G?KCECm@_AgA_BOQEEc@[MIECc@[c@WaB_AgEmCkCiAsBwAu@o@]_@i@s@c@q@o@oAi@mAIQUs@Wu@AG]kAGSMc@GYY_AAGCGoAmEa@yAYaAOi@Og@Uq@k@{Aq@cB]w@sA_C}@wAaAmAq@s@{AsAOO_@[QQyA}@aEoBeAa@uBk@uB_@gCYaAIwBE{AAcCB{ICgDEE?_@?qCAI?S?wB?i@?oA?MA{JCcA?O?[?G?W?aFAk@@[@_IC{BG_COwDa@kDi@YEeCa@eC]aDe@gC_@_MiBuAWSEa@IcCm@i@Q_@MsF{BuAi@yF_CiCeAuEoB_@Qc@QiCiAmEaBmA[q@Ms@MGAaCYSCm@IsBKkBCwACoH@{@A}@?uECwEAqF?uHIO?eOQi@A{A?w@?aBEW?uHI}A?w@Aw@Aq@Aa@CuCOcBQuCe@QCMCSGc@KyD_AeDq@oAQqAKwCGO@u@@]@c@D}BRqB^qA\\{Af@IBw@Xc@NkBn@cDdAwBj@{B`@uANq@F{BHkCHeAB}ADoABm@@gEJ{CJcLb@{BNoBRYDaFl@{AP{Ft@}@L_@Di@H}@LiPxB}AT[BcPvBo@H_CZwFr@[FuJnA}@LM@}Cb@uBRI@q@FoADgBHY@kC@uE?gIAkB?mB@wDAqF@{MA]AgR?iB?_@?uC@}CAiDCiBB]?{C?cUAkC?{@?k@?cA?mA?e@?O?_D?oPAQ?]?_N@sF?kG@gA?]?}DA_]BS@G?uDB]@_ADuCRiDb@gAR{Cn@{Cx@[LcBj@A@_IzCwBp@m@NYFs@`@aARoCb@qD^aCRoDLwC?oCE}CQiBSuBWiAQ}Bc@kBc@qA_@k@Qa@O_KkDiBk@oCq@yDs@kC]eCOoCE{ICuK@_B@i@M[?sRDm@?O?yPFu@?aE@q[HwA?_@?yD?}XLa@?{RBqC?kE@_JD]?_IBeKBgD@{D@uJIw@?G?i@?iNNiR@g@AkA@K?mE@eF?mB?}@?yF@U?a@?}H?OAaJ@}C@qB?wF?_G@i@Aw@?_H?iTGQ?_A?Q?Y@G?yC@aCBuEEi@CwBKcD[qCa@{Ba@wA]gCs@[KkC_AoEqBqCmA{BcAkGqCwAo@cAc@gJiEcEmByAm@mB{@sCqAoD}Aa@MsBu@qA[[I[E{B[}AMkBGiDAaLDaFBoGDqG@uJBqGAiC?o@AcJAgu@Kq\\DkDAm@?sBA}QIsA?qCAkBAiP?g@?_I?o@?cB?w@?_UA[?kYEs@?sCA{@?{@A{LAuUCeB?iKA{@?}@?uN?gF?mA?__A@{^CqNAkGAw@?k^Cy@?[?_@?gXAoE@cVCaC?m@?cB?aL?_A?gG?gA?Q?M?}WAoC@iPAmA@yHE{BEiHW}H[_GSg@AS?UAsKCoQ?W?kB?iEH{AFU@uAH_Md@aMHgG?iBAoAA{@@uI@oNCwHBmCAeB?{FCeXAmB?_EEs@AeAGeACwAIuAG_Io@wCS}BUwFg@sE_@kCUe@EoBMaFSoBEuBAsAAgACs@C{DAgG?sDD]?gELqBLiI`@k@BkETaDP_ERk@B{CP_HTuA@oABY@i@?Q?{D?_BEuHC}ACyB?w@AQ?_A?U?_GB{CDcB@ePl@wK\\sBFmFDW?iGDoBAmA@{DCiHEc@Ao@AiR@sKE{F?}C?{ICoB?u\\Eg@?yS?{DA}CAuB?wM@}G?kKAuNAmB@k@?k@@g@@{h@@eQBqF?}A@qF@sH@gP@m@@U?a@?mC?sE@uRDsC?qTBeD?}F@gd@Dup@FI?{C?sj@K[?}d@K{EAq@?ou@GiM@oTAuHA[@e@?yYFyF@eA?uC?{A@cA?m@?]AwBAw@@eAAcM@w@?KFSDsADmB@I?E?uE?sI@wHAmV?cD@mD@aV?uE@c@A_f@?qD@sT?sV?w@?kCA}I@wTB]?yDD_RfAcFZgM`AiPjAkKt@qD\\y@LcEx@gGxAcAViGnBM@Q?eC`AgIhDuHdDyAp@QFGBODkBt@mHpCKPULkCjAuKdEkBv@eM`G}DhBsEbCoEhBaBh@}FrBiEhAeBZO@a@HiDd@kBTeCTk@DwDNcDD{DAaGI{BAwC?uJCiA?w@AkAAoA?kDCWIGCY?eGAw@?uAAgA?uGCuC?mJ@eC@_BBs@?o@@}C@k@LqADcAAgNIeCGu@A_AAiUc@U?kACgCGeOWq@AgACuEIeLKkBAeB@SCe@SoKGsAA_SMW?uCCO?s@?cGGYLWDg@@uSMqIGiPO}TMO?ui@We\\c@oHGgD?mAAi@?eF?kJ?eXGePEmW?mB?{PIk[EmHCcKCyQa@yCAI@Y?eB?wR^}m@WmDCgLC}J?qB?q@I_@UuE?iJCqI@qBC}BJgRGqC?a@J{LBaCFcGD{O`@yUb@oCHib@`A_@@cEJq@@oAB}EHcIP{Ff@_BJo@H}BZ}A\\a@HeATmCh@wBd@oE|@iAPK@GAGAMG_LbCw@NeAPoJdBy@LaARSDgGjAwAXkB\\ILEHIDOHoDp@aKpBkJrB{LvCcFhAoIbB}JlBiGdAoKfByBViDZgDXyBHsBFqDFa@?{@@iDBGAIASOc@?q@?}ROa@A}FI}BGmDMcAAgCEs@?wE?oC@yGLw@@{EHaA?G?eHAkF?kF?iGAg@?_@?g@Aq@KSAOCMGKGKIGKGMEOCQAS@S@SDQFQHKHIJIJELCL?L?LDJFJHJJHNDPDR@TLt@?l@?^?Z?^?J@|A?vCBjBAdCA|@?R?b@AlCAdA?n@?z@?V?dAAbA?j@?\\?`@Kt]ArEC|G?R?zA@vI?`AAx@ErC?J?pAA~BK~_@AzC?f@?h@?|@?Z@xC?\\@|A@P@nABp@BbA@t@D~AB|ABf@B`ABvAJlEDrA@f@?JBl@@ZHrDJnEFnBLjHFdI?V@zCAdDEdEOhHEtAExAK`EE~BAr@CpCGbDa@bPKxEIhDClAAr@EhG?X?dF@r@?l@?Z?f@?pB?R?NA|A?zA?tA?tAAlF?|A?f@AbE?vC?\\?h@An@@\\?b@W`@wBnDw@pAgAdB_CxDi@|@g@z@U^g@z@_@n@U^uA|ByBrDCDOVQXU`@{@|Ai@x@u@fAa@l@QVSVu@`Ad@p@DR@PM\\AX?hA?vB?pAAdA?H?jC?`@AvB@fE?nAA\\?dA?hA@xC?x@?JAHA~FAxA?jC?bAAtC?L?jDAjD^?lG@bA?",
+     "encodedPolylinePrecision": 5
+    }
+   ],
+   "sections": [
+    {
+     "startPointIndex": 0,
+     "endPointIndex": 7,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "other"
+    },
+    {
+     "startPointIndex": 7,
+     "endPointIndex": 1200,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "truck"
+    }
+   ],
+   "progress": [
+    {
+     "pointIndex": 0,
+     "travelTimeInSeconds": 0,
+     "distanceInMeters": 0
+    },
+    {
+     "pointIndex": 28,
+     "travelTimeInSeconds": 53,
+     "distanceInMeters": 255
+    },
+    {
+     "pointIndex": 33,
+     "travelTimeInSeconds": 68,
+     "distanceInMeters": 322
+    },
+    {
+     "pointIndex": 37,
+     "travelTimeInSeconds": 99,
+     "distanceInMeters": 378
+    },
+    {
+     "pointIndex": 40,
+     "travelTimeInSeconds": 116,
+     "distanceInMeters": 449
+    },
+    {
+     "pointIndex": 42,
+     "travelTimeInSeconds": 144,
+     "distanceInMeters": 499
+    },
+    {
+     "pointIndex": 51,
+     "travelTimeInSeconds": 191,
+     "distanceInMeters": 866
+    },
+    {
+     "pointIndex": 54,
+     "travelTimeInSeconds": 219,
+     "distanceInMeters": 979
+    },
+    {
+     "pointIndex": 57,
+     "travelTimeInSeconds": 241,
+     "distanceInMeters": 1065
+    },
+    {
+     "pointIndex": 61,
+     "travelTimeInSeconds": 281,
+     "distanceInMeters": 1261
+    },
+    {
+     "pointIndex": 68,
+     "travelTimeInSeconds": 352,
+     "distanceInMeters": 1420
+    },
+    {
+     "pointIndex": 80,
+     "travelTimeInSeconds": 385,
+     "distanceInMeters": 1625
+    },
+    {
+     "pointIndex": 88,
+     "travelTimeInSeconds": 436,
+     "distanceInMeters": 1914
+    },
+    {
+     "pointIndex": 101,
+     "travelTimeInSeconds": 500,
+     "distanceInMeters": 2212
+    },
+    {
+     "pointIndex": 105,
+     "travelTimeInSeconds": 524,
+     "distanceInMeters": 2311
+    },
+    {
+     "pointIndex": 114,
+     "travelTimeInSeconds": 559,
+     "distanceInMeters": 2474
+    },
+    {
+     "pointIndex": 127,
+     "travelTimeInSeconds": 601,
+     "distanceInMeters": 2784
+    },
+    {
+     "pointIndex": 132,
+     "travelTimeInSeconds": 633,
+     "distanceInMeters": 2895
+    },
+    {
+     "pointIndex": 141,
+     "travelTimeInSeconds": 660,
+     "distanceInMeters": 3183
+    },
+    {
+     "pointIndex": 146,
+     "travelTimeInSeconds": 681,
+     "distanceInMeters": 3285
+    },
+    {
+     "pointIndex": 173,
+     "travelTimeInSeconds": 722,
+     "distanceInMeters": 3741
+    },
+    {
+     "pointIndex": 256,
+     "travelTimeInSeconds": 977,
+     "distanceInMeters": 8034
+    },
+    {
+     "pointIndex": 290,
+     "travelTimeInSeconds": 1075,
+     "distanceInMeters": 10496
+    },
+    {
+     "pointIndex": 352,
+     "travelTimeInSeconds": 1475,
+     "distanceInMeters": 14491
+    },
+    {
+     "pointIndex": 382,
+     "travelTimeInSeconds": 1600,
+     "distanceInMeters": 17383
+    },
+    {
+     "pointIndex": 433,
+     "travelTimeInSeconds": 1735,
+     "distanceInMeters": 21239
+    },
+    {
+     "pointIndex": 505,
+     "travelTimeInSeconds": 1994,
+     "distanceInMeters": 29286
+    },
+    {
+     "pointIndex": 540,
+     "travelTimeInSeconds": 2215,
+     "distanceInMeters": 32544
+    },
+    {
+     "pointIndex": 541,
+     "travelTimeInSeconds": 2263,
+     "distanceInMeters": 33507
+    },
+    {
+     "pointIndex": 690,
+     "travelTimeInSeconds": 2821,
+     "distanceInMeters": 52329
+    },
+    {
+     "pointIndex": 758,
+     "travelTimeInSeconds": 3271,
+     "distanceInMeters": 64911
+    },
+    {
+     "pointIndex": 875,
+     "travelTimeInSeconds": 3653,
+     "distanceInMeters": 78197
+    },
+    {
+     "pointIndex": 1003,
+     "travelTimeInSeconds": 4143,
+     "distanceInMeters": 95533
+    },
+    {
+     "pointIndex": 1025,
+     "travelTimeInSeconds": 4164,
+     "distanceInMeters": 95909
+    },
+    {
+     "pointIndex": 1060,
+     "travelTimeInSeconds": 4206,
+     "distanceInMeters": 96601
+    },
+    {
+     "pointIndex": 1062,
+     "travelTimeInSeconds": 4231,
+     "distanceInMeters": 97107
+    },
+    {
+     "pointIndex": 1066,
+     "travelTimeInSeconds": 4256,
+     "distanceInMeters": 97421
+    },
+    {
+     "pointIndex": 1090,
+     "travelTimeInSeconds": 4319,
+     "distanceInMeters": 98574
+    },
+    {
+     "pointIndex": 1098,
+     "travelTimeInSeconds": 4348,
+     "distanceInMeters": 98865
+    },
+    {
+     "pointIndex": 1122,
+     "travelTimeInSeconds": 4447,
+     "distanceInMeters": 100662
+    },
+    {
+     "pointIndex": 1126,
+     "travelTimeInSeconds": 4454,
+     "distanceInMeters": 100732
+    },
+    {
+     "pointIndex": 1129,
+     "travelTimeInSeconds": 4473,
+     "distanceInMeters": 100795
+    },
+    {
+     "pointIndex": 1143,
+     "travelTimeInSeconds": 4514,
+     "distanceInMeters": 101330
+    },
+    {
+     "pointIndex": 1167,
+     "travelTimeInSeconds": 4587,
+     "distanceInMeters": 102278
+    },
+    {
+     "pointIndex": 1172,
+     "travelTimeInSeconds": 4614,
+     "distanceInMeters": 102350
+    },
+    {
+     "pointIndex": 1175,
+     "travelTimeInSeconds": 4632,
+     "distanceInMeters": 102468
+    },
+    {
+     "pointIndex": 1177,
+     "travelTimeInSeconds": 4645,
+     "distanceInMeters": 102501
+    },
+    {
+     "pointIndex": 1181,
+     "travelTimeInSeconds": 4682,
+     "distanceInMeters": 102711
+    },
+    {
+     "pointIndex": 1182,
+     "travelTimeInSeconds": 4710,
+     "distanceInMeters": 102744
+    },
+    {
+     "pointIndex": 1186,
+     "travelTimeInSeconds": 4743,
+     "distanceInMeters": 102883
+    },
+    {
+     "pointIndex": 1189,
+     "travelTimeInSeconds": 4763,
+     "distanceInMeters": 102917
+    },
+    {
+     "pointIndex": 1192,
+     "travelTimeInSeconds": 4803,
+     "distanceInMeters": 103123
+    },
+    {
+     "pointIndex": 1197,
+     "travelTimeInSeconds": 4835,
+     "distanceInMeters": 103366
+    },
+    {
+     "pointIndex": 1198,
+     "travelTimeInSeconds": 4850,
+     "distanceInMeters": 103383
+    },
+    {
+     "pointIndex": 1200,
+     "travelTimeInSeconds": 4878,
+     "distanceInMeters": 103571
+    }
+   ]
+  },
+  {
+   "summary": {
+    "lengthInMeters": 103550,
+    "travelTimeInSeconds": 4953,
+    "trafficDelayInSeconds": 478,
+    "trafficLengthInMeters": 11322,
+    "departureTime": "2026-10-14T18:13:57-06:00",
+    "arrivalTime": "2026-10-14T19:36:30-06:00",
+    "deviationDistance": 20170,
+    "deviationTime": 1702,
+    "deviationPoint": {
+     "latitude": 39.9049,
+     "longitude": -104.9899
+    }
+   },
+   "legs": [
+    {
+     "summary": {
+      "lengthInMeters": 103550,
+      "travelTimeInSeconds": 4953,
+      "trafficDelayInSeconds": 478,
+      "trafficLengthInMeters": 11322,
+      "departureTime": "2026-10-14T18:13:57-06:00",
+      "arrivalTime": "2026-10-14T19:36:30-06:00"
+     },
+     "encodedPolyline": "_qpqFd|x_Sa@AW?m@AC?QBOBQH?s@?ECYCOCMGOQ[EEIMSWIKEGCKCKCQAM?E?I@MBMBOFSHSZm@LUJQHYDUBW?u@?iA?i@?q@?qAYAy@@e@?OAe@?sBAg@?aCCcE?[?aC?{@AM?wAAo@@S?M?qD@uB?i@AiBAc@@G?i@?y@dACDEF_@j@OPIL_@j@KNYb@[`@GHUXILEFy@jAeAtAcArAq@fA]h@q@dAY`@g@n@_@f@c@j@[b@SZIJILcAxAq@|@QRY`@k@x@S^c@r@IN{@hAc@j@UXKLILy@dAMPUDKPQTMNMPs@dAaCjDWZaAvAc@l@EFGHCDED_@d@KNOPMNm@t@o@x@_@f@]b@MNUXm@~@kA`Be@r@m@dA[l@Of@Un@S`@a@bA{@vBSj@EBIFKJILGJO^]z@Uf@EHO\\O^Sh@Sl@ENGHGDG@G?KCECm@_AgA_BOQEEc@[MIECc@[c@WaB_AgEmCkCiAsBwAu@o@]_@i@s@c@q@o@oAi@mAIQUs@Wu@AG]kAGSMc@GYY_AAGCGoAmEa@yAYaAOi@Og@Uq@k@{Aq@cB]w@sA_C}@wAaAmAq@s@{AsAOO_@[QQyA}@aEoBeAa@uBk@uB_@gCYaAIwBE{AAcCB{ICgDEE?_@?qCAI?S?wB?i@?oA?MA{JCcA?O?[?G?W?aFAk@@[@_IC{BG_COwDa@kDi@YEeCa@eC]aDe@gC_@_MiBuAWSEa@IcCm@i@Q_@MsF{BuAi@yF_CiCeAuEoB_@Qc@QiCiAmEaBmA[q@Ms@MGAaCYSCm@IsBKkBCwACoH@{@A}@?uECwEAqF?uHIO?eOQi@A{A?w@?aBEW?uHI}A?w@Aw@Aq@Aa@CuCOcBQuCe@QCMCSGc@KyD_AeDq@oAQqAKwCGO@u@@]@c@D}BRqB^qA\\{Af@IBw@Xc@NkBn@cDdAwBj@{B`@uANq@F{BHkCHeAB}ADoABm@@gEJ{CJcLb@{BNoBRYDaFl@{AP{Ft@}@L_@Di@H}@LiPxB}AT[BcPvBo@H_CZwFr@[FuJnA}@LM@}Cb@uBRI@q@FoADgBHY@kC@uE?gIAkB?mB@wDAqF@{MA]AgR?iB?_@?uC@}CAiDCiBB]?{C?cUAkC?{@?k@?cA?mA?e@?O?_D?oPAQ?]?_N@sF?kG@gA?]?}DA_]BS@G?uDB]@_ADuCRiDb@gAR{Cn@{Cx@[LcBj@A@_IzCwBp@m@NYFaBVaFv@yBTcCRMBiBHO?w@@{DC}ACc@CaDUkDa@sAS_Do@c@IoBk@k@Qa@MuKwDiBi@kBm@iCe@cBW_BQeBMuAGcBEqA?wBDw@?kF@_G@iC@[?sRDm@?O?yPFu@?aE@q[HwA?_@?yD?}XLa@?{RBqC?kE@_JD]?_IBeKBgD@{D@uJIw@?G?i@?iNNiR@g@AkA@K?mE@eF?mB?}@?yF@U?a@?}H?OAaJ@}C@qB?wF?_G@i@Aw@?_H?iTGQ?_A?Q?Y@G?yC@aCBuEEi@CwBKcD[qCa@{Ba@wA]gCs@[KkC_AoEqBqCmA{BcAkGqCwAo@cAc@gJiEcEmByAm@mB{@sCqAoD}Aa@MsBu@qA[[I[E{B[}AMkBGiDAaLDaFBoGDqG@uJBqGAiC?o@AcJAgu@Kq\\DkDAm@?sBA}QIsA?qCAkBAiP?g@?_I?o@?cB?w@?_UA[?kYEs@?sCA{@?{@A{LAuUCeB?iKA{@?}@?uN?gF?mA?__A@{^CqNAkGAw@?k^Cy@?[?_@?gXAoE@cVCaC?m@?cB?aL?_A?gG?gA?Q?M?}WAoC@iPAmA@yHE{BEiHW}H[_GSg@AS?UAsKCoQ?W?kB?iEH{AFU@uAH_Md@aMHgG?iBAoAA{@@uI@oNCwHBmCAeB?{FCeXAmB?_EEs@AeAGeACwAIuAG_Io@wCS}BUwFg@sE_@kCUe@EoBMaFSoBEuBAsAAgACs@C{DAgG?sDD]?gELqBLiI`@k@BkETaDP_ERk@B{CP_HTuA@oABY@i@?Q?{D?_BEuHC}ACyB?w@AQ?_A?U?_GB{CDcB@ePl@wK\\sBFmFDW?iGDoBAmA@{DCiHEc@Ao@AiR@sKE{F?}C?{ICoB?u\\Eg@?yS?{DA}CAuB?wM@}G?kKAuNAmB@k@?k@@g@@{h@@eQBqF?}A@qF@sH@gP@m@@U?a@?mC?sE@uRDsC?qTBeD?}F@gd@Dup@FI?{C?sj@K[?}d@K{EAq@?ou@GiM@oTAuHA[@e@?yYFyF@eA?uC?{A@cA?m@?]AwBAw@@eAAcM@w@?qC?oAAI?G?{A@oJ?qB?qF?}D@aIB]?gB?{HAeKAiOA}C?w@?s@?qTB}S?m@?q@?iG@gA?U?q_@?w@?sNBaB?wB?s@?yA@kED{BE[@_B?{AD{BHsHh@yStA_EX}BPcMz@oCPeGd@{Db@yAXuGrAgD~@kBj@cEzAeC`AgIhDuHdDyAp@QFGBODkBt@mHpCwDxAqGdCuDxAoI~DgFdCmDdB{BfA[JsChAq@\\u@XoAf@yAd@yBv@mA^k@JuA\\}Bf@OB_@Hm@Jm@JoGr@_BJ}@DO?uCNgB@iEEe@A{@EyGAuCA{HCgC?Q?kB?wAAeE?Y?eGAw@?uAAgA?uGCuC?mJ@eC@_BBs@?o@@}C@}BCcAAsD@cFA_CEiCGkEImFIwBGeDIs@AU?i@Aa@AgCEu@AiJSy@A}ACaDGgGIaDCo@?sAAeDCyAAoKGsAA_SMW?uCCO?s@?cGGgNGkOImAA{@As@?KAyBGqDAmXMQAO?yFAkQMwBCu@?yA?{\\YyGMwDIeI?oGAaE?_ECmF?eEC}I?W?iECkE?iHEqLB{DCyA?gm@ImHCyGCcDE{@CgDIoIMeC?c@?eOLeFHgDCyBAuA@uGGcBAgC?iOKgA?qDCqIAm@?a@@cKCcEAuE?iJCqI@qBC}BJgRGqC?qJAkB@iBBu^x@eIH_FHeCHsCH_DFwAB}ADeBDqGJaCHeCF_@@O?{ENwKPiBBoBDwAJ{APaBJkDXy@HqB\\o@J]H_@HsB`@gEbAq@NkATmCj@_LbCw@NeAPoJdBy@LaARSDgGjAwAXkB\\kB\\iB^kJhBkGtAoXnG}EdAkF`AuCj@eGjAyFdAcGz@gHt@qCRa@BiDJsEFa@@kGFc@?q@?}ROa@A}FI}BGmDMcAAgCEs@?wE?oC@yGLw@@{EHaA?G?eHAkF?kF?iGAg@?_@?g@Aq@KSAOCMGKGKIGKGMEOCQAS@S@SDQFQHKHIJIJELCL?L?LDJFJHJJHNDPDR@TLt@?l@?^?Z?^?J@|A?vCBjBAdCA|@?R?b@AlCAdA?n@?z@?V?dAAbA?j@?\\?`@Kt]ArEC|G?R?zA@vI?`AAx@ErC?J?pAA~BK~_@AzC?f@?h@?|@?Z@xC?\\@|A@P@nABp@BbA@t@D~AB|ABf@B`ABvAJlEDrA@f@?JBl@@ZHrDJnEFnBLjHFdI?V@zCAdDEdEOhHEtAExAK`EE~BAr@CpCGbDa@bPKxEIhDClAAr@EhG?X?dF@r@?l@?Z?f@?pB?R?NA|A?zA?tA?tAAlF?|A?f@AbE?vC?\\?h@An@@\\?b@W`@wBnDw@pAgAdB_CxDi@|@g@z@U^g@z@_@n@U^uA|ByBrDCDOVQXU`@{@|Ai@x@u@fAa@l@QVSVu@`Ad@p@DR@PM\\AX?hA?vB?pAAdA?H?jC?`@AvB@fE?nAA\\?dA?hA@xC?x@?JAHA~FAxA?jC?bAAtC?L?jDAjD^?lG@bA?",
+     "encodedPolylinePrecision": 5
+    }
+   ],
+   "sections": [
+    {
+     "startPointIndex": 0,
+     "endPointIndex": 7,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "other"
+    },
+    {
+     "startPointIndex": 7,
+     "endPointIndex": 1251,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "truck"
+    }
+   ],
+   "progress": [
+    {
+     "pointIndex": 0,
+     "travelTimeInSeconds": 0,
+     "distanceInMeters": 0
+    },
+    {
+     "pointIndex": 28,
+     "travelTimeInSeconds": 53,
+     "distanceInMeters": 255
+    },
+    {
+     "pointIndex": 33,
+     "travelTimeInSeconds": 68,
+     "distanceInMeters": 322
+    },
+    {
+     "pointIndex": 37,
+     "travelTimeInSeconds": 99,
+     "distanceInMeters": 378
+    },
+    {
+     "pointIndex": 40,
+     "travelTimeInSeconds": 116,
+     "distanceInMeters": 449
+    },
+    {
+     "pointIndex": 42,
+     "travelTimeInSeconds": 144,
+     "distanceInMeters": 499
+    },
+    {
+     "pointIndex": 51,
+     "travelTimeInSeconds": 191,
+     "distanceInMeters": 866
+    },
+    {
+     "pointIndex": 54,
+     "travelTimeInSeconds": 219,
+     "distanceInMeters": 979
+    },
+    {
+     "pointIndex": 57,
+     "travelTimeInSeconds": 241,
+     "distanceInMeters": 1065
+    },
+    {
+     "pointIndex": 61,
+     "travelTimeInSeconds": 281,
+     "distanceInMeters": 1261
+    },
+    {
+     "pointIndex": 68,
+     "travelTimeInSeconds": 352,
+     "distanceInMeters": 1420
+    },
+    {
+     "pointIndex": 80,
+     "travelTimeInSeconds": 385,
+     "distanceInMeters": 1625
+    },
+    {
+     "pointIndex": 88,
+     "travelTimeInSeconds": 436,
+     "distanceInMeters": 1914
+    },
+    {
+     "pointIndex": 101,
+     "travelTimeInSeconds": 500,
+     "distanceInMeters": 2212
+    },
+    {
+     "pointIndex": 105,
+     "travelTimeInSeconds": 524,
+     "distanceInMeters": 2311
+    },
+    {
+     "pointIndex": 114,
+     "travelTimeInSeconds": 559,
+     "distanceInMeters": 2474
+    },
+    {
+     "pointIndex": 127,
+     "travelTimeInSeconds": 601,
+     "distanceInMeters": 2784
+    },
+    {
+     "pointIndex": 132,
+     "travelTimeInSeconds": 633,
+     "distanceInMeters": 2895
+    },
+    {
+     "pointIndex": 141,
+     "travelTimeInSeconds": 660,
+     "distanceInMeters": 3183
+    },
+    {
+     "pointIndex": 146,
+     "travelTimeInSeconds": 681,
+     "distanceInMeters": 3285
+    },
+    {
+     "pointIndex": 173,
+     "travelTimeInSeconds": 722,
+     "distanceInMeters": 3741
+    },
+    {
+     "pointIndex": 256,
+     "travelTimeInSeconds": 977,
+     "distanceInMeters": 8034
+    },
+    {
+     "pointIndex": 290,
+     "travelTimeInSeconds": 1075,
+     "distanceInMeters": 10496
+    },
+    {
+     "pointIndex": 352,
+     "travelTimeInSeconds": 1475,
+     "distanceInMeters": 14491
+    },
+    {
+     "pointIndex": 382,
+     "travelTimeInSeconds": 1600,
+     "distanceInMeters": 17383
+    },
+    {
+     "pointIndex": 459,
+     "travelTimeInSeconds": 1826,
+     "distanceInMeters": 23850
+    },
+    {
+     "pointIndex": 511,
+     "travelTimeInSeconds": 2001,
+     "distanceInMeters": 29283
+    },
+    {
+     "pointIndex": 546,
+     "travelTimeInSeconds": 2222,
+     "distanceInMeters": 32541
+    },
+    {
+     "pointIndex": 547,
+     "travelTimeInSeconds": 2269,
+     "distanceInMeters": 33505
+    },
+    {
+     "pointIndex": 696,
+     "travelTimeInSeconds": 2828,
+     "distanceInMeters": 52326
+    },
+    {
+     "pointIndex": 763,
+     "travelTimeInSeconds": 3278,
+     "distanceInMeters": 64912
+    },
+    {
+     "pointIndex": 966,
+     "travelTimeInSeconds": 3944,
+     "distanceInMeters": 86543
+    },
+    {
+     "pointIndex": 1063,
+     "travelTimeInSeconds": 4232,
+     "distanceInMeters": 95786
+    },
+    {
+     "pointIndex": 1109,
+     "travelTimeInSeconds": 4281,
+     "distanceInMeters": 96553
+    },
+    {
+     "pointIndex": 1113,
+     "travelTimeInSeconds": 4307,
+     "distanceInMeters": 97086
+    },
+    {
+     "pointIndex": 1117,
+     "travelTimeInSeconds": 4332,
+     "distanceInMeters": 97400
+    },
+    {
+     "pointIndex": 1141,
+     "travelTimeInSeconds": 4395,
+     "distanceInMeters": 98553
+    },
+    {
+     "pointIndex": 1149,
+     "travelTimeInSeconds": 4424,
+     "distanceInMeters": 98844
+    },
+    {
+     "pointIndex": 1173,
+     "travelTimeInSeconds": 4523,
+     "distanceInMeters": 100641
+    },
+    {
+     "pointIndex": 1177,
+     "travelTimeInSeconds": 4530,
+     "distanceInMeters": 100711
+    },
+    {
+     "pointIndex": 1180,
+     "travelTimeInSeconds": 4549,
+     "distanceInMeters": 100774
+    },
+    {
+     "pointIndex": 1193,
+     "travelTimeInSeconds": 4588,
+     "distanceInMeters": 101293
+    },
+    {
+     "pointIndex": 1207,
+     "travelTimeInSeconds": 4639,
+     "distanceInMeters": 101979
+    },
+    {
+     "pointIndex": 1218,
+     "travelTimeInSeconds": 4663,
+     "distanceInMeters": 102257
+    },
+    {
+     "pointIndex": 1223,
+     "travelTimeInSeconds": 4690,
+     "distanceInMeters": 102329
+    },
+    {
+     "pointIndex": 1226,
+     "travelTimeInSeconds": 4708,
+     "distanceInMeters": 102447
+    },
+    {
+     "pointIndex": 1228,
+     "travelTimeInSeconds": 4721,
+     "distanceInMeters": 102480
+    },
+    {
+     "pointIndex": 1232,
+     "travelTimeInSeconds": 4758,
+     "distanceInMeters": 102689
+    },
+    {
+     "pointIndex": 1233,
+     "travelTimeInSeconds": 4785,
+     "distanceInMeters": 102723
+    },
+    {
+     "pointIndex": 1237,
+     "travelTimeInSeconds": 4819,
+     "distanceInMeters": 102862
+    },
+    {
+     "pointIndex": 1240,
+     "travelTimeInSeconds": 4839,
+     "distanceInMeters": 102896
+    },
+    {
+     "pointIndex": 1243,
+     "travelTimeInSeconds": 4879,
+     "distanceInMeters": 103102
+    },
+    {
+     "pointIndex": 1248,
+     "travelTimeInSeconds": 4910,
+     "distanceInMeters": 103345
+    },
+    {
+     "pointIndex": 1249,
+     "travelTimeInSeconds": 4925,
+     "distanceInMeters": 103362
+    },
+    {
+     "pointIndex": 1251,
+     "travelTimeInSeconds": 4953,
+     "distanceInMeters": 103550
+    }
+   ]
+  },
+  {
+   "summary": {
+    "lengthInMeters": 105610,
+    "travelTimeInSeconds": 6999,
+    "trafficDelayInSeconds": 407,
+    "trafficLengthInMeters": 6868,
+    "departureTime": "2026-10-14T18:13:57-06:00",
+    "arrivalTime": "2026-10-14T20:10:36-06:00",
+    "deviationDistance": 191,
+    "deviationTime": 44,
+    "deviationPoint": {
+     "latitude": 39.74037,
+     "longitude": -104.98933
+    }
+   },
+   "legs": [
+    {
+     "summary": {
+      "lengthInMeters": 105610,
+      "travelTimeInSeconds": 6999,
+      "trafficDelayInSeconds": 407,
+      "trafficLengthInMeters": 6868,
+      "departureTime": "2026-10-14T18:13:57-06:00",
+      "arrivalTime": "2026-10-14T20:10:36-06:00"
+     },
+     "encodedPolyline": "_qpqFd|x_Sa@AW?m@AC?QBOBQH?s@?ECYCOCMGOQ[EEIMSWMKGGIQAICMAMCMAICEAAEA?X?JD\\BHHVDJDFj@t@BFNXFVB\\?z@@pAA`@@dCGtC?nB?^?J?N?|@?L?dB?j@?^?XA~A?J?J?T@bA?lAAhA?d@?|@An@?tACdB?d@?N?V?XAH?b@?R?Z?l@?\\AvA@h@?dA@Z?j@B~@?hA?dA?x@?tB?zFAZAX?RAp@?LAXCbAA|ACrBAtAAb@?NCfA?PAN?RA|AAnDAtA?|@MzACVKxBAPMvBUnBAFAFENENCJS^GF[ZWPCBgAf@WRKJW\\s@xAGNILINGJELEVOVc@~@g@|@{@rA[b@KXEVGHURYZGHKHEFGDEFEDKHIHi@h@qAvAq@f@s@`@_@Ts@Z}Ab@gBRkAD}AEyAO{@QuA_@IC}DoAoC{@cA]e@MuAe@SI_Bu@eAk@eAs@}@s@USQQu@q@w@w@k@w@aCiD}@wAq@cAKOEEKQS[IKo@cAiFgIa@m@c@q@o@}@]i@cBmCKMIMYe@kC_Ea@o@OUOWiBaDkAsBk@cAqB{DMUqAsBYa@}AkB{@{@iAaAcAs@qBqAsBmAqA}@sBwAu@o@]_@i@s@c@q@o@oAi@mAIQUs@Wu@AG]kAGSMc@GYY_AAGCGoAmEa@yAYaAOi@Og@Uq@k@{Aq@cB]w@sA_C}@wAaAmAq@s@{AsAOO_@[QQyA}@aEoBeAa@uBk@uB_@gCYaAIwBE{AAcCB{ICgDEE?_@?qCAI?S?wB?i@?oA?MA{JCcA?O?[?G?W?aFAk@@[@_IC{BG_COwDa@kDi@YEeCa@eC]aDe@gC_@_MiBuAWSEa@IcCm@i@Q_@MsF{BuAi@yF_CiCeAuEoB_@Qc@QiCiAmEaBmA[q@Ms@MGAaCYSCm@IsBKkBCwACoH@{@A}@?uECwEAqF?uHIO?eOQi@A{A?w@?aBEW?uHI}A?w@Aw@Aq@AOFO?eA@qBCmBSeBUE?QCMCUE_@G}A[yF_Ao@Ey@@w@Jy@Z[PMH[XSTKLQZ[f@CHEHCFGTMd@CNCDG`@KfAA\\?`@FtBE`@HxAVhF@HBh@?t@@d@?L?ZBxA?lCAdL?|AAfB?t@?\\AjD?rAEfCAp@OjCMtAUnBKr@_@bCQx@uBxKYtA[`B_C|L_@hByBhMk@zCIb@e@|BY|A_EvS[`BYrAeErT]dB]bBm@|Cm@`Do@bDsAfHg@bCsAfHe@~BmAnGk@tCKj@GZQz@UrAg@|BwCjPAB}@vE_AtEm@tC}@|DGTq@dC_@fAENu@tBADkE`K[n@o@hAU^mB|CCBwBrCQVOPq@t@kBpBw@z@_CdCkDtDqBnBcEhEyCzCeAdA}DdEKJeBbBw@r@OPw@|@eClCgCfCcDzCwDjDcEhDgAx@OLgAr@_Ah@qBlAqAt@e@VgAn@w@`@e@VQJQJgGtCCBgHpCGBc@PkGzBw@V_FdB_A\\{@Xe@RaRvGk@PoG|BgDlAcDlAUHYJe@PqBv@uAr@kBdASPuCrBOJ_DtBmChBcXnQkAr@cIhFqD~BqJhGw@f@s@b@SRaBbA_Al@oGnEyE~CYP_IhFoBpAe@Zw@h@OJk@\\sEvCyElDWPUPo@`@qEvCqAv@uEhCuCpAoAl@}HnDkDbBgEbCYNg@ZeDrBeCzAiC`BUNsBnAyD`CgAr@eAp@gBdAoG|DsEtCuBpAeAp@yMhIcAn@m@^kBtAwD~Cy@v@SD}B`C{@n@SLoA^u@DgBAa@CgBGkACg@DSDSHe@\\ONQV[VMOm@k@eAi@a@OICc@OMAq@MOA[EICSCO?iAC{ACmB?SAa@@U?k@?U?K?K@s@Ek@?S?qB?G?}@?O@O?Y?W?]?s@?Q@eAAC?uB@o@@eBAm@@wA?w@?_@@gA?_@?qA?_@AY?I?_@?yB?mCAs@?s@AeCAM?M?m@?a@Du@@qB?eBAcB?i@AoB?eB@Q?qBAkA?mA@e@@??MA_A@sDCuA@yAAeEIeCA]?gHUuDSuCIqDIiDEeAEiA?iC?wH?}A?eE?wA?y@?sKM{C?}A?{IBu@?sAAq@?mC?uBA_A?Q?]?W?YA[?g@?KAi@?qD@qA?{CAa@?mB@Q?w@?uBBqDAI?oAAmF?q@@q@?i@?m@?_A?kC?wAAcA?gB?C?iE?aA?cA?u@?g@?Q?g@?mB?iCAK?aAAQ?}@?u@@c@?uAAeB@g@?U?w@?e@BqARa@He@LiAh@C@_@Tc@\\}@z@]^w@hAA@a@x@a@`ASl@a@|AO~@YdB[nBYbBQ`ASnAOn@Y|@M\\[x@OXs@jAy@~@_@Zm@b@GDKFeAf@c@Ns@PaANg@BcCBqD@aB@{C?mA?oD@{@?mA?]?}@?eA?[AaAAy@?iFBS?gAH_APUHUFw@^WNe@Z{ApAmCzBgExD_IpHo@j@cAr@i@VeAZ{@NmAD[AwBOmI}@c@E{@G}AEqA?m@CY?W?eA@{@@gABe@?e@?oB?wFBe@?S?O?S?i@?cBBaHAmA?U?eC?g@AwF?m@?yA?gB?g@?q@@Y?_C?cCAuAAyC?_@?iB?}B@[?Q?_A?M?U?I?_ADeBC_A@o@@w@@Q?aBGuCBK?O?i@@UNaEAmEM{AE_GOwBGQ?{DEuIAyJ?cCAkD@}BD_ENmHT_AFy@DqBHmDJO?QGi@@eC@s@?cDIs@CSAq@CoK]SLsBMe@CwAG_BGs@AaBEuBAyJCkI?yJ@aA@kB@aGBO?W?I?eFBwFA{B?sA?u@?gD?u@?o@AgA?q@?}@?w@?u@?sA?yG?[?wBAe@?i@?iIA{DFaKR}DBqBAcHEwOa@sDKaFIcGEwCDsI?aIDgFBwC@kVHkENs@DsCL}@BmBDg@Uy@@cA@mA@wA@o@?M?O?iA@sAAoA?o@?kD?}A?a@A[RQ?W?_@Aq@?oD@gFDsDBoD@U?yH@oD?mNAgC?yHCoACiCCkA?mJGiKIwOIqQK_FEqJG_F@{GAqP@_B?kBA}CBuDCuGBaJ@sEA_CAcHEmHGWAS?kA?sAA}@?kBBKKK@eECi@?O?sBCiAAg@AkAAcAAq@AiA?OAk@AG?M?aC?i@@IHuDFi@@wC?mA?Y?_@?cM@A?e@?cA@S?c@?u@?wA?mB?oD?aA?W?S?aA?W?yA@}@?k@?k@?cB?{A?_B@K?cA?U?aA?O?q@?U?I@oA?S?Q?cBDo@AU?S?O?cA?Q?U?s@?c@?U?_@?I?q@?U?oA?_@?a@A[?[?O?gB?M?I?W?q@?i@AY?[?uA?U?I?O?U?Q?_@?S?S?Q?Q?c@?c@?W@K?o@?i@?S?iCAq@AwB?g@?i@?U?i@?e@?a@?[?cA?K?k@?S?K?K?_@?cBB_@?IE{C@[?_@AY?uA?[Am@GkBCgABoD@uACK@KHy@?S?I?c@?y@?c@?o@?e@Ai@?Q?c@?g@?g@?u@?[?I?g@?S?g@?aA?k@?q@Ae@?uA@GA}@Ag@Ai@?WAm@?c@?_@?W?]?]AkB?oB?[?WAW?gA?aBAs@?]?U?eBAi@?a@?u@?u@Aw@?S?K?U?]A_BCaB?e@?_@AM?_A?kA?UAm@?u@?i@A_@?u@?y@AO?]?o@?cA?gBAQ?W?M?cA?W?W?iA?OAM@KMO?k@?YAY?]AS???_@Aw@@Y?c@Ay@?q@?w@@m@?g@?]@WLm@?w@BsA?u@?i@?gB@iAAcA?qA@U?}A?eBBs@@I?o@@W?U?]?W?kAAsABK?e@?U@gA@}EBU?yBBqCDkBAw@Aa@@W?MAI@MMwD?s@AqA@_BDa@AK@]?U?gA@S?gA?Y?kG?eC@w@?_@LgIOkAA_@AeECyAAsBAsG?aG?cXDuq@C}[AmHAc@AW?gDC}BCY?y@?}JDmA@Y?aCJuDPK@I@{AJm@BsFTmABcHD}DAeIBgMB{G?cD?gSDkC@qDE}EEkEM_DQaCMy@EcDGkCCiEA]?m@A}A?k@?eD@sB?}@?kJ@cQ@mDAaB@c@?cLFaP@mA?K?kA@kD?Y?cBAa@A_C?oK@eACiA?}LAqEAi@@WIwGDa_@?S?{@?wJ?uF?iHBeBD_CPkANeDj@}@R[FoBn@s@X{J|E}@d@}@d@yD~AmCp@iATwC`@gBJi@Dm@?_@B{@@}EBsCAwAAgEMoAEkDQsQaAkGc@yC]uAS{E{@eEcAeEoAeF}AmLoDGCiEeA}Ds@oM{AOCgPgB[EiAOwAKuIeAgAS}Ac@gBs@wA_A}@u@o@s@k@s@SYo@_Ac@w@[s@Wq@_@iAYcASaAYsBKu@KeB?KCu@AaA?_D@mAASBiABsI@oN@iE?yLEiQ?u@?uK?aA@{DMgDGs@QyA]yAu@aCu@iB}@{AQYkAmAcAu@y@c@y@]g@OsAYcAMqAEoBA}@B]As@@w@?}A@I?Y?_@?yC?m@AaH@mBA[NwDBc@@Q@yA?cCAqBC}@?oA?S?_@?{@?_B?s@?mE@cCAgFAs@?mACyBAkDE{@CmDK{EQeGSgZcAuCKC?WAkEQgJ[}AIcAKyCWwD[_DScDIe@?}B@kEPyC\\yD\\]DeBLgAJM@cCN_@@??c@B_B@{@@U?s@@S?I?u@?g@?YAi@@[?WAS?IGAAW?G?W?g@A_@@C@IHQ?[?y@@]?yABg@@iDHqCBgC?c@?mB?g@?gAAe@?oAAM?e@?Y@a@AyAAi@?WQ[Aa@?Q?cA?q@@O?_@?q@@[?SAu@?i@?k@?mA?[?yC@g@AiD?o@?q@AsA?[?U?cAA]?s@?e@AyAAK?Q?sA?sA?SA[?iAAgB?iB?eBAiBAuA?S?_@AgA?iBAi@?u@Aa@?q@AQ?gAAgC?{A?q@AG?uAAeAAG?s@?g@?mCAaDA}AAk@?{@Aw@?W?c@?k@AW?G?[?S?c@A[?[@c@?[AI?O?uAA_A?aB?iA@i@?eA?Q?]AiAAe@?gACs@AwB?}@?a@AeA?M?kA?cBAo@?o@?q@?s@Ak@?yA?o@?[?MA_@@_@Am@?mBAu@?kA@{@BQ@K@w@La@HODe@NGBk@TKFa@RWPk@^aA|@OLoAzAWXg@j@_@b@MNGHy@`A_A~@QVQRM^e@f@KLc@^g@`@{@h@]PWH_@PWEcARw@Jm@DkB@uBAY?]?]Ak@?}DAg@?_A?cCA{ACa@@[?U?Q?aAAW?]?s@A_BCK?yBC]?}ADMHyB?mAAY?}BAU?k@?qACW?O?S?eBA_EC{A?gDAyD?aP@}A?mI?yBA[?sA?iA?i@?}@?Y@cB?aD?uB?S?Q?{@?}@?o@?O?UASMU?eB@}@?sA?_@A]?yCBM?I?iB?wA?[?cB?Y?_A?y@?_@?g@?sA?{@?mA@}A?a@@mEAu@?kE?c@?k@@]@QAa@?a@?_A?QL}@BeEAoC?_H@u@?_A@{BA]M{B?kDA}CBiI?s@?qZCE?[@uC?eFAgE?eA@mA?_AAmDC_D?[?oC?aB?u@@IAO?_@@_@?eCAg@?wAAwA@O?GLs@?iEEQAQOi@@kCDkB?W?aHAM?WCMHuFGaE?wIAy@?[?gA?wD?U@cB?Q@w@Ak@?g@?e@AoA?aCB_@?c@?Y?k@@KAcCF{CDwB@oC@_A@iBCe@?m@?c@@GIO?wAAiA?mCAeB@I?_FBqC?}AG_ACy@C_@C_C@g@?{CCeCAkCE{BC_KEeDC{BEi@?s@RiHG{HEyCCeBAO?iLIiKEK@c@CMAU?e@AaAA]?qAA{@AO?O?o@?IAcA?KA[?oBAqCAw@?c@AqA?gC@sD?O?iA?cAAeE@qA?uA?qB?g@@Y?wDBgC?wA?}C?kE@]?kA?{@@_BAo@Bq@?y@?gABWAaA?iA?_A?u@AU?{@Ce@?kFCsECO?W?gBCs@?Q?kA?wDAyCDeA@oHAu@?yDAsADUAoA?}B?aA@iB@O?yA?w@@aD?WAkCAw@?q@?{AAQ?aD?sA?y@?k@?O?}AAeDAeCCo@?qD?yBAe@Aa@AO?g@AG?y@Cy@?{@BeABW?s@@i@@w@?_@?[?Y?w@?cB?i@?e@Ao@?M?M?aAAk@@aDEk@Aa@A]Am@Aa@AY?]?_@As@?sA?q@Ai@?S@sDHgADW?i@BgCF}E?_A?_@?_@?}A?wABK?}@Bw@@kB?gB?mGCq@AwA?iC?M?yA?kC?wA?iA?{BAmB?i@??\\?dB?v@Af@?r@?^?^?b@?H?R?hA?bA?V?h@AzB?rD?H?lDAnD?vD?xAEvAAN?VC~@EJEBE@GASKGGeA}A[e@oAiB]i@yB?uCAqE?",
+     "encodedPolylinePrecision": 5
+    }
+   ],
+   "sections": [
+    {
+     "startPointIndex": 0,
+     "endPointIndex": 7,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "other"
+    },
+    {
+     "startPointIndex": 7,
+     "endPointIndex": 2141,
+     "sectionType": "TRAVEL_MODE",
+     "travelMode": "truck"
+    }
+   ],
+   "progress": [
+    {
+     "pointIndex": 0,
+     "travelTimeInSeconds": 0,
+     "distanceInMeters": 0
+    },
+    {
+     "pointIndex": 18,
+     "travelTimeInSeconds": 51,
+     "distanceInMeters": 200
+    },
+    {
+     "pointIndex": 30,
+     "travelTimeInSeconds": 92,
+     "distanceInMeters": 267
+    },
+    {
+     "pointIndex": 41,
+     "travelTimeInSeconds": 150,
+     "distanceInMeters": 410
+    },
+    {
+     "pointIndex": 45,
+     "travelTimeInSeconds": 171,
+     "distanceInMeters": 582
+    },
+    {
+     "pointIndex": 48,
+     "travelTimeInSeconds": 198,
+     "distanceInMeters": 649
+    },
+    {
+     "pointIndex": 55,
+     "travelTimeInSeconds": 217,
+     "distanceInMeters": 775
+    },
+    {
+     "pointIndex": 66,
+     "travelTimeInSeconds": 294,
+     "distanceInMeters": 1031
+    },
+    {
+     "pointIndex": 77,
+     "travelTimeInSeconds": 357,
+     "distanceInMeters": 1193
+    },
+    {
+     "pointIndex": 87,
+     "travelTimeInSeconds": 449,
+     "distanceInMeters": 1474
+    },
+    {
+     "pointIndex": 97,
+     "travelTimeInSeconds": 489,
+     "distanceInMeters": 1771
+    },
+    {
+     "pointIndex": 126,
+     "travelTimeInSeconds": 539,
+     "distanceInMeters": 2425
+    },
+    {
+     "pointIndex": 163,
+     "travelTimeInSeconds": 646,
+     "distanceInMeters": 3226
+    },
+    {
+     "pointIndex": 204,
+     "travelTimeInSeconds": 853,
+     "distanceInMeters": 4891
+    },
+    {
+     "pointIndex": 224,
+     "travelTimeInSeconds": 902,
+     "distanceInMeters": 5928
+    },
+    {
+     "pointIndex": 298,
+     "travelTimeInSeconds": 1130,
+     "distanceInMeters": 9749
+    },
+    {
+     "pointIndex": 333,
+     "travelTimeInSeconds": 1227,
+     "distanceInMeters": 12235
+    },
+    {
+     "pointIndex": 341,
+     "travelTimeInSeconds": 1261,
+     "distanceInMeters": 12607
+    },
+    {
+     "pointIndex": 424,
+     "travelTimeInSeconds": 1440,
+     "distanceInMeters": 16978
+    },
+    {
+     "pointIndex": 569,
+     "travelTimeInSeconds": 1849,
+     "distanceInMeters": 27742
+    },
+    {
+     "pointIndex": 575,
+     "travelTimeInSeconds": 1869,
+     "distanceInMeters": 27952
+    },
+    {
+     "pointIndex": 580,
+     "travelTimeInSeconds": 1902,
+     "distanceInMeters": 28032
+    },
+    {
+     "pointIndex": 581,
+     "travelTimeInSeconds": 1912,
+     "distanceInMeters": 28044
+    },
+    {
+     "pointIndex": 603,
+     "travelTimeInSeconds": 1961,
+     "distanceInMeters": 28497
+    },
+    {
+     "pointIndex": 606,
+     "travelTimeInSeconds": 1979,
+     "distanceInMeters": 28562
+    },
+    {
+     "pointIndex": 645,
+     "travelTimeInSeconds": 2063,
+     "distanceInMeters": 29781
+    },
+    {
+     "pointIndex": 655,
+     "travelTimeInSeconds": 2092,
+     "distanceInMeters": 30111
+    },
+    {
+     "pointIndex": 682,
+     "travelTimeInSeconds": 2190,
+     "distanceInMeters": 32322
+    },
+    {
+     "pointIndex": 686,
+     "travelTimeInSeconds": 2211,
+     "distanceInMeters": 32512
+    },
+    {
+     "pointIndex": 691,
+     "travelTimeInSeconds": 2225,
+     "distanceInMeters": 32594
+    },
+    {
+     "pointIndex": 723,
+     "travelTimeInSeconds": 2323,
+     "distanceInMeters": 34019
+    },
+    {
+     "pointIndex": 730,
+     "travelTimeInSeconds": 2349,
+     "distanceInMeters": 34233
+    },
+    {
+     "pointIndex": 752,
+     "travelTimeInSeconds": 2389,
+     "distanceInMeters": 34874
+    },
+    {
+     "pointIndex": 765,
+     "travelTimeInSeconds": 2417,
+     "distanceInMeters": 35298
+    },
+    {
+     "pointIndex": 782,
+     "travelTimeInSeconds": 2459,
+     "distanceInMeters": 36042
+    },
+    {
+     "pointIndex": 785,
+     "travelTimeInSeconds": 2482,
+     "distanceInMeters": 36131
+    },
+    {
+     "pointIndex": 809,
+     "travelTimeInSeconds": 2560,
+     "distanceInMeters": 37520
+    },
+    {
+     "pointIndex": 813,
+     "travelTimeInSeconds": 2581,
+     "distanceInMeters": 37671
+    },
+    {
+     "pointIndex": 816,
+     "travelTimeInSeconds": 2595,
+     "distanceInMeters": 37725
+    },
+    {
+     "pointIndex": 832,
+     "travelTimeInSeconds": 2641,
+     "distanceInMeters": 38426
+    },
+    {
+     "pointIndex": 849,
+     "travelTimeInSeconds": 2699,
+     "distanceInMeters": 39298
+    },
+    {
+     "pointIndex": 854,
+     "travelTimeInSeconds": 2716,
+     "distanceInMeters": 39369
+    },
+    {
+     "pointIndex": 873,
+     "travelTimeInSeconds": 2767,
+     "distanceInMeters": 40352
+    },
+    {
+     "pointIndex": 889,
+     "travelTimeInSeconds": 2825,
+     "distanceInMeters": 41640
+    },
+    {
+     "pointIndex": 893,
+     "travelTimeInSeconds": 2850,
+     "distanceInMeters": 41799
+    },
+    {
+     "pointIndex": 930,
+     "travelTimeInSeconds": 2960,
+     "distanceInMeters": 44296
+    },
+    {
+     "pointIndex": 939,
+     "travelTimeInSeconds": 3022,
+     "distanceInMeters": 45653
+    },
+    {
+     "pointIndex": 947,
+     "travelTimeInSeconds": 3087,
+     "distanceInMeters": 46991
+    },
+    {
+     "pointIndex": 954,
+     "travelTimeInSeconds": 3107,
+     "distanceInMeters": 47292
+    },
+    {
+     "pointIndex": 959,
+     "travelTimeInSeconds": 3133,
+     "distanceInMeters": 47427
+    },
+    {
+     "pointIndex": 977,
+     "travelTimeInSeconds": 3184,
+     "distanceInMeters": 48450
+    },
+    {
+     "pointIndex": 1008,
+     "travelTimeInSeconds": 3356,
+     "distanceInMeters": 52528
+    },
+    {
+     "pointIndex": 1022,
+     "travelTimeInSeconds": 3396,
+     "distanceInMeters": 53030
+    },
+    {
+     "pointIndex": 1026,
+     "travelTimeInSeconds": 3412,
+     "distanceInMeters": 53139
+    },
+    {
+     "pointIndex": 1061,
+     "travelTimeInSeconds": 3510,
+     "distanceInMeters": 54539
+    },
+    {
+     "pointIndex": 1064,
+     "travelTimeInSeconds": 3523,
+     "distanceInMeters": 54585
+    },
+    {
+     "pointIndex": 1065,
+     "travelTimeInSeconds": 3560,
+     "distanceInMeters": 54630
+    },
+    {
+     "pointIndex": 1116,
+     "travelTimeInSeconds": 3637,
+     "distanceInMeters": 55618
+    },
+    {
+     "pointIndex": 1127,
+     "travelTimeInSeconds": 3681,
+     "distanceInMeters": 55890
+    },
+    {
+     "pointIndex": 1141,
+     "travelTimeInSeconds": 3739,
+     "distanceInMeters": 56235
+    },
+    {
+     "pointIndex": 1159,
+     "travelTimeInSeconds": 3816,
+     "distanceInMeters": 56739
+    },
+    {
+     "pointIndex": 1170,
+     "travelTimeInSeconds": 3846,
+     "distanceInMeters": 56979
+    },
+    {
+     "pointIndex": 1173,
+     "travelTimeInSeconds": 3865,
+     "distanceInMeters": 57065
+    },
+    {
+     "pointIndex": 1233,
+     "travelTimeInSeconds": 3993,
+     "distanceInMeters": 58533
+    },
+    {
+     "pointIndex": 1239,
+     "travelTimeInSeconds": 4009,
+     "distanceInMeters": 58607
+    },
+    {
+     "pointIndex": 1242,
+     "travelTimeInSeconds": 4028,
+     "distanceInMeters": 58674
+    },
+    {
+     "pointIndex": 1268,
+     "travelTimeInSeconds": 4099,
+     "distanceInMeters": 59419
+    },
+    {
+     "pointIndex": 1288,
+     "travelTimeInSeconds": 4171,
+     "distanceInMeters": 60195
+    },
+    {
+     "pointIndex": 1291,
+     "travelTimeInSeconds": 4197,
+     "distanceInMeters": 60275
+    },
+    {
+     "pointIndex": 1294,
+     "travelTimeInSeconds": 4210,
+     "distanceInMeters": 60344
+    },
+    {
+     "pointIndex": 1307,
+     "travelTimeInSeconds": 4259,
+     "distanceInMeters": 61148
+    },
+    {
+     "pointIndex": 1398,
+     "travelTimeInSeconds": 4657,
+     "distanceInMeters": 71541
+    },
+    {
+     "pointIndex": 1400,
+     "travelTimeInSeconds": 4666,
+     "distanceInMeters": 71622
+    },
+    {
+     "pointIndex": 1406,
+     "travelTimeInSeconds": 4688,
+     "distanceInMeters": 71953
+    },
+    {
+     "pointIndex": 1423,
+     "travelTimeInSeconds": 4767,
+     "distanceInMeters": 74057
+    },
+    {
+     "pointIndex": 1449,
+     "travelTimeInSeconds": 4830,
+     "distanceInMeters": 75398
+    },
+    {
+     "pointIndex": 1450,
+     "travelTimeInSeconds": 4841,
+     "distanceInMeters": 75466
+    },
+    {
+     "pointIndex": 1452,
+     "travelTimeInSeconds": 4859,
+     "distanceInMeters": 75508
+    },
+    {
+     "pointIndex": 1500,
+     "travelTimeInSeconds": 4985,
+     "distanceInMeters": 78414
+    },
+    {
+     "pointIndex": 1513,
+     "travelTimeInSeconds": 5021,
+     "distanceInMeters": 79143
+    },
+    {
+     "pointIndex": 1543,
+     "travelTimeInSeconds": 5127,
+     "distanceInMeters": 81580
+    },
+    {
+     "pointIndex": 1548,
+     "travelTimeInSeconds": 5141,
+     "distanceInMeters": 81669
+    },
+    {
+     "pointIndex": 1552,
+     "travelTimeInSeconds": 5155,
+     "distanceInMeters": 81744
+    },
+    {
+     "pointIndex": 1585,
+     "travelTimeInSeconds": 5214,
+     "distanceInMeters": 82614
+    },
+    {
+     "pointIndex": 1608,
+     "travelTimeInSeconds": 5267,
+     "distanceInMeters": 83273
+    },
+    {
+     "pointIndex": 1610,
+     "travelTimeInSeconds": 5283,
+     "distanceInMeters": 83327
+    },
+    {
+     "pointIndex": 1621,
+     "travelTimeInSeconds": 5328,
+     "distanceInMeters": 83662
+    },
+    {
+     "pointIndex": 1632,
+     "travelTimeInSeconds": 5370,
+     "distanceInMeters": 84085
+    },
+    {
+     "pointIndex": 1655,
+     "travelTimeInSeconds": 5431,
+     "distanceInMeters": 84849
+    },
+    {
+     "pointIndex": 1660,
+     "travelTimeInSeconds": 5457,
+     "distanceInMeters": 84926
+    },
+    {
+     "pointIndex": 1720,
+     "travelTimeInSeconds": 5570,
+     "distanceInMeters": 86547
+    },
+    {
+     "pointIndex": 1743,
+     "travelTimeInSeconds": 5627,
+     "distanceInMeters": 87223
+    },
+    {
+     "pointIndex": 1773,
+     "travelTimeInSeconds": 5691,
+     "distanceInMeters": 88237
+    },
+    {
+     "pointIndex": 1803,
+     "travelTimeInSeconds": 5779,
+     "distanceInMeters": 89814
+    },
+    {
+     "pointIndex": 1842,
+     "travelTimeInSeconds": 5881,
+     "distanceInMeters": 91609
+    },
+    {
+     "pointIndex": 1858,
+     "travelTimeInSeconds": 5959,
+     "distanceInMeters": 93106
+    },
+    {
+     "pointIndex": 1865,
+     "travelTimeInSeconds": 5975,
+     "distanceInMeters": 93282
+    },
+    {
+     "pointIndex": 1921,
+     "travelTimeInSeconds": 6127,
+     "distanceInMeters": 95896
+    },
+    {
+     "pointIndex": 1947,
+     "travelTimeInSeconds": 6234,
+     "distanceInMeters": 97826
+    },
+    {
+     "pointIndex": 1950,
+     "travelTimeInSeconds": 6250,
+     "distanceInMeters": 97925
+    },
+    {
+     "pointIndex": 1953,
+     "travelTimeInSeconds": 6270,
+     "distanceInMeters": 97976
+    },
+    {
+     "pointIndex": 1966,
+     "travelTimeInSeconds": 6311,
+     "distanceInMeters": 98492
+    },
+    {
+     "pointIndex": 1968,
+     "travelTimeInSeconds": 6323,
+     "distanceInMeters": 98571
+    },
+    {
+     "pointIndex": 1986,
+     "travelTimeInSeconds": 6394,
+     "distanceInMeters": 99535
+    },
+    {
+     "pointIndex": 1988,
+     "travelTimeInSeconds": 6409,
+     "distanceInMeters": 99588
+    },
+    {
+     "pointIndex": 2018,
+     "travelTimeInSeconds": 6526,
+     "distanceInMeters": 101095
+    },
+    {
+     "pointIndex": 2020,
+     "travelTimeInSeconds": 6554,
+     "distanceInMeters": 101198
+    },
+    {
+     "pointIndex": 2065,
+     "travelTimeInSeconds": 6667,
+     "distanceInMeters": 102750
+    },
+    {
+     "pointIndex": 2068,
+     "travelTimeInSeconds": 6686,
+     "distanceInMeters": 102809
+    },
+    {
+     "pointIndex": 2094,
+     "travelTimeInSeconds": 6770,
+     "distanceInMeters": 103946
+    },
+    {
+     "pointIndex": 2096,
+     "travelTimeInSeconds": 6795,
+     "distanceInMeters": 104030
+    },
+    {
+     "pointIndex": 2101,
+     "travelTimeInSeconds": 6820,
+     "distanceInMeters": 104317
+    },
+    {
+     "pointIndex": 2103,
+     "travelTimeInSeconds": 6841,
+     "distanceInMeters": 104401
+    },
+    {
+     "pointIndex": 2104,
+     "travelTimeInSeconds": 6855,
+     "distanceInMeters": 104414
+    },
+    {
+     "pointIndex": 2132,
+     "travelTimeInSeconds": 6921,
+     "distanceInMeters": 105160
+    },
+    {
+     "pointIndex": 2136,
+     "travelTimeInSeconds": 6938,
+     "distanceInMeters": 105255
+    },
+    {
+     "pointIndex": 2141,
+     "travelTimeInSeconds": 6999,
+     "distanceInMeters": 105610
+    }
+   ]
+  }
+ ]
+}
