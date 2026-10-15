@@ -27,7 +27,8 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy .
-      - run: python -m pytest
+      - run: coverage run -m pytest
+      - run: coverage report
 
   frontend:
     runs-on: ubuntu-latest

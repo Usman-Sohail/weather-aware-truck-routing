@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FakeMap } from '../../test/fakeMap';
 import type { LonLat } from '../../types/api';
@@ -31,6 +31,14 @@ function renderLayer(map: FakeMap, props: Partial<Props> = {}) {
   const view = render(layer(props));
   return { ...view, update: (next: Partial<Props>) => view.rerender(layer(next)) };
 }
+
+beforeEach(() => {
+  vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+    callback(0);
+    return 1;
+  });
+  vi.stubGlobal('cancelAnimationFrame', () => {});
+});
 
 describe('TruckLayer', () => {
   it('draws the trucks above everything else on the map', () => {

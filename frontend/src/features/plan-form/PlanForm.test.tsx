@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -153,5 +153,30 @@ describe('PlanForm', () => {
     await user.type(screen.getByLabelText('Cargo weight'), 'abc42,0x00 lb');
 
     expect(screen.getByLabelText('Cargo weight')).toHaveValue('42,000');
+  });
+
+  it('waits for a lookup still in flight instead of refusing to plan', async () => {
+    const user = userEvent.setup();
+    const release: (() => void)[] = [];
+    const slowSearch: PlaceSearch = (query) =>
+      new Promise((resolve) => {
+        release.push(() => resolve(query.startsWith('Chi') ? [CHICAGO] : [DENVER]));
+      });
+    const { onSubmit } = renderForm({ search: slowSearch });
+
+    await user.type(screen.getByLabelText('Starting place'), 'Denver');
+    await user.type(screen.getByLabelText('Destination'), 'Chicago');
+    await user.type(screen.getByLabelText('Cargo weight'), '42000');
+    await user.click(screen.getByRole('button', { name: 'Compare routes' }));
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    await act(async () => {
+      for (const resolve of release) resolve();
+    });
+
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ origin: DENVER, destination: CHICAGO }),
+    );
+    expect(screen.queryByText('Choose a destination from the matches.')).not.toBeInTheDocument();
   });
 });

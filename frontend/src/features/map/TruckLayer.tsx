@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import type { PlannedRoute } from '../../types/api';
 import { TRUCK_LAYER_IDS, TRUCK_SOURCE_ID, truckLayers, truckPositions } from './trucks';
+import { useFrameCallback } from './useFrameCallback';
 import { useTripMap } from './useTripMap';
 
 interface TruckLayerProps {
@@ -29,11 +30,16 @@ export function TruckLayer({ routes, hour, selectedRouteId }: TruckLayerProps) {
     };
   }, [map]);
 
-  useEffect(() => {
+  // Coalesced like the heatmap, so both move in the same frame while the slider is dragged.
+  const show = useFrameCallback((at: number) => {
     void map
       ?.getSource<GeoJSONSource>(TRUCK_SOURCE_ID)
-      ?.setData(truckPositions(routes, hour, selectedRouteId));
-  }, [map, routes, hour, selectedRouteId]);
+      ?.setData(truckPositions(routes, at, selectedRouteId));
+  });
+
+  useEffect(() => {
+    show(hour);
+  }, [map, routes, hour, selectedRouteId, show]);
 
   return null;
 }

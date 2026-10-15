@@ -1,4 +1,11 @@
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import {
+  type KeyboardEvent,
+  type Ref,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import { ApiError, geocode, isAbortError } from '../../lib/api';
 import { shortPlaceName } from '../../lib/format';
@@ -18,6 +25,11 @@ type Lookup =
   | { status: 'found'; query: string; candidates: PlaceCandidate[] }
   | { status: 'failed'; message: string };
 
+export interface PlaceFieldHandle {
+  /** The place this field stands for, looking it up first if that has not happened yet. */
+  resolve: () => Promise<PlaceCandidate | null>;
+}
+
 interface PlaceFieldProps {
   id: string;
   label: string;
@@ -25,6 +37,7 @@ interface PlaceFieldProps {
   onChange: (place: PlaceCandidate | null) => void;
   error?: string;
   search?: PlaceSearch;
+  ref?: Ref<PlaceFieldHandle>;
 }
 
 /**
@@ -39,6 +52,7 @@ export function PlaceField({
   onChange,
   error,
   search = searchPlaces,
+  ref,
 }: PlaceFieldProps) {
   const [text, setText] = useState(value?.name ?? '');
   const [lookup, setLookup] = useState<Lookup>({ status: 'idle' });
@@ -51,10 +65,10 @@ export function PlaceField({
     onChange(place);
   }
 
-  async function runSearch() {
+  async function runSearch(): Promise<PlaceCandidate | null> {
     const query = text.trim();
     if (query.length < MIN_QUERY_LENGTH || query === value?.name) {
-      return;
+      return value ?? null;
     }
     pending.current?.abort();
     const controller = new AbortController();
@@ -67,9 +81,10 @@ export function PlaceField({
       if (best) {
         choose(best);
       }
+      return best ?? null;
     } catch (caught) {
       if (isAbortError(caught)) {
-        return;
+        return value ?? null;
       }
       setLookup({
         status: 'failed',
@@ -77,7 +92,11 @@ export function PlaceField({
           caught instanceof ApiError ? caught.message : 'The place search failed. Try again.',
       });
     }
+    return null;
   }
+
+  // Submitting counts as leaving the field, so a place typed but never looked up still counts.
+  useImperativeHandle(ref, () => ({ resolve: runSearch }));
 
   function handleTextChange(next: string) {
     // A lookup still in flight answers for text that no longer exists.
