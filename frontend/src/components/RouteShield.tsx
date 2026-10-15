@@ -7,7 +7,6 @@ interface RouteShieldProps {
   decorative?: boolean;
 }
 
-/** The route's letter in a highway-shield outline, the label routes carry everywhere. */
 export function RouteShield({ id, size = 28, decorative = false }: RouteShieldProps) {
   return (
     <svg

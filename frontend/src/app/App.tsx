@@ -30,8 +30,6 @@ export function App() {
   const formArea = useRef<HTMLDivElement>(null);
   const summary = useRef<HTMLDivElement>(null);
 
-  // The form folds into a summary while a plan runs or shows its results. It comes back
-  // to edit the trip, and with the reason when planning fails.
   const showForm = editing || state.status === 'failed';
   const summaryTrip = showForm ? null : state.trip;
 

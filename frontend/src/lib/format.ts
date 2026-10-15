@@ -54,7 +54,6 @@ function formatWeekdayTime(date: Date, timeZone: string, withZone: boolean): str
   return withZone ? `${text} ${part('timeZoneName')}` : text;
 }
 
-/** Weekday, time and zone abbreviation in ``timeZone``, e.g. "Fri, 8:00 AM MDT". */
 export function formatClock(iso: string, timeZone: string, withZone = true): string {
   return formatWeekdayTime(new Date(iso), timeZone, withZone);
 }
@@ -94,7 +93,6 @@ export function formatForecastHour(forecastHourUtc: string, timeZone: string): s
     : `${start.time} ${start.zone} to ${end.time} ${end.zone}`;
 }
 
-/** The wall-clock time in ``timeZone`` as "YYYY-MM-DDTHH:MM", the departure input's format. */
 export function wallClockInZone(date: Date, timeZone: string): string {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
@@ -116,7 +114,6 @@ export function nextQuarterHour(date: Date): Date {
   return new Date(Math.floor(date.getTime() / QUARTER_HOUR_MS) * QUARTER_HOUR_MS + QUARTER_HOUR_MS);
 }
 
-/** The zone's short name at ``date``, e.g. "MDT" or "MST" for America/Denver. */
 export function zoneAbbreviation(timeZone: string, date: Date): string {
   const part = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'short' })
     .formatToParts(date)

@@ -10,7 +10,6 @@ import type { RiskRun, RouteView } from './model';
 import styles from './RouteComparison.module.css';
 
 interface RouteComparisonProps {
-  /** Best first, as ranked by the assessment. */
   routes: RouteView[];
   recommendation: Recommendation;
   selectedId: string | null;
@@ -19,10 +18,6 @@ interface RouteComparisonProps {
 
 const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
-/**
- * Each route as a strip of its risk from start to finish, all on one mile scale, so the
- * driver sees how long each route is and where its trouble lies before opening any detail.
- */
 export function RouteComparison({
   routes,
   recommendation,
@@ -135,7 +130,6 @@ function recommendationTag({ status }: Recommendation): string | null {
   return status === 'unavailable' ? null : 'Recommended';
 }
 
-/** "300 mi High, 25 mi Moderate", or a plain statement when the whole route is Low. */
 function riskSummary(route: RouteView): string {
   const notable = notableMiles(route.metrics);
   if (notable.length === 0) return 'Low risk the whole way';

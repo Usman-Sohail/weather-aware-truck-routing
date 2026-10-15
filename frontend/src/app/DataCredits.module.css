@@ -1,4 +1,3 @@
-/* Sits at the foot of the panel, or right after the results once they fill it. */
 .credits {
   margin-top: auto;
   padding-top: var(--space-3);

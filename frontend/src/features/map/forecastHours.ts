@@ -16,7 +16,6 @@ export interface HourInfo {
    */
   forecastHourUtc: string;
   forecastLabel: string;
-  /** The same in words, for `aria-valuetext`. */
   spokenLabel: string;
 }
 
@@ -40,7 +39,6 @@ export function hourInfo(departureUtc: string, timeZone: string, k: number): Hou
   };
 }
 
-/** Seconds precision with a Z, the form the API uses. */
 function isoUtc(ms: number): string {
   return `${new Date(ms).toISOString().slice(0, 19)}Z`;
 }

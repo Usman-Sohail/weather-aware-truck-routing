@@ -24,7 +24,6 @@ class RiskLevel(IntEnum):
 
     @property
     def label(self) -> str:
-        """Human-readable name, e.g. ``No Travel``."""
         return self.name.replace("_", " ").title()
 
 

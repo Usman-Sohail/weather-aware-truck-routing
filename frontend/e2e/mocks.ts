@@ -9,8 +9,6 @@ const json =
   (route) =>
     route.fulfill({ status, json: body, headers: { 'Access-Control-Allow-Origin': '*' } });
 
-// Answers every request the app makes, so tests never reach the backend, the providers or
-// the basemap.
 export async function mockServices(
   page: Page,
   { routes = json(PLAN) }: { routes?: Responder } = {},

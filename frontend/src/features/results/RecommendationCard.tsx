@@ -5,7 +5,6 @@ import type { RouteView } from './model';
 import styles from './RecommendationCard.module.css';
 
 interface RecommendationCardProps {
-  /** The recommended route, or null when no route can be recommended. */
   route: RouteView | null;
   recommendation: Recommendation;
   loadLb: number;

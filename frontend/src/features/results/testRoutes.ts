@@ -43,7 +43,6 @@ export function testCheckpoint(
   };
 }
 
-/** A route whose checkpoints sit every ``lengthMi / (levels.length - 1)`` miles. */
 export function testRoute(
   id: string,
   rank: number,

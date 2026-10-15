@@ -156,7 +156,6 @@ const ASSESSMENT = {
   heatmap: { hours: 49, frames: [] },
 };
 
-/** Answers each request the way the backend and the forecast service would. */
 function mockServices(routes: () => Response = () => Response.json(PLAN)) {
   const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);

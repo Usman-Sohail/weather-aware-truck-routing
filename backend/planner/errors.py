@@ -185,7 +185,6 @@ def _as_strings(value: Any) -> list[str]:
 
 
 def not_found_view(request: HttpRequest, exception: Exception) -> JsonResponse:
-    """Django-level 404 handler for URLs outside any API view."""
     response = JsonResponse(
         error_body("NOT_FOUND", "The requested resource was not found."), status=404
     )
@@ -194,7 +193,6 @@ def not_found_view(request: HttpRequest, exception: Exception) -> JsonResponse:
 
 
 def server_error_view(request: HttpRequest) -> JsonResponse:
-    """Django-level 500 handler for errors raised outside DRF views."""
     response = JsonResponse(error_body("INTERNAL_ERROR", INTERNAL_ERROR_MESSAGE), status=500)
     add_never_cache_headers(response)
     return response
