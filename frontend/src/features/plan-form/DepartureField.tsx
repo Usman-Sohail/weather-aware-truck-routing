@@ -78,7 +78,7 @@ interface DayOption {
   date: string;
   weekday: string;
   dayOfMonth: string;
-  /** "October", or "January 2027" once the days reach another year. */
+  /** "October 2026". */
   monthLabel: string;
   spoken: string;
 }
@@ -104,10 +104,7 @@ function dayOptions(today: string, days: number): DayOption[] {
       date: moment.toISOString().slice(0, 10),
       weekday: WEEKDAY.format(moment),
       dayOfMonth: String(moment.getUTCDate()),
-      monthLabel:
-        moment.getUTCFullYear() === year
-          ? MONTH.format(moment)
-          : `${MONTH.format(moment)} ${moment.getUTCFullYear()}`,
+      monthLabel: `${MONTH.format(moment)} ${moment.getUTCFullYear()}`,
       spoken: SPOKEN.format(moment),
     };
   });

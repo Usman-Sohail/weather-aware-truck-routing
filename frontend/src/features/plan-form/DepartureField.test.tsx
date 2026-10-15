@@ -28,7 +28,7 @@ describe('DepartureField', () => {
   it('gathers the days under the month they belong to', () => {
     const days = renderField('2026-10-15');
 
-    expect(months()).toEqual(['October']);
+    expect(months()).toEqual(['October 2026']);
     expect(days).toEqual([
       'Today15',
       'Fri16',
@@ -44,14 +44,14 @@ describe('DepartureField', () => {
   it('starts a new month where the days cross into it', () => {
     const days = renderField('2026-10-29');
 
-    expect(months()).toEqual(['October', 'November']);
+    expect(months()).toEqual(['October 2026', 'November 2026']);
     expect(days).toEqual(['Today29', 'Fri30', 'Sat31', 'Sun1', 'Mon2', 'Tue3', 'Wed4', 'Thu5']);
   });
 
-  it('names the year as well once the days reach another one', () => {
+  it('names the year, including when the days reach another one', () => {
     renderField('2026-12-29');
 
-    expect(months()).toEqual(['December', 'January 2027']);
+    expect(months()).toEqual(['December 2026', 'January 2027']);
   });
 
   it('spells the whole date for screen readers', () => {
