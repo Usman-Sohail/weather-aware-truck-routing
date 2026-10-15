@@ -1,0 +1,18 @@
+/* Sits at the foot of the panel, or right after the results once they fill it. */
+.credits {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-rule);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+.credits a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.credits a:hover {
+  color: var(--color-ink);
+}

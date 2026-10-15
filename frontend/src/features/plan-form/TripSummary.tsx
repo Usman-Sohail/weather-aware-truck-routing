@@ -1,6 +1,6 @@
 import type { Ref } from 'react';
 
-import { formatLoad, formatWallClock, zoneAbbreviation } from '../../lib/format';
+import { formatLoad, formatMiles, formatWallClock, zoneAbbreviation } from '../../lib/format';
 import styles from './TripSummary.module.css';
 import type { Trip } from './validation';
 
@@ -23,7 +23,7 @@ export function TripSummary({ trip, onEdit, now = () => new Date(), ref }: TripS
       </p>
       <p className={styles.details}>
         Departs {formatWallClock(trip.departureLocal)} {zone}. {formatLoad(trip.loadLb)} of cargo,
-        weather every {trip.intervalMi} mi.
+        weather every {formatMiles(trip.intervalMi)}.
       </p>
       <button type="button" className={styles.edit} onClick={onEdit}>
         Edit trip

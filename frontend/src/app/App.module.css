@@ -29,8 +29,8 @@
 .panel {
   /* Keeps visually hidden controls inside the scroller instead of stretching the page. */
   position: relative;
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-5);
   padding: var(--space-5);
   border-right: 1px solid var(--color-rule);

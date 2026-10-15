@@ -11,6 +11,7 @@ import { useResults } from '../features/results/useResults';
 import { PlanStatus } from '../features/trip/PlanStatus';
 import { usePlanTrip } from '../features/trip/usePlanTrip';
 import styles from './App.module.css';
+import { DataCredits } from './DataCredits';
 import { ServiceStatusBadge } from './ServiceStatusBadge';
 import { useServiceStatus } from './useServiceStatus';
 
@@ -87,6 +88,7 @@ export function App() {
               )}
             </section>
           )}
+          <DataCredits />
         </div>
         <section className={styles.map} aria-label="Route map">
           <p className={styles.placeholder}>Map</p>
