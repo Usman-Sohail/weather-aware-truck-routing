@@ -45,7 +45,8 @@ class TomTomClient:
             "vehicleCommercial": "true",
             "vehicleWeight": TRUCK_GROSS_WEIGHT_KG,
             "maxAlternatives": MAX_ALTERNATIVES,
-            "routeRepresentation": "polyline",
+            # About ten times smaller than a list of point objects for long routes.
+            "routeRepresentation": "encodedPolyline",
             "extendedRouteRepresentation": ["distance", "travelTime"],
             "departAt": "now" if depart_at is None else depart_at.isoformat(timespec="seconds"),
         }
@@ -99,9 +100,11 @@ def parse_routes(payload: Any) -> tuple[RouteOption, ...]:
 
 def _parse_profile(route: Mapping[str, Any]) -> RouteProfile:
     points = [
-        (float(point["longitude"]), float(point["latitude"]))
+        point
         for leg in route["legs"]
-        for point in leg["points"]
+        for point in decode_polyline(
+            leg["encodedPolyline"], int(leg.get("encodedPolylinePrecision", 5))
+        )
     ]
     summary = route["summary"]
     last = len(points) - 1
@@ -122,6 +125,37 @@ def _parse_profile(route: Mapping[str, Any]) -> RouteProfile:
         ),
     )
     return build_profile(points, [anchors[index] for index in sorted(anchors)])
+
+
+def decode_polyline(encoded: str, precision: int = 5) -> list[LonLat]:
+    """Decode an encoded polyline (the widely used format TomTom returns) to (lon, lat).
+
+    Each value is a zig-zag encoded delta from the previous point, written in 5-bit chunks
+    offset by 63; latitude comes before longitude.
+    """
+    values: list[int] = []
+    current = shift = 0
+    for char in encoded:
+        chunk = ord(char) - 63
+        if not 0 <= chunk < 64:
+            raise ValueError("The encoded polyline contains an invalid character.")
+        current |= (chunk & 0x1F) << shift
+        if chunk & 0x20:
+            shift += 5
+            continue
+        values.append(~(current >> 1) if current & 1 else current >> 1)
+        current = shift = 0
+    if shift or len(values) % 2:
+        raise ValueError("The encoded polyline is truncated.")
+
+    factor = 10**precision
+    points: list[LonLat] = []
+    lat = lon = 0
+    for i in range(0, len(values), 2):
+        lat += values[i]
+        lon += values[i + 1]
+        points.append((lon / factor, lat / factor))
+    return points
 
 
 def parse_places(payload: Any) -> tuple[Place, ...]:

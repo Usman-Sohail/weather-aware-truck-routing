@@ -11,7 +11,12 @@ import responses
 from planner.errors import NoRouteError, ProviderUnavailableError
 from planner.providers.http import ProviderHttpClient
 from planner.providers.routing import RoutingProvider
-from planner.providers.tomtom import TRUCK_GROSS_WEIGHT_KG, TomTomClient, parse_routes
+from planner.providers.tomtom import (
+    TRUCK_GROSS_WEIGHT_KG,
+    TomTomClient,
+    decode_polyline,
+    parse_routes,
+)
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 KEY = "test-key"
@@ -60,7 +65,7 @@ def test_route_request_uses_the_truck_profile() -> None:
     assert query["vehicleCommercial"] == ["true"]
     assert query["vehicleWeight"] == [str(TRUCK_GROSS_WEIGHT_KG)]
     assert query["maxAlternatives"] == ["2"]
-    assert query["routeRepresentation"] == ["polyline"]
+    assert query["routeRepresentation"] == ["encodedPolyline"]
     assert query["extendedRouteRepresentation"] == ["distance", "travelTime"]
     assert query["departAt"] == ["now"]
 
@@ -122,7 +127,8 @@ def test_a_route_response_without_routes_means_no_route() -> None:
         lambda p: p.pop("routes"),
         lambda p: p["routes"][0].pop("legs"),
         lambda p: p["routes"][0]["progress"][1].pop("distanceInMeters"),
-        lambda p: p["routes"][0]["legs"][0]["points"][0].update(latitude="north"),
+        lambda p: p["routes"][0]["legs"][0].update(encodedPolyline="_p~iF~ps|U_ulLnnqC_mqNvxq"),
+        lambda p: p["routes"][0]["legs"][0].update(encodedPolyline=" not a polyline "),
     ],
 )
 def test_malformed_route_responses_report_the_service_as_unavailable(
@@ -204,3 +210,37 @@ def test_a_malformed_geocode_response_reports_the_service_as_unavailable() -> No
 
     with pytest.raises(ProviderUnavailableError):
         client().geocode("denver")
+
+
+def test_decode_polyline_matches_the_reference_example() -> None:
+    # The reference example of the encoded polyline format, in (lon, lat) order.
+    points = decode_polyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@")
+
+    assert points == [(-120.2, 38.5), (-120.95, 40.7), (-126.453, 43.252)]
+
+
+def test_decode_polyline_respects_the_precision() -> None:
+    assert decode_polyline("_p~iF~ps|U", precision=6) == [(-12.02, 3.85)]
+
+
+@pytest.mark.parametrize("encoded", ["_p~iF~ps|U_ulL", "_p~iF~ps", "_p~iF ~ps|U"])
+def test_decode_polyline_rejects_truncated_or_invalid_input(encoded: str) -> None:
+    with pytest.raises(ValueError):
+        decode_polyline(encoded)
+
+
+def test_a_recorded_tomtom_response_parses_into_consistent_profiles() -> None:
+    payload = fixture("tomtom_routes_real_denver_fort_collins.json")
+
+    options = parse_routes(payload)
+
+    assert len(options) == len(payload["routes"]) == 3
+    for option, route in zip(options, payload["routes"], strict=True):
+        profile = option.profile
+        assert route["progress"][-1]["pointIndex"] == len(profile.points) - 1
+        assert profile.length_m == route["summary"]["lengthInMeters"]
+        assert profile.travel_time_s == route["summary"]["travelTimeInSeconds"]
+        assert list(profile.distance_m) == sorted(profile.distance_m)
+        assert list(profile.elapsed_s) == sorted(profile.elapsed_s)
+        assert profile.points[0] == pytest.approx((-104.99, 39.74), abs=0.05)
+        assert profile.points[-1] == pytest.approx((-105.08, 40.59), abs=0.05)

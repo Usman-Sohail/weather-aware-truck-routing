@@ -15,52 +15,8 @@
             "lengthInMeters": 1612345,
             "travelTimeInSeconds": 55800
           },
-          "points": [
-            {
-              "latitude": 39.7392,
-              "longitude": -104.9903
-            },
-            {
-              "latitude": 40.25,
-              "longitude": -103.8
-            },
-            {
-              "latitude": 40.98,
-              "longitude": -102.3
-            },
-            {
-              "latitude": 41.12,
-              "longitude": -100.76
-            },
-            {
-              "latitude": 40.92,
-              "longitude": -98.34
-            },
-            {
-              "latitude": 40.81,
-              "longitude": -96.7
-            },
-            {
-              "latitude": 41.26,
-              "longitude": -95.93
-            },
-            {
-              "latitude": 41.59,
-              "longitude": -93.62
-            },
-            {
-              "latitude": 41.66,
-              "longitude": -91.53
-            },
-            {
-              "latitude": 41.52,
-              "longitude": -90.58
-            },
-            {
-              "latitude": 41.8781,
-              "longitude": -87.6298
-            }
-          ]
+          "encodedPolyline": "_qpqFj|x_SowbBkngFoqmC_~cH_jZ_xkH~`f@_twMnnT_i_Io{vAokuCom_AodbMotLoewK~iZopxDc}dAwe_Q",
+          "encodedPolylinePrecision": 5
         }
       ],
       "sections": [
@@ -108,52 +64,8 @@
             "lengthInMeters": 1701220,
             "travelTimeInSeconds": 58920
           },
-          "points": [
-            {
-              "latitude": 39.7392,
-              "longitude": -104.9903
-            },
-            {
-              "latitude": 39.27,
-              "longitude": -103.25
-            },
-            {
-              "latitude": 39.35,
-              "longitude": -101.7
-            },
-            {
-              "latitude": 38.88,
-              "longitude": -99.33
-            },
-            {
-              "latitude": 38.84,
-              "longitude": -97.61
-            },
-            {
-              "latitude": 39.05,
-              "longitude": -95.68
-            },
-            {
-              "latitude": 39.1,
-              "longitude": -94.58
-            },
-            {
-              "latitude": 40.2,
-              "longitude": -93.6
-            },
-            {
-              "latitude": 41.1,
-              "longitude": -92.3
-            },
-            {
-              "latitude": 41.5,
-              "longitude": -90.2
-            },
-            {
-              "latitude": 41.8781,
-              "longitude": -87.6298
-            }
-          ]
+          "encodedPolyline": "_qpqFj|x_SnszA{{rI_sNovmHnxzAo{mM~xF_}nIo_h@o}wJowH_zuE_zuE_l~D_xnD_||F_cmA_dyKczhAw~tN",
+          "encodedPolylinePrecision": 5
         }
       ],
       "sections": [
@@ -196,52 +108,8 @@
             "lengthInMeters": 1655870,
             "travelTimeInSeconds": 57310
           },
-          "points": [
-            {
-              "latitude": 39.7392,
-              "longitude": -104.9903
-            },
-            {
-              "latitude": 40.4,
-              "longitude": -104.1
-            },
-            {
-              "latitude": 40.8,
-              "longitude": -102.9
-            },
-            {
-              "latitude": 40.9,
-              "longitude": -101.1
-            },
-            {
-              "latitude": 40.7,
-              "longitude": -99.08
-            },
-            {
-              "latitude": 40.8,
-              "longitude": -96.68
-            },
-            {
-              "latitude": 41.25,
-              "longitude": -95.85
-            },
-            {
-              "latitude": 41.4,
-              "longitude": -94.2
-            },
-            {
-              "latitude": 41.9,
-              "longitude": -92.4
-            },
-            {
-              "latitude": 41.7,
-              "longitude": -89.9
-            },
-            {
-              "latitude": 41.8781,
-              "longitude": -87.6298
-            }
-          ]
+          "encodedPolyline": "_qpqFj|x_S_a`Ck{lD_cmA_kiF_pR_q~I~`f@_piK_pR_wsMo{vAobaDoh\\ogaI_t`B_q~I~`f@_hgNcxa@wkzL",
+          "encodedPolylinePrecision": 5
         }
       ],
       "sections": [
