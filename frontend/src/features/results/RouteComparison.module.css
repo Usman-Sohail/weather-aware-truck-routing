@@ -44,7 +44,6 @@
   background: var(--color-shield-blue-wash);
 }
 
-/* The ring hugs the card's border: an offset ring around a bordered box reads as a gap. */
 .route:has(input:focus-visible) {
   outline: 2px solid var(--color-focus);
   outline-offset: 0;
@@ -73,7 +72,6 @@
   display: block;
 }
 
-/* Sits above the strip with its pointer on the stretch it names. */
 .tooltip {
   --pointer-x: 50%;
 
@@ -96,7 +94,6 @@
   transform: translateX(-50%);
 }
 
-/* Near the ends of the strip the card shifts inward and its pointer follows the stretch. */
 .tooltip[data-align='start'] {
   --pointer-x: 0.75rem;
 

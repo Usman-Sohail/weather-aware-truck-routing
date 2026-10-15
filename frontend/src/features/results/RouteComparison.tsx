@@ -110,10 +110,7 @@ export function RouteComparison({
   );
 }
 
-/**
- * The stretch under the pointer, centred over it but kept inside the strip near its ends.
- * Pointer-only detail: the route's summary and the checkpoint table carry the same facts.
- */
+// Pointer-only: the summary line and the checkpoint table carry the same facts.
 function StretchTooltip({ run, longest }: { run: RiskRun; longest: number }) {
   const middle = ((run.startMi + run.endMi) / 2 / longest) * 100;
   const align = middle < 20 ? 'start' : middle > 80 ? 'end' : 'center';

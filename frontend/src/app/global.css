@@ -71,8 +71,7 @@ select {
   outline-offset: 2px;
 }
 
-/* A ring set off from a bordered field reads as a gap, so text fields thicken their own
-   border in the focus colour instead. */
+/* An offset ring around a bordered field reads as a gap. */
 input:not([type='checkbox'], [type='radio'], [type='range']):focus-visible,
 select:focus-visible,
 textarea:focus-visible {
