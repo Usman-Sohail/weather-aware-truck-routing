@@ -5,7 +5,7 @@ A React + Django web app that helps a truck driver choose the safest of several 
 |                   |                                                     |
 | ----------------- | --------------------------------------------------- |
 | Live application  | https://weather-aware-truck-routing-nine.vercel.app |
-| Walkthrough video | _TODO: added once recorded_                         |
+| Walkthrough video | https://drive.google.com/file/d/1QediGL1UdSf1FHAkFV20JAFn8ylHOGZM/view?usp=sharing                        |
 
 ## Local development
 
