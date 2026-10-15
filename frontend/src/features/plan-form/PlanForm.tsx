@@ -170,7 +170,8 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
             value={values.loadLb}
             onChange={(event) => {
               markEdited('load');
-              setValues((previous) => ({ ...previous, loadLb: event.target.value }));
+              const loadLb = event.target.value.replace(/[^\d,]/g, '');
+              setValues((previous) => ({ ...previous, loadLb }));
             }}
             aria-invalid={loadError ? true : undefined}
             aria-describedby={loadError ? 'load-hint load-error' : 'load-hint'}

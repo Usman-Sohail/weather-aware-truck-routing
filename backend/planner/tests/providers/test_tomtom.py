@@ -6,9 +6,10 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
+import requests
 import responses
 
-from planner.errors import NoRouteError, ProviderUnavailableError
+from planner.errors import NoRouteError, ProviderTimeoutError, ProviderUnavailableError
 from planner.providers.http import ProviderHttpClient
 from planner.providers.routing import RoutingProvider
 from planner.providers.tomtom import (
@@ -33,7 +34,11 @@ def fixture(name: str) -> Any:
 
 
 def client() -> TomTomClient:
-    return TomTomClient(KEY, ProviderHttpClient(backoff_s=0))
+    return TomTomClient(
+        KEY,
+        routing_http=ProviderHttpClient(backoff_s=0, retry_timeouts=False),
+        geocode_http=ProviderHttpClient(backoff_s=0),
+    )
 
 
 def sent_query() -> dict[str, list[str]]:
@@ -51,6 +56,27 @@ def test_tomtom_client_implements_the_routing_interface() -> None:
 def test_a_key_is_required() -> None:
     with pytest.raises(ValueError):
         TomTomClient("")
+
+
+def test_routes_get_one_long_wait_and_place_lookups_two_short_ones(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    timeouts: list[object] = []
+
+    def slow_get(self: object, url: str, **kwargs: object) -> None:
+        timeouts.append(kwargs["timeout"])
+        raise requests.exceptions.ReadTimeout()
+
+    monkeypatch.setattr(requests.Session, "get", slow_get)
+    monkeypatch.setattr("planner.providers.http.time.sleep", lambda _: None)
+    tomtom = TomTomClient(KEY)
+
+    with pytest.raises(ProviderTimeoutError):
+        tomtom.find_routes(DENVER, CHICAGO, depart_at=None)
+    with pytest.raises(ProviderTimeoutError):
+        tomtom.geocode("Denver")
+
+    assert timeouts == [(5.0, 30.0), (5.0, 6.0), (5.0, 6.0)]
 
 
 @responses.activate
