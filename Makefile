@@ -1,7 +1,7 @@
 PYTHON_BIN ?= python3.12
 VENV := backend/.venv/bin
 
-.PHONY: setup backend-setup frontend-setup dev-backend dev-frontend check backend-check frontend-check
+.PHONY: setup backend-setup frontend-setup dev-backend dev-frontend check backend-check frontend-check e2e
 
 setup: backend-setup frontend-setup
 
@@ -29,3 +29,6 @@ frontend-check:
 		&& npm test && npm run build
 
 check: backend-check frontend-check
+
+e2e:
+	cd frontend && npm run test:e2e
