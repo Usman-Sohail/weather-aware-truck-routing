@@ -1,0 +1,78 @@
+.panel {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  container-type: inline-size;
+}
+
+/* What sits on the map, such as the legend; it keeps clear of the credits in the corner. */
+.overlay {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-7);
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+/* A narrow map shows its credits across the bottom until it is first moved. */
+@container (max-width: 40rem) {
+  .overlay {
+    right: var(--space-4);
+    bottom: var(--space-7);
+  }
+
+  .controls {
+    flex-wrap: wrap;
+  }
+}
+
+.overlay > * {
+  pointer-events: auto;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+/* A fixed width, or the card would resize with its wording as the slider moves. */
+.card {
+  flex: none;
+  width: 22rem;
+  max-width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 15%);
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 12%);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+/* On a phone the controls would cover most of the map, so they sit below it instead. */
+@media (max-width: 48rem) {
+  .panel {
+    grid-template-rows: minmax(20rem, 1fr) auto;
+  }
+
+  .overlay {
+    position: static;
+    padding: var(--space-3);
+    pointer-events: auto;
+  }
+}

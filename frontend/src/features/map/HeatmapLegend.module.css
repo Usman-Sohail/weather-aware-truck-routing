@@ -1,0 +1,67 @@
+.legend {
+  display: grid;
+  gap: var(--space-1);
+  width: max-content;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 15%);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.levels {
+  display: grid;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.swatch {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  /* Keeps the palest wash visible on the white card. */
+  border: 1px solid rgb(31 42 48 / 30%);
+  border-radius: 2px;
+}
+
+/* The map's hatch tile at the same scale, drawn in the colour the component sets. */
+.swatch[data-hatched] {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    currentColor 0 1.5px,
+    transparent 1.5px 5.66px
+  );
+}
+
+.grid {
+  margin: 0;
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-rule);
+  color: var(--color-ink-muted);
+}
+
+/* Two short columns cover less of a phone's map than one tall one. */
+@media (max-width: 30rem) {
+  .levels {
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+  }
+}

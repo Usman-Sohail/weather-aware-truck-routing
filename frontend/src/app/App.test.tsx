@@ -1,8 +1,26 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import type { TripMapProps } from '../features/map/TripMap';
 import { App } from './App';
+
+vi.mock('../features/map/TripMap', () => ({
+  TripMap: ({ routes, selectedRouteId, onSelectRoute }: TripMapProps) => (
+    <div>
+      {routes.map((route) => (
+        <button
+          key={route.id}
+          type="button"
+          aria-pressed={route.id === selectedRouteId}
+          onClick={() => onSelectRoute(route.id)}
+        >
+          Route {route.id} on the map
+        </button>
+      ))}
+    </div>
+  ),
+}));
 
 const DENVER = {
   name: 'Denver, CO, United States',
@@ -229,6 +247,33 @@ describe('App', () => {
     expect(screen.getByLabelText('Starting place')).toBeVisible();
     expect(screen.getByLabelText('Starting place')).toHaveFocus();
     expect(screen.getByLabelText('Cargo weight')).toHaveValue('42000');
+  });
+
+  it('keeps the map and the route comparison on the same route', async () => {
+    mockServices();
+    const user = userEvent.setup();
+    render(<App />);
+    const map = screen.getByRole('region', { name: 'Route map' });
+
+    expect(within(map).getByText('Routes appear here once a trip is planned.')).toBeVisible();
+
+    await planDenverToChicago(user);
+
+    expect(
+      await within(map).findByRole('button', { name: 'Route B on the map', pressed: true }),
+    ).toBeVisible();
+    expect(within(map).queryByText('Routes appear here once a trip is planned.')).toBeNull();
+
+    await user.click(within(map).getByRole('button', { name: 'Route A on the map' }));
+
+    expect(screen.getByRole('radio', { name: /^Route A:/ })).toBeChecked();
+    expect(screen.getByRole('table', { name: 'Checkpoints on Route A' })).toBeVisible();
+
+    await user.click(screen.getByRole('radio', { name: /^Route B:/ }));
+
+    expect(
+      within(map).getByRole('button', { name: 'Route B on the map', pressed: true }),
+    ).toBeVisible();
   });
 
   it('brings the form back with the reason when planning fails', async () => {
