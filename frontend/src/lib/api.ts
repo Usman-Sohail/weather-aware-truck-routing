@@ -1,4 +1,13 @@
-import type { ApiErrorBody, HealthResponse } from '../types/api';
+import type {
+  ApiErrorBody,
+  AssessRequest,
+  AssessResponse,
+  GeocodeResponse,
+  HealthResponse,
+  RoutesRequest,
+  RoutesResponse,
+  WeatherRequest,
+} from '../types/api';
 
 /** A failed API call, carrying the backend's error code and any per-field messages. */
 export class ApiError extends Error {
@@ -88,4 +97,65 @@ function isErrorBody(value: unknown): value is ApiErrorBody {
 
 export function getHealth(signal?: AbortSignal): Promise<HealthResponse> {
   return requestJson<HealthResponse>('/api/health', { signal });
+}
+
+export function geocode(query: string, signal?: AbortSignal): Promise<GeocodeResponse> {
+  return requestJson<GeocodeResponse>(`/api/geocode?q=${encodeURIComponent(query)}`, { signal });
+}
+
+export function planRoutes(request: RoutesRequest, signal?: AbortSignal): Promise<RoutesResponse> {
+  return requestJson<RoutesResponse>('/api/routes', { method: 'POST', body: request, signal });
+}
+
+export function assessTrip(request: AssessRequest, signal?: AbortSignal): Promise<AssessResponse> {
+  return requestJson<AssessResponse>('/api/assess', { method: 'POST', body: request, signal });
+}
+
+const WEATHER_UNAVAILABLE_MESSAGE =
+  'The weather service could not be reached. Check your connection and try again.';
+
+/**
+ * Sends the forecast request prepared by the backend straight to the weather service, so
+ * that it counts against this viewer's own rate limit, and returns the raw response for
+ * the backend to validate. The body is form-encoded, which keeps it a CORS simple request.
+ */
+export async function fetchForecast(
+  request: WeatherRequest,
+  signal?: AbortSignal,
+): Promise<unknown> {
+  let response: Response;
+  try {
+    response = await fetch(request.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: request.body,
+      signal,
+    });
+  } catch (error) {
+    if (isAbortError(error)) {
+      throw error;
+    }
+    throw new ApiError(0, 'WEATHER_UNAVAILABLE', WEATHER_UNAVAILABLE_MESSAGE);
+  }
+
+  const payload: unknown = await response.json().catch(() => undefined);
+  if (response.ok && payload !== undefined) {
+    return payload;
+  }
+  if (response.status === 429) {
+    const reason = forecastErrorReason(payload);
+    throw new ApiError(
+      429,
+      'WEATHER_RATE_LIMITED',
+      `The weather service is limiting requests from your network${reason ? ` (${reason})` : ''}. Try again in a minute.`,
+    );
+  }
+  throw new ApiError(response.status, 'WEATHER_UNAVAILABLE', WEATHER_UNAVAILABLE_MESSAGE);
+}
+
+function forecastErrorReason(payload: unknown): string | undefined {
+  if (typeof payload === 'object' && payload !== null && 'reason' in payload) {
+    return typeof payload.reason === 'string' ? payload.reason : undefined;
+  }
+  return undefined;
 }

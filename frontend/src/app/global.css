@@ -1,16 +1,32 @@
+/*
+ * Design tokens. Overpass descends from Highway Gothic, the lettering of US road signs.
+ * Colour encodes weather risk and nothing else; routes are told apart by line pattern and
+ * shield label. Risk colours live in src/lib/risk.ts because the map uses them too.
+ * Every text pair here was checked against WCAG (body text >= 4.5:1, boundaries >= 3:1).
+ */
 :root {
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Overpass Variable', 'Overpass', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --color-canvas: #eef1f4;
-  --color-surface: #ffffff;
-  --color-text: #1b2430;
-  --color-text-muted: #5b6878;
-  --color-border: #d9dee5;
-  --color-border-strong: #a9b3c0;
-  --color-accent: #1f5fbf;
-  --color-success: #2e7d32;
-  --color-danger: #c62828;
-  --color-focus: #1f5fbf;
+  --color-paper: #f3f5f4;
+  --color-surface: #fcfdfc;
+  --color-ink: #1f2a30;
+  --color-ink-muted: #56636b;
+  --color-rule: #dde3e5;
+  --color-rule-strong: #7b8890;
+  --color-guide-green: #0b6e4f;
+  --color-shield-blue: #1e4e8c;
+  --color-shield-blue-wash: #e8eef7;
+  --color-error: #a3231f;
+  --color-error-wash: #fbeceb;
+  --color-focus: #1e4e8c;
+
+  /* A 1.25 type scale on a 16px base. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -18,19 +34,17 @@
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
+  --space-7: 3rem;
 
-  --text-sm: 0.875rem;
-  --text-md: 1rem;
-  --text-lg: 1.125rem;
+  --radius-control: 4px;
+  --panel-width: 27rem;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-
-  color: var(--color-text);
-  background: var(--color-canvas);
+  color: var(--color-ink);
+  background: var(--color-paper);
   font-family: var(--font-sans);
   font-size: 100%;
   line-height: 1.5;
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -44,9 +58,28 @@ body {
   margin: 0;
 }
 
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
