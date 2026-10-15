@@ -1,0 +1,25 @@
+.map {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Two classes, so this outranks the position MapLibre gives its container. */
+.map > .canvas {
+  position: absolute;
+  inset: 0;
+  font-family: var(--font-sans);
+}
+
+/* MapLibre trades the focus outline of its buttons for a faint glow. */
+.map :global(.maplibregl-ctrl.maplibregl-ctrl-group button:focus-visible),
+.map :global(.maplibregl-ctrl-attrib-button:focus-visible) {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* The map clips anything outside the canvas, so the ring goes inside its edge. */
+.map :global(.maplibregl-canvas:focus-visible) {
+  outline-offset: -3px;
+}

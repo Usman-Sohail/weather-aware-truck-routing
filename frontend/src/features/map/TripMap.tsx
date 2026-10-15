@@ -1,0 +1,122 @@
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+import { Map as MapLibreMap, NavigationControl } from 'maplibre-gl';
+import type { GeoJSONSource } from 'maplibre-gl';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+
+import { INITIAL_BOUNDS, MAP_STYLE_URL } from './mapStyle';
+import {
+  ROUTE_LAYER_IDS,
+  ROUTE_SOURCE_ID,
+  routeBounds,
+  routeFeatures,
+  routeLayers,
+  routeSource,
+} from './routeLayers';
+import type { MapRoute } from './routeLayers';
+import styles from './TripMap.module.css';
+import { TripMapContext } from './useTripMap';
+
+export interface TripMapProps {
+  routes: readonly MapRoute[];
+  /** Changes with every new plan; each new plan is fitted into view once. */
+  planKey: string | null;
+  selectedRouteId: string | null;
+  onSelectRoute: (routeId: string) => void;
+  /** Layers drawn on the map, which reach it through `useTripMap`. */
+  children?: ReactNode;
+}
+
+const FIT_PADDING_PX = 48;
+const FIT_DURATION_MS = 800;
+
+/**
+ * Picking a route on the map is a shortcut for pointer users; the route comparison stays
+ * the accessible way to choose one.
+ */
+export function TripMap({
+  routes,
+  planKey,
+  selectedRouteId,
+  onSelectRoute,
+  children,
+}: TripMapProps) {
+  const container = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<MapLibreMap | null>(null);
+  const fittedPlanKey = useRef<string | null>(null);
+  const selectRoute = useEffectEvent(onSelectRoute);
+
+  useEffect(() => {
+    if (!container.current) return;
+    const instance = new MapLibreMap({
+      container: container.current,
+      style: MAP_STYLE_URL,
+      bounds: INITIAL_BOUNDS,
+      attributionControl: { compact: true },
+      dragRotate: false,
+      touchPitch: false,
+      maxPitch: 0,
+      locale: { 'Map.Title': 'Map of the planned routes' },
+    });
+    instance.addControl(new NavigationControl({ showCompass: false }));
+    instance.touchZoomRotate.disableRotation();
+    instance.keyboard.disableRotation();
+
+    const subscriptions = [
+      instance.on('load', () => {
+        instance.addSource(ROUTE_SOURCE_ID, routeSource());
+        for (const layer of routeLayers()) instance.addLayer(layer);
+        setMap(instance);
+      }),
+      instance.on('click', ROUTE_LAYER_IDS, (event) => {
+        const routeId: unknown = event.features?.[0]?.properties.routeId;
+        if (typeof routeId === 'string') selectRoute(routeId);
+      }),
+      instance.on('mouseenter', ROUTE_LAYER_IDS, () => {
+        instance.getCanvas().style.cursor = 'pointer';
+      }),
+      instance.on('mouseleave', ROUTE_LAYER_IDS, () => {
+        instance.getCanvas().style.cursor = '';
+      }),
+    ];
+
+    return () => {
+      for (const subscription of subscriptions) subscription.unsubscribe();
+      // A map made again starts from the initial view, so it fits the current plan anew.
+      fittedPlanKey.current = null;
+      setMap(null);
+      instance.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    void map
+      ?.getSource<GeoJSONSource>(ROUTE_SOURCE_ID)
+      ?.setData(routeFeatures(routes, selectedRouteId));
+  }, [map, routes, selectedRouteId]);
+
+  useEffect(() => {
+    if (!map || planKey === fittedPlanKey.current) return;
+    fittedPlanKey.current = planKey;
+    const bounds = routeBounds(routes);
+    if (bounds) {
+      map.fitBounds(bounds, {
+        padding: FIT_PADDING_PX,
+        duration: FIT_DURATION_MS,
+        animate: !prefersReducedMotion(),
+      });
+    }
+  }, [map, planKey, routes]);
+
+  return (
+    <div className={styles.map}>
+      <div ref={container} className={styles.canvas} />
+      <TripMapContext value={map}>{children}</TripMapContext>
+    </div>
+  );
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
