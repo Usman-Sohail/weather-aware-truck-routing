@@ -41,6 +41,11 @@
   font-weight: 650;
 }
 
+.month {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
 .date {
   font-size: var(--text-lg);
   font-weight: 750;
