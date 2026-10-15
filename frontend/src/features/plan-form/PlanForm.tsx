@@ -93,8 +93,8 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
 
   const zone = values.origin?.time_zone ?? browserTimeZone();
   const departureHint = values.origin
-    ? `Local time in ${values.origin.name.split(',')[0]} (${zoneAbbreviation(zone, now())}). Plan up to 7 days ahead.`
-    : 'Local time at the starting place. Plan up to 7 days ahead.';
+    ? `Local time in ${values.origin.name.split(',')[0]} (${zoneAbbreviation(zone, now())}). Forecasts reach 7 days ahead.`
+    : 'Local time at the starting place. Forecasts reach 7 days ahead.';
   const departureError = errorFor('departure');
   const loadError = errorFor('load');
   const intervalError = errorFor('interval');

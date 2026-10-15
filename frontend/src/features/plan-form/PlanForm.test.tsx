@@ -63,7 +63,7 @@ describe('PlanForm', () => {
     await user.type(screen.getByLabelText('Starting place'), 'Denver{Enter}');
     await screen.findByDisplayValue(DENVER.name);
 
-    expect(screen.getByLabelText('Time')).toHaveValue('12:15');
+    expect(screen.getByLabelText('Time')).toHaveValue('12:15 PM');
     expect(screen.getByRole('radio', { name: 'Thursday, October 15' })).toBeChecked();
     expect(screen.getByText(/Local time in Denver \(MDT\)/)).toBeVisible();
   });
@@ -117,11 +117,12 @@ describe('PlanForm', () => {
 
     await user.click(screen.getByRole('radio', { name: 'Friday, October 16' }));
     const time = screen.getByLabelText('Time');
-    await user.selectOptions(time, '06:30');
+    await user.clear(time);
+    await user.type(time, '6:30 am');
     await user.type(screen.getByLabelText('Starting place'), 'Denver{Enter}');
     await screen.findByDisplayValue(DENVER.name);
 
-    expect(time).toHaveValue('06:30');
+    expect(time).toHaveValue('6:30 AM');
     expect(screen.getByRole('radio', { name: 'Friday, October 16' })).toBeChecked();
   });
 

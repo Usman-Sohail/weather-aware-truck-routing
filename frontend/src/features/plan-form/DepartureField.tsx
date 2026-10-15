@@ -1,5 +1,6 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
+import { clockLabel, parseClock, timeSlots } from './clock';
 import styles from './DepartureField.module.css';
 
 interface DepartureFieldProps {
@@ -26,8 +27,18 @@ export function DepartureField({
 }: DepartureFieldProps) {
   const groupName = useId();
   const timeId = useId();
+  const slotsId = useId();
   const [date, time] = splitLocal(value);
   const options = dayOptions(today, days);
+  // What the driver is typing, until it parses or the field is left.
+  const [typing, setTyping] = useState<{ text: string; at: string } | null>(null);
+  const shown = typing?.at === time ? typing.text : clockLabel(time);
+
+  function handleTime(text: string) {
+    const parsed = parseClock(text);
+    setTyping({ text, at: parsed ?? time });
+    if (parsed) onChange(`${date}T${parsed}`);
+  }
 
   return (
     <div className={styles.field}>
@@ -55,20 +66,23 @@ export function DepartureField({
       </div>
       <div className={styles.time}>
         <label htmlFor={timeId}>Time</label>
-        <select
+        <input
           id={timeId}
-          className={styles.slots}
-          value={time}
-          onChange={(event) => onChange(`${date}T${event.target.value}`)}
+          type="text"
+          list={slotsId}
+          autoComplete="off"
+          className={styles.slot}
+          value={shown}
+          onChange={(event) => handleTime(event.target.value)}
+          onBlur={() => setTyping(null)}
           aria-invalid={invalid ? true : undefined}
           aria-describedby={describedBy}
-        >
+        />
+        <datalist id={slotsId}>
           {timeSlots(date === today ? earliestToday : '00:00', time).map((slot) => (
-            <option key={slot} value={slot}>
-              {clockLabel(slot)}
-            </option>
+            <option key={slot} value={clockLabel(slot)} />
           ))}
-        </select>
+        </datalist>
       </div>
     </div>
   );
@@ -109,39 +123,4 @@ function dayOptions(today: string, days: number): DayOption[] {
       spoken: SPOKEN.format(moment),
     };
   });
-}
-
-const SLOT_MINUTES = 15;
-
-/**
- * Quarter-hour departures from ``earliest`` to midnight, which is as precise as an hourly
- * forecast can answer. ``chosen`` is kept even when it has just passed, so the control
- * always shows the time the driver picked.
- */
-function timeSlots(earliest: string, chosen: string): string[] {
-  const first = Math.ceil(minutesOf(earliest) / SLOT_MINUTES) * SLOT_MINUTES;
-  const slots: string[] = [];
-  for (let minutes = first; minutes < 24 * 60; minutes += SLOT_MINUTES) {
-    slots.push(timeOf(minutes));
-  }
-  if (chosen && !slots.includes(chosen)) slots.unshift(chosen);
-  return slots;
-}
-
-function minutesOf(time: string): number {
-  const [hours = 0, minutes = 0] = time.split(':').map(Number);
-  return hours * 60 + minutes;
-}
-
-function timeOf(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  return `${String(hours).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
-}
-
-/** "06:30" reads as "6:30 AM", the way the rest of the app shows times. */
-function clockLabel(time: string): string {
-  const minutes = minutesOf(time);
-  const hours = Math.floor(minutes / 60);
-  const hour12 = hours % 12 === 0 ? 12 : hours % 12;
-  return `${hour12}:${String(minutes % 60).padStart(2, '0')} ${hours < 12 ? 'AM' : 'PM'}`;
 }
