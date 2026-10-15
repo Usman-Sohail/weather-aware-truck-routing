@@ -6,6 +6,7 @@ import {
   formatLoad,
   formatMiles,
   formatReading,
+  formatWallClock,
   nextQuarterHour,
   wallClockInZone,
   zoneAbbreviation,
@@ -80,5 +81,12 @@ describe('zoneAbbreviation', () => {
     expect(zoneAbbreviation('America/Denver', new Date('2026-10-16T14:00:00Z'))).toBe('MDT');
     expect(zoneAbbreviation('America/Denver', new Date('2026-12-16T14:00:00Z'))).toBe('MST');
     expect(zoneAbbreviation('America/Phoenix', new Date('2026-07-16T14:00:00Z'))).toBe('MST');
+  });
+});
+
+describe('formatWallClock', () => {
+  it('formats the entered local time as written, whatever the browser zone', () => {
+    expect(formatWallClock('2026-10-14T18:45')).toBe('Wed, 6:45 PM');
+    expect(formatWallClock('2026-11-01T01:30')).toBe('Sun, 1:30 AM');
   });
 });

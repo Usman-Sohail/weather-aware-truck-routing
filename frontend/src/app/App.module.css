@@ -36,6 +36,11 @@
   overflow-y: auto;
 }
 
+.section {
+  display: grid;
+  gap: var(--space-5);
+}
+
 .panelHeading {
   margin: 0;
   font-size: var(--text-xl);
