@@ -3,10 +3,26 @@
   gap: var(--space-3);
 }
 
+.month {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.month + .month {
+  margin-top: var(--space-2);
+}
+
+.monthName {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  color: var(--color-ink-muted);
+}
+
+/* auto-fill, not auto-fit: a short month keeps the same card width as a full one. */
 .days {
   display: grid;
-  /* Wide enough for a day that names its month, so every card keeps one shape. */
-  grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(3.25rem, 1fr));
   gap: var(--space-1);
 }
 
@@ -38,11 +54,6 @@
 }
 
 .weekday {
-  font-size: var(--text-xs);
-  font-weight: 650;
-}
-
-.month {
   font-size: var(--text-xs);
   font-weight: 650;
 }

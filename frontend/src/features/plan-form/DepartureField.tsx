@@ -32,29 +32,30 @@ export function DepartureField({
 
   return (
     <div className={styles.field}>
-      <div
-        className={styles.days}
-        role="radiogroup"
-        aria-label="Departure day"
-        aria-describedby={describedBy}
-      >
-        {options.map((day, index) => (
-          <label key={day.date} className={styles.day}>
-            <input
-              type="radio"
-              name={groupName}
-              value={day.date}
-              checked={day.date === date}
-              onChange={() => onChange(`${day.date}T${time}`)}
-              className="visually-hidden"
-              aria-label={day.spoken}
-            />
-            <span className={styles.weekday}>{index === 0 ? 'Today' : day.weekday}</span>
-            <span className={styles.date}>
-              {day.month && <span className={styles.month}>{day.month} </span>}
-              {day.dayOfMonth}
-            </span>
-          </label>
+      <div role="radiogroup" aria-label="Departure day" aria-describedby={describedBy}>
+        {byMonth(options).map((group) => (
+          <div key={group.label} className={styles.month}>
+            <p className={styles.monthName}>{group.label}</p>
+            <div className={styles.days}>
+              {group.days.map((day) => (
+                <label key={day.date} className={styles.day}>
+                  <input
+                    type="radio"
+                    name={groupName}
+                    value={day.date}
+                    checked={day.date === date}
+                    onChange={() => onChange(`${day.date}T${time}`)}
+                    className="visually-hidden"
+                    aria-label={day.spoken}
+                  />
+                  <span className={styles.weekday}>
+                    {day.date === options[0]?.date ? 'Today' : day.weekday}
+                  </span>
+                  <span className={styles.date}>{day.dayOfMonth}</span>
+                </label>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
       <TimeField
@@ -77,13 +78,13 @@ interface DayOption {
   date: string;
   weekday: string;
   dayOfMonth: string;
-  /** Shown on the first day and whenever the month changes, so "1" is never bare. */
-  month: string | null;
+  /** "October", or "January 2027" once the days reach another year. */
+  monthLabel: string;
   spoken: string;
 }
 
 const WEEKDAY = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' });
-const MONTH = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
+const MONTH = new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' });
 const SPOKEN = new Intl.DateTimeFormat('en-US', {
   weekday: 'long',
   month: 'long',
@@ -103,8 +104,22 @@ function dayOptions(today: string, days: number): DayOption[] {
       date: moment.toISOString().slice(0, 10),
       weekday: WEEKDAY.format(moment),
       dayOfMonth: String(moment.getUTCDate()),
-      month: offset === 0 || moment.getUTCDate() === 1 ? MONTH.format(moment) : null,
+      monthLabel:
+        moment.getUTCFullYear() === year
+          ? MONTH.format(moment)
+          : `${MONTH.format(moment)} ${moment.getUTCFullYear()}`,
       spoken: SPOKEN.format(moment),
     };
   });
+}
+
+/** The days in runs of one month, so a window spanning two never reads as one. */
+function byMonth(days: DayOption[]): { label: string; days: DayOption[] }[] {
+  const groups: { label: string; days: DayOption[] }[] = [];
+  for (const day of days) {
+    const current = groups.at(-1);
+    if (current?.label === day.monthLabel) current.days.push(day);
+    else groups.push({ label: day.monthLabel, days: [day] });
+  }
+  return groups;
 }
