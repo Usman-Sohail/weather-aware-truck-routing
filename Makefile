@@ -8,7 +8,7 @@ setup: backend-setup frontend-setup
 backend-setup:
 	$(PYTHON_BIN) -m venv backend/.venv
 	$(VENV)/python -m pip install --upgrade pip
-	$(VENV)/python -m pip install -r backend/requirements-dev.txt
+	$(VENV)/python -m pip install -e "backend[dev]"
 	test -f backend/.env || cp backend/.env.example backend/.env
 
 frontend-setup:

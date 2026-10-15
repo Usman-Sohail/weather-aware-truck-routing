@@ -7,6 +7,8 @@ docs/
 !.env.example
 
 # Python
+uv.lock
+*.egg-info/
 __pycache__/
 *.py[cod]
 .venv/
