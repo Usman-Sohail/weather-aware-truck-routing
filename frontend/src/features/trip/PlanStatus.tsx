@@ -9,6 +9,8 @@ const STEPS: { step: PlanStep; label: string }[] = [
   { step: 'assessing', label: 'Assessing weather risk' },
 ];
 
+const SPOKEN_PROGRESS = { done: ' (done)', current: ' (in progress)', waiting: '' };
+
 /** Progress of a running plan, why it failed, or notices about a finished one. */
 export function PlanStatus({ state }: { state: PlanState }) {
   const failure = useRef<HTMLParagraphElement>(null);
@@ -32,8 +34,14 @@ export function PlanStatus({ state }: { state: PlanState }) {
                 data-state={progress}
                 aria-current={progress === 'current' ? 'step' : undefined}
               >
+                <span className={styles.marker} aria-hidden="true">
+                  {progress === 'done' && <CheckMark />}
+                  {progress === 'waiting' && index + 1}
+                </span>
                 {label}
-                {progress === 'done' && <span className="visually-hidden"> (done)</span>}
+                {SPOKEN_PROGRESS[progress] && (
+                  <span className="visually-hidden">{SPOKEN_PROGRESS[progress]}</span>
+                )}
               </li>
             );
           })}
@@ -65,4 +73,22 @@ export function PlanStatus({ state }: { state: PlanState }) {
   }
 
   return null;
+}
+
+function CheckMark() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      focusable="false"
+    >
+      <path d="M2.5 6.5 5 9l4.5-6" />
+    </svg>
+  );
 }
