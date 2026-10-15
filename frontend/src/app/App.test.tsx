@@ -187,6 +187,16 @@ describe('App', () => {
     expect(await screen.findByText('Service unavailable')).toBeVisible();
   });
 
+  it('credits the weather and routing data', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })));
+
+    render(<App />);
+
+    expect(await screen.findByText('Service online')).toBeVisible();
+    expect(screen.getByRole('link', { name: /^Open-Meteo\.com/ })).toBeVisible();
+    expect(screen.getByRole('link', { name: /^TomTom/ })).toBeVisible();
+  });
+
   it('plans a trip from the form to a recommendation, then lets the driver edit it', async () => {
     const fetchMock = mockServices();
     const user = userEvent.setup();

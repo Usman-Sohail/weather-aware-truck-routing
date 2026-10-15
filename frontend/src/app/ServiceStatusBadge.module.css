@@ -5,6 +5,8 @@
   margin: 0;
   font-size: var(--text-sm);
   color: var(--color-ink-muted);
+  /* A narrow header wraps the title, never the status. */
+  white-space: nowrap;
 }
 
 .dot {

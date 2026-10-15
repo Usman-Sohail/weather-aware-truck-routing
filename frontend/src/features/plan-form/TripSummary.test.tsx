@@ -38,6 +38,14 @@ describe('TripSummary', () => {
     ).toBeVisible();
   });
 
+  it('keeps the check interval on one line with its unit', () => {
+    render(<TripSummary trip={TRIP} onEdit={() => {}} />);
+
+    expect(screen.getByRole('group', { name: 'Trip summary' }).textContent).toContain(
+      'weather every 25 mi.',
+    );
+  });
+
   it('offers to edit the trip', async () => {
     const onEdit = vi.fn();
     const user = userEvent.setup();
