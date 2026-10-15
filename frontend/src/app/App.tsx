@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
-import { MapPanel } from '../features/map/MapPanel';
+import type { CheckpointRequest } from '../features/map/CheckpointLayer';
 import { PlanForm } from '../features/plan-form/PlanForm';
 import { TripSummary } from '../features/plan-form/TripSummary';
 import type { Trip } from '../features/plan-form/validation';
@@ -16,11 +16,17 @@ import { DataCredits } from './DataCredits';
 import { ServiceStatusBadge } from './ServiceStatusBadge';
 import { useServiceStatus } from './useServiceStatus';
 
+// MapLibre is most of the bundle, so the trip panel shows before the map has downloaded.
+const MapPanel = lazy(() =>
+  import('../features/map/MapPanel').then((module) => ({ default: module.MapPanel })),
+);
+
 export function App() {
   const serviceStatus = useServiceStatus();
   const { state, submit } = usePlanTrip();
   const results = useResults(state.plan, state.assessment);
   const [editing, setEditing] = useState(true);
+  const [checkpointRequest, setCheckpointRequest] = useState<CheckpointRequest | null>(null);
   const formArea = useRef<HTMLDivElement>(null);
   const summary = useRef<HTMLDivElement>(null);
 
@@ -85,6 +91,9 @@ export function App() {
                 <CheckpointTable
                   route={results.selected}
                   timeZone={results.plan.departure.time_zone}
+                  onShowOnMap={(checkpointId, returnFocus) =>
+                    setCheckpointRequest({ checkpointId, returnFocus })
+                  }
                 />
               )}
             </section>
@@ -92,7 +101,9 @@ export function App() {
           <DataCredits />
         </div>
         <section className={styles.map} aria-label="Route map">
-          <MapPanel results={results} />
+          <Suspense fallback={<p className={styles.mapLoading}>Loading the map…</p>}>
+            <MapPanel results={results} checkpointRequest={checkpointRequest} />
+          </Suspense>
         </section>
       </main>
     </div>

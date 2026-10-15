@@ -89,6 +89,12 @@
   background: var(--color-paper);
 }
 
+.mapLoading {
+  margin: auto;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
 @media (max-width: 48rem) {
   .main {
     grid-template-columns: 1fr;

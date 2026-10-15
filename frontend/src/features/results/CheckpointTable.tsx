@@ -9,12 +9,13 @@ interface CheckpointTableProps {
   route: RouteView;
   /** Zone the arrival times are shown in, normally the trip's departure zone. */
   timeZone: string;
+  onShowOnMap?: (checkpointId: string, trigger: HTMLElement) => void;
 }
 
 const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
 /** Where and when the truck meets each forecast on one route, the risk there and why. */
-export function CheckpointTable({ route, timeZone }: CheckpointTableProps) {
+export function CheckpointTable({ route, timeZone, onShowOnMap }: CheckpointTableProps) {
   const [hideLow, setHideLow] = useState(false);
   const headingId = useId();
   const { checkpoints } = route;
@@ -61,7 +62,20 @@ export function CheckpointTable({ route, timeZone }: CheckpointTableProps) {
             const rowZone = zoneAbbreviation(timeZone, new Date(checkpoint.eta_utc));
             return (
               <tr key={checkpoint.id}>
-                <td className={styles.mile}>{wholeNumber.format(checkpoint.mile)}</td>
+                <td className={styles.mile}>
+                  {onShowOnMap ? (
+                    <button
+                      type="button"
+                      className={styles.show}
+                      aria-label={`Show mile ${wholeNumber.format(checkpoint.mile)} on the map`}
+                      onClick={(event) => onShowOnMap(checkpoint.id, event.currentTarget)}
+                    >
+                      {wholeNumber.format(checkpoint.mile)}
+                    </button>
+                  ) : (
+                    wholeNumber.format(checkpoint.mile)
+                  )}
+                </td>
                 {/* The zone is repeated only after a clock change during the trip. */}
                 <td>{formatClock(checkpoint.eta_utc, timeZone, rowZone !== zone)}</td>
                 <td>

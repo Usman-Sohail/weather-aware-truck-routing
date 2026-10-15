@@ -6,6 +6,7 @@ import type { GeoJSONSource, PaddingOptions } from 'maplibre-gl';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { prefersReducedMotion } from '../../lib/motion';
 import { INITIAL_BOUNDS, MAP_STYLE_URL } from './mapStyle';
 import {
   ROUTE_LAYER_IDS,
@@ -128,8 +129,4 @@ export function TripMap({
       <TripMapContext value={map}>{children}</TripMapContext>
     </div>
   );
-}
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }

@@ -237,6 +237,7 @@ describe('App', () => {
 
     expect(screen.getByRole('radio', { name: /^Route B:/ })).toBeChecked();
     expect(screen.getByRole('table', { name: 'Checkpoints on Route B' })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Show mile 60 on the map' }));
 
     await user.click(screen.getByRole('radio', { name: /^Route A:/ }));
 

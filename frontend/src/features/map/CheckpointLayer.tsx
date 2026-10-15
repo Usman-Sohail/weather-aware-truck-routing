@@ -3,6 +3,7 @@ import type { GeoJSONSource } from 'maplibre-gl';
 import { useEffect, useEffectEvent, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { prefersReducedMotion } from '../../lib/motion';
 import type { RouteView } from '../results/model';
 import {
   CHECKPOINT_LAYER_IDS,
@@ -14,17 +15,39 @@ import { CheckpointPopup } from './CheckpointPopup';
 import { ROUTE_LABEL_LAYER_ID } from './routeLayers';
 import { useTripMap } from './useTripMap';
 
+export interface CheckpointRequest {
+  checkpointId: string;
+  returnFocus: HTMLElement | null;
+}
+
 interface CheckpointLayerProps {
   routes: RouteView[];
   selectedRouteId: string | null;
   timeZone: string;
+  request?: CheckpointRequest | null;
 }
 
-export function CheckpointLayer({ routes, selectedRouteId, timeZone }: CheckpointLayerProps) {
+const REQUEST_ZOOM = 7;
+
+export function CheckpointLayer({
+  routes,
+  selectedRouteId,
+  timeZone,
+  request = null,
+}: CheckpointLayerProps) {
   const map = useTripMap();
   const [popupContent] = useState(() => document.createElement('div'));
   // A popup belongs to the routes it was opened on, so new results close it.
-  const [opened, setOpened] = useState<{ routes: RouteView[]; checkpointId: string } | null>(null);
+  const [opened, setOpened] = useState<{
+    routes: RouteView[];
+    checkpointId: string;
+    returnFocus?: HTMLElement | null;
+  } | null>(null);
+  const [handledRequest, setHandledRequest] = useState(request);
+  if (request !== handledRequest) {
+    setHandledRequest(request);
+    if (request) setOpened({ routes, ...request });
+  }
   const openId = opened?.routes === routes ? opened.checkpointId : null;
   const checkpoint = openId === null ? null : findCheckpoint(routes, openId);
   const openCheckpoint = useEffectEvent((checkpointId: string) => {
@@ -65,6 +88,27 @@ export function CheckpointLayer({ routes, selectedRouteId, timeZone }: Checkpoin
       ?.setData(checkpointFeatures(routes, selectedRouteId));
   }, [map, routes, selectedRouteId]);
 
+  const moveTo = useEffectEvent((checkpointId: string) => {
+    const target = findCheckpoint(routes, checkpointId);
+    if (!map || !target) return;
+    // On a phone the map sits below the results, out of sight.
+    map.getContainer().scrollIntoView?.({ block: 'nearest' });
+    map.easeTo({
+      center: [target.lon, target.lat],
+      zoom: Math.max(map.getZoom(), REQUEST_ZOOM),
+      animate: !prefersReducedMotion(),
+    });
+  });
+
+  useEffect(() => {
+    if (request) moveTo(request.checkpointId);
+  }, [map, request]);
+
+  const returnFocus = useEffectEvent((popupElement: HTMLElement | undefined) => {
+    const focused = document.activeElement;
+    if (focused === document.body || popupElement?.contains(focused)) opened?.returnFocus?.focus();
+  });
+
   useEffect(() => {
     if (!map || !checkpoint) return;
     const popup = new Popup({ maxWidth: 'none' })
@@ -73,6 +117,7 @@ export function CheckpointLayer({ routes, selectedRouteId, timeZone }: Checkpoin
       .addTo(map);
     // A click on another checkpoint opens it before this popup's close-on-click fires.
     const closing = popup.on('close', () => {
+      returnFocus(popup.getElement?.());
       setOpened((current) => (current?.checkpointId === checkpoint.id ? null : current));
     });
     return () => {
