@@ -85,6 +85,8 @@ const fakes = vi.hoisted(() => {
   return { FakeMap, FakeNavigationControl };
 });
 
+vi.mock('./maplibreWorker', () => ({}));
+
 vi.mock('maplibre-gl', () => ({
   Map: fakes.FakeMap,
   NavigationControl: fakes.FakeNavigationControl,
@@ -220,7 +222,10 @@ describe('TripMap', () => {
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
     expect(map.fitBounds).toHaveBeenLastCalledWith(
       routeBounds(PLAN.routes),
-      expect.objectContaining({ padding: 48, animate: true }),
+      expect.objectContaining({
+        padding: { top: 48, right: 48, bottom: 48, left: 48 },
+        animate: true,
+      }),
     );
 
     update(NEXT_PLAN);
@@ -231,7 +236,17 @@ describe('TripMap', () => {
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
     expect(map.fitBounds).toHaveBeenLastCalledWith(
       routeBounds(NEXT_PLAN.routes),
-      expect.objectContaining({ padding: 48 }),
+      expect.objectContaining({ padding: { top: 48, right: 48, bottom: 48, left: 48 } }),
+    );
+  });
+
+  it('keeps the routes clear of whatever covers an edge of the map when it fits', () => {
+    renderTripMap({ ...PLAN, coveredEdges: () => ({ bottom: 200 }) });
+    const map = loadMap();
+
+    expect(map.fitBounds).toHaveBeenLastCalledWith(
+      routeBounds(PLAN.routes),
+      expect.objectContaining({ padding: { top: 48, right: 48, bottom: 248, left: 48 } }),
     );
   });
 

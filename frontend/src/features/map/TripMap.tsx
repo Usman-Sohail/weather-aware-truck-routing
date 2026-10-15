@@ -1,7 +1,8 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
+import './maplibreWorker';
 
 import { Map as MapLibreMap, NavigationControl } from 'maplibre-gl';
-import type { GeoJSONSource } from 'maplibre-gl';
+import type { GeoJSONSource, PaddingOptions } from 'maplibre-gl';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -26,6 +27,8 @@ export interface TripMapProps {
   onSelectRoute: (routeId: string) => void;
   /** Layers drawn on the map, which reach it through `useTripMap`. */
   children?: ReactNode;
+  /** Pixels hidden under overlays along each edge, measured when a plan is fitted. */
+  coveredEdges?: () => Partial<PaddingOptions>;
 }
 
 const FIT_PADDING_PX = 48;
@@ -41,11 +44,21 @@ export function TripMap({
   selectedRouteId,
   onSelectRoute,
   children,
+  coveredEdges,
 }: TripMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<MapLibreMap | null>(null);
   const fittedPlanKey = useRef<string | null>(null);
   const selectRoute = useEffectEvent(onSelectRoute);
+  const fitPadding = useEffectEvent((): PaddingOptions => {
+    const covered = coveredEdges?.() ?? {};
+    return {
+      top: FIT_PADDING_PX + (covered.top ?? 0),
+      right: FIT_PADDING_PX + (covered.right ?? 0),
+      bottom: FIT_PADDING_PX + (covered.bottom ?? 0),
+      left: FIT_PADDING_PX + (covered.left ?? 0),
+    };
+  });
 
   useEffect(() => {
     if (!container.current) return;
@@ -102,7 +115,7 @@ export function TripMap({
     const bounds = routeBounds(routes);
     if (bounds) {
       map.fitBounds(bounds, {
-        padding: FIT_PADDING_PX,
+        padding: fitPadding(),
         duration: FIT_DURATION_MS,
         animate: !prefersReducedMotion(),
       });

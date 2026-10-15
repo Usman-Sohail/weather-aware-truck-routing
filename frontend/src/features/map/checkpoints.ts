@@ -33,12 +33,19 @@ export function checkpointFeatures(
   selectedRouteId: string | null,
 ): FeatureCollection<Point, CheckpointProperties> {
   const features = routes
-    .flatMap((route) => route.checkpoints.map((checkpoint) => ({ route, checkpoint })))
+    .flatMap((route) =>
+      route.checkpoints.map((checkpoint, index) => ({
+        checkpoint,
+        routeId: route.id,
+        selected: route.id === selectedRouteId,
+        // A stretch at one level is named once, where it starts, so labels do not pile up.
+        startsStretch:
+          checkpoint.assessment.level !== route.checkpoints[index - 1]?.assessment.level,
+      })),
+    )
     // Ids follow route order, so they stay put when the selection changes, and start at 1
     // because MapLibre's feature queries ignore the state of a feature whose id is 0.
-    .map(({ route, checkpoint }, index) =>
-      checkpointFeature(checkpoint, route.id, route.id === selectedRouteId, index + 1),
-    )
+    .map((entry, index) => checkpointFeature({ ...entry, id: index + 1 }))
     // MapLibre draws a layer's features in data order, so later ones sit on top.
     .sort(
       (a, b) =>
@@ -48,12 +55,19 @@ export function checkpointFeatures(
   return { type: 'FeatureCollection', features };
 }
 
-function checkpointFeature(
-  checkpoint: CheckpointView,
-  routeId: string,
-  selected: boolean,
-  id: number,
-): Feature<Point, CheckpointProperties> {
+function checkpointFeature({
+  checkpoint,
+  routeId,
+  selected,
+  startsStretch,
+  id,
+}: {
+  checkpoint: CheckpointView;
+  routeId: string;
+  selected: boolean;
+  startsStretch: boolean;
+  id: number;
+}): Feature<Point, CheckpointProperties> {
   const { level } = checkpoint.assessment;
   const info = riskInfo(level);
   const levelIndex = info.index ?? NO_FORECAST_INDEX;
@@ -67,7 +81,7 @@ function checkpointFeature(
       level,
       levelIndex,
       selected,
-      label: selected && levelIndex > 0 ? info.label : '',
+      label: selected && startsStretch && levelIndex > 0 ? info.label : '',
     },
   };
 }

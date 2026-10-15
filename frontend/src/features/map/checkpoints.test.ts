@@ -134,6 +134,16 @@ describe('checkpointFeatures', () => {
     });
   });
 
+  it('names each stretch of one level once, at its first checkpoint', () => {
+    const stretches = route('C', 3, ['moderate', 'moderate', 'severe', 'severe', 'moderate']);
+
+    const labels = checkpointFeatures([stretches], 'C')
+      .features.sort((a, b) => a.properties.checkpointId.localeCompare(b.properties.checkpointId))
+      .map((feature) => feature.properties.label);
+
+    expect(labels).toEqual(['Moderate', '', 'Severe', '', 'Moderate']);
+  });
+
   it('lists the selected route last and worse risks after milder ones, so they draw on top', () => {
     const order = (selectedRouteId: string | null) =>
       checkpointFeatures(ROUTES, selectedRouteId).features.map(

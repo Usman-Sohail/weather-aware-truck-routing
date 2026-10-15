@@ -8,8 +8,10 @@ import type { Results } from '../results/useResults';
 import { MapPanel } from './MapPanel';
 import type { TripMapProps } from './TripMap';
 
+vi.mock('maplibre-gl', () => ({ Popup: class {} }));
+
 vi.mock('./TripMap', () => ({
-  TripMap: ({ routes, planKey, selectedRouteId, onSelectRoute }: TripMapProps) => (
+  TripMap: ({ routes, planKey, selectedRouteId, onSelectRoute, children }: TripMapProps) => (
     <figure aria-label={planKey ? `Map of ${planKey}` : 'Map without a plan'}>
       {routes.map((route) => (
         <button
@@ -21,6 +23,7 @@ vi.mock('./TripMap', () => ({
           Route {route.id}
         </button>
       ))}
+      {children}
     </figure>
   ),
 }));
@@ -42,9 +45,26 @@ function plannedRoute(id: string): PlannedRoute {
   };
 }
 
-function resultsFor(selectedId: string, select: (routeId: string) => void = vi.fn()): Results {
+function resultsFor(
+  selectedId: string,
+  select: (routeId: string) => void = vi.fn(),
+  planToken = 'plan-1',
+): Results {
   return {
-    plan: { routes: [plannedRoute('A'), plannedRoute('B')], plan_token: 'plan-1' },
+    plan: {
+      routes: [plannedRoute('A'), plannedRoute('B')],
+      plan_token: planToken,
+      corridor: {
+        step_lat_deg: 0.1,
+        step_lon_deg: 0.13,
+        approx_cell_mi: 17,
+        cells: [],
+        first_location_index: 0,
+      },
+      departure: { utc: '2026-10-16T02:15:00Z', time_zone: 'America/Denver' },
+    },
+    assessment: { heatmap: { hours: 49, frames: [] } },
+    routes: [testRoute('A', 1, 1000, ['low', 'low']), testRoute('B', 2, 1000, ['low', 'low'])],
     selected: testRoute(selectedId, 1, 1000, ['low', 'low']),
     select,
   } as unknown as Results;
@@ -75,5 +95,25 @@ describe('MapPanel', () => {
     await user.click(screen.getByRole('button', { name: 'Route A' }));
 
     expect(select).toHaveBeenCalledWith('A');
+  });
+
+  it('puts the forecast slider and the heatmap legend on the map', () => {
+    render(<MapPanel results={resultsFor('B')} />);
+
+    expect(screen.getByRole('slider', { name: 'Forecast hour' })).toHaveValue('0');
+    expect(screen.getByText('Weather risk')).toBeVisible();
+    expect(screen.getByText(/^Grid ≈ 17/)).toBeVisible();
+  });
+
+  it('starts every new plan at departure', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<MapPanel results={resultsFor('B')} />);
+    screen.getByRole('slider', { name: 'Forecast hour' }).focus();
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    expect(screen.getByRole('slider', { name: 'Forecast hour' })).toHaveValue('2');
+
+    rerender(<MapPanel results={resultsFor('B', vi.fn(), 'plan-2')} />);
+
+    expect(screen.getByRole('slider', { name: 'Forecast hour' })).toHaveValue('0');
   });
 });

@@ -24,10 +24,33 @@
     right: var(--space-4);
     bottom: var(--space-7);
   }
+
+  .controls {
+    flex-wrap: wrap;
+  }
 }
 
 .overlay > * {
   pointer-events: auto;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+/* A fixed width, or the card would resize with its wording as the slider moves. */
+.card {
+  flex: none;
+  width: 22rem;
+  max-width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgb(31 42 48 / 15%);
 }
 
 .note {
@@ -39,4 +62,17 @@
   box-shadow: 0 1px 3px rgb(31 42 48 / 12%);
   font-size: var(--text-sm);
   color: var(--color-ink-muted);
+}
+
+/* On a phone the controls would cover most of the map, so they sit below it instead. */
+@media (max-width: 48rem) {
+  .panel {
+    grid-template-rows: minmax(20rem, 1fr) auto;
+  }
+
+  .overlay {
+    position: static;
+    padding: var(--space-3);
+    pointer-events: auto;
+  }
 }
