@@ -1,7 +1,8 @@
+import type { FeatureCollection, Polygon } from 'geojson';
 import type { ExpressionSpecification, FillLayerSpecification } from 'maplibre-gl';
 
 import { RISK_LEVELS, UNKNOWN_RISK } from '../../lib/risk';
-import type { Corridor, LonLat } from '../../types/api';
+import type { Corridor } from '../../types/api';
 
 export const HEATMAP_SOURCE_ID = 'heatmap-cells';
 export const HEATMAP_FILL_LAYER_ID = 'heatmap-fill';
@@ -14,24 +15,6 @@ const WASH_OPACITY = 0.45;
 
 const HATCH_SIZE = 8;
 const HATCH_LINE_WIDTH = 1.5;
-
-// maplibre-gl's types use the GeoJSON types without exporting them.
-export interface Polygon {
-  type: 'Polygon';
-  coordinates: LonLat[][];
-}
-
-export interface Feature<G> {
-  type: 'Feature';
-  id: number;
-  properties: Record<string, never>;
-  geometry: G;
-}
-
-export interface FeatureCollection<G> {
-  type: 'FeatureCollection';
-  features: Feature<G>[];
-}
 
 export interface FeatureStateTarget {
   setFeatureState(feature: { source: string; id: number }, state: { level: number | null }): void;
