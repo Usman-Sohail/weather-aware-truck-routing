@@ -113,4 +113,20 @@ describe('RouteComparison', () => {
 
     expect(screen.queryByRole('tooltip', { hidden: true })).not.toBeInTheDocument();
   });
+
+  it('names a stretch under a mile instead of calling the route calm', () => {
+    const routes = [
+      testRoute('A', 1, 500, ['low', 'no_travel', 'low'], { low: 500 }, { no_travel: '<1' }),
+    ];
+
+    render(
+      <RouteComparison routes={routes} recommendation={CLEAR} selectedId="A" onSelect={() => {}} />,
+    );
+
+    expect(screen.getByText('<1 mi No Travel')).toBeVisible();
+    expect(screen.queryByText('Low risk the whole way')).not.toBeInTheDocument();
+    expect(readable(screen.getByRole('radio').getAttribute('aria-label'))).toContain(
+      '<1 mi No Travel',
+    );
+  });
 });

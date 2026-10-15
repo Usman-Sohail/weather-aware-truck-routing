@@ -104,9 +104,12 @@ export function mileTicks(maxMi: number, maxIntervals = 4): number[] {
 
 const NOTABLE_LEVELS: readonly RiskKey[] = ['no_travel', 'severe', 'high', 'moderate', 'unknown'];
 
-/** Miles above Low, worst first, then miles without a forecast, as the API displays them. */
+/**
+ * Miles above Low, worst first, then miles without a forecast. The API rounds miles to whole
+ * numbers and shows a stretch under a mile as "<1", so the displayed value decides.
+ */
 export function notableMiles(metrics: RouteAssessment): { level: RiskKey; display: string }[] {
-  return NOTABLE_LEVELS.filter((level) => metrics.miles[level] > 0).map((level) => ({
+  return NOTABLE_LEVELS.filter((level) => metrics.miles_display[level] !== '0').map((level) => ({
     level,
     display: metrics.miles_display[level],
   }));
