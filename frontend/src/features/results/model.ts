@@ -87,3 +87,28 @@ export function riskRuns(route: RouteView): RiskRun[] {
   });
   return runs;
 }
+
+/** Round mile marks for an axis from 0 to ``maxMi``, at most ``maxIntervals`` apart. */
+export function mileTicks(maxMi: number, maxIntervals = 4): number[] {
+  if (maxMi <= 0) return [0];
+  const magnitude = 10 ** Math.floor(Math.log10(maxMi / maxIntervals));
+  const step =
+    [1, 2, 2.5, 5]
+      .map((multiple) => multiple * magnitude)
+      .find((candidate) => Math.floor(maxMi / candidate) <= maxIntervals) ?? 10 * magnitude;
+  const ticks: number[] = [];
+  for (let index = 0; index * step <= maxMi; index += 1) {
+    ticks.push(index * step);
+  }
+  return ticks;
+}
+
+const NOTABLE_LEVELS: readonly RiskKey[] = ['no_travel', 'severe', 'high', 'moderate', 'unknown'];
+
+/** Miles above Low, worst first, then miles without a forecast, as the API displays them. */
+export function notableMiles(metrics: RouteAssessment): { level: RiskKey; display: string }[] {
+  return NOTABLE_LEVELS.filter((level) => metrics.miles[level] > 0).map((level) => ({
+    level,
+    display: metrics.miles_display[level],
+  }));
+}

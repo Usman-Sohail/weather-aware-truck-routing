@@ -1,0 +1,17 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.1em 0.5em 0.05em 0.4em;
+  /* A thin outline keeps the palest level visible on light surfaces. */
+  border: 1px solid rgb(31 42 48 / 35%);
+  border-radius: 3px;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge[data-size='small'] {
+  font-size: var(--text-xs);
+}

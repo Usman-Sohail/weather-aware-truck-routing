@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import { readable } from '../../test/text';
 import type { Recommendation, RiskKey } from '../../types/api';
 import type { RouteView } from './model';
 import { RecommendationCard } from './RecommendationCard';
@@ -59,7 +60,7 @@ describe('RecommendationCard', () => {
     const facts = Object.fromEntries(
       screen
         .getAllByRole('term')
-        .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+        .map((term) => [term.textContent, readable(term.nextElementSibling?.textContent)]),
     );
     expect(facts).toEqual({
       Distance: '1,173 mi',

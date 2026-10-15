@@ -12,21 +12,24 @@ import {
   zoneAbbreviation,
 } from './format';
 
+/** ``text`` with non-breaking spaces, which keep a number and its unit on one line. */
+const together = (text: string) => text.replaceAll(' ', '\u00a0');
+
 describe('formatMiles', () => {
   it('rounds to whole miles with separators, keeping a decimal for short distances', () => {
-    expect(formatMiles(1005.4)).toBe('1,005 mi');
-    expect(formatMiles(25)).toBe('25 mi');
-    expect(formatMiles(6.25)).toBe('6.3 mi');
-    expect(formatMiles(0)).toBe('0 mi');
+    expect(formatMiles(1005.4)).toBe(together('1,005 mi'));
+    expect(formatMiles(25)).toBe(together('25 mi'));
+    expect(formatMiles(6.25)).toBe(together('6.3 mi'));
+    expect(formatMiles(0)).toBe(together('0 mi'));
   });
 });
 
 describe('formatDuration', () => {
   it('matches the wording used in recommendation explanations', () => {
-    expect(formatDuration(834)).toBe('13 h 54 min');
-    expect(formatDuration(60)).toBe('1 h 00 min');
-    expect(formatDuration(45)).toBe('45 min');
-    expect(formatDuration(0)).toBe('0 min');
+    expect(formatDuration(834)).toBe(together('13 h 54 min'));
+    expect(formatDuration(60)).toBe(together('1 h 00 min'));
+    expect(formatDuration(45)).toBe(together('45 min'));
+    expect(formatDuration(0)).toBe(together('0 min'));
   });
 });
 
@@ -36,17 +39,35 @@ describe('formatClock', () => {
     expect(formatClock('2026-11-02T14:00:00Z', 'America/Denver')).toBe('Mon, 7:00 AM MST');
     expect(formatClock('2026-10-16T14:00:00Z', 'America/Chicago')).toBe('Fri, 9:00 AM CDT');
   });
+
+  it('leaves the zone out when a heading already names it', () => {
+    expect(formatClock('2026-10-16T14:00:00Z', 'America/Denver', false)).toBe('Fri, 8:00 AM');
+  });
 });
 
 describe('formatLoad and formatReading', () => {
   it('formats cargo weight in pounds', () => {
-    expect(formatLoad(42000)).toBe('42,000 lb');
+    expect(formatLoad(42000)).toBe(together('42,000 lb'));
   });
 
   it('formats readings with units and says when data is missing', () => {
-    expect(formatReading(47.2, 'mph')).toBe('47.2 mph');
-    expect(formatReading(0.031, 'in/hr')).toBe('0.031 in/hr');
+    expect(formatReading(47.2, 'mph')).toBe(together('47.2 mph'));
+    expect(formatReading(0.031, 'in/hr')).toBe(together('0.031 in/hr'));
     expect(formatReading(null, 'mph')).toBe('No data');
+  });
+});
+
+describe('units', () => {
+  it('never wrap away from their numbers in a narrow column', () => {
+    const texts = [
+      formatMiles(1331),
+      formatDuration(1151),
+      formatLoad(42000),
+      formatReading(0.016, 'in/hr'),
+    ];
+    for (const text of texts) {
+      expect(text).not.toContain(' ');
+    }
   });
 });
 
