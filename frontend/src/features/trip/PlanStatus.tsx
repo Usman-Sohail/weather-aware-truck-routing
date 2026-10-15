@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import styles from './PlanStatus.module.css';
 import type { PlanState, PlanStep } from './usePlanTrip';
 
@@ -9,6 +11,13 @@ const STEPS: { step: PlanStep; label: string }[] = [
 
 /** Progress of a running plan, why it failed, or notices about a finished one. */
 export function PlanStatus({ state }: { state: PlanState }) {
+  const failure = useRef<HTMLParagraphElement>(null);
+
+  // Like an error summary, the reason takes focus so it is read first and Tab continues from it.
+  useEffect(() => {
+    if (state.error) failure.current?.focus();
+  }, [state.error]);
+
   if (state.status === 'working' && state.step) {
     const current = STEPS.findIndex(({ step }) => step === state.step);
     return (
@@ -39,7 +48,7 @@ export function PlanStatus({ state }: { state: PlanState }) {
         ? 'Check the highlighted fields.'
         : state.error.message;
     return (
-      <p role="alert" className={styles.failure}>
+      <p ref={failure} role="alert" tabIndex={-1} className={styles.failure}>
         {message}
       </p>
     );

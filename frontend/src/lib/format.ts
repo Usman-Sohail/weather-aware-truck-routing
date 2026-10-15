@@ -26,21 +26,33 @@ export function formatReading(value: number | null, unit: 'mph' | 'in/hr'): stri
 
 const clockFormats = new Map<string, Intl.DateTimeFormat>();
 
-/** Weekday, time and zone abbreviation in ``timeZone``, e.g. "Fri, 8:00 AM MDT". */
-export function formatClock(iso: string, timeZone: string): string {
-  let format = clockFormats.get(timeZone);
+/**
+ * "Fri, 8:00 AM" (plus the zone name when asked), assembled from parts so the punctuation
+ * does not depend on the ICU version's patterns.
+ */
+function formatWeekdayTime(date: Date, timeZone: string, withZone: boolean): string {
+  const key = `${timeZone}|${withZone}`;
+  let format = clockFormats.get(key);
   if (!format) {
     format = new Intl.DateTimeFormat('en-US', {
       weekday: 'short',
       hour: 'numeric',
       minute: '2-digit',
       timeZone,
-      timeZoneName: 'short',
+      ...(withZone ? { timeZoneName: 'short' } : {}),
     });
-    clockFormats.set(timeZone, format);
+    clockFormats.set(key, format);
   }
-  // Recent ICU versions put narrow no-break spaces around "AM"; plain spaces wrap better.
-  return format.format(new Date(iso)).replace(/[\u202f\u00a0]/g, ' ');
+  const parts = format.formatToParts(date);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((candidate) => candidate.type === type)?.value ?? '';
+  const text = `${part('weekday')}, ${part('hour')}:${part('minute')} ${part('dayPeriod')}`;
+  return withZone ? `${text} ${part('timeZoneName')}` : text;
+}
+
+/** Weekday, time and zone abbreviation in ``timeZone``, e.g. "Fri, 8:00 AM MDT". */
+export function formatClock(iso: string, timeZone: string): string {
+  return formatWeekdayTime(new Date(iso), timeZone, true);
 }
 
 /** The wall-clock time in ``timeZone`` as "YYYY-MM-DDTHH:MM", the departure input's format. */
@@ -71,4 +83,13 @@ export function zoneAbbreviation(timeZone: string, date: Date): string {
     .formatToParts(date)
     .find((candidate) => candidate.type === 'timeZoneName');
   return part?.value ?? timeZone;
+}
+
+/** A "YYYY-MM-DDTHH:MM" wall-clock value as "Wed, 6:45 PM", without shifting zones. */
+export function formatWallClock(local: string): string {
+  const [date = '', time = ''] = local.split('T');
+  const [year, month, day] = date.split('-').map(Number);
+  const [hour, minute] = time.split(':').map(Number);
+  const asUtc = new Date(Date.UTC(year ?? 0, (month ?? 1) - 1, day ?? 1, hour ?? 0, minute ?? 0));
+  return formatWeekdayTime(asUtc, 'UTC', false);
 }

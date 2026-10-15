@@ -46,6 +46,17 @@ describe('PlanStatus', () => {
     );
   });
 
+  it('moves focus to the reason so it is read first and Tab continues from it', () => {
+    const error = new ApiError(503, 'PROVIDER_TIMEOUT', 'The routing service took too long.');
+
+    const { rerender } = render(
+      <PlanStatus state={{ ...IDLE, status: 'working', step: 'routing' }} />,
+    );
+    rerender(<PlanStatus state={{ ...IDLE, status: 'failed', error }} />);
+
+    expect(screen.getByRole('alert')).toHaveFocus();
+  });
+
   it('points to the form for validation errors instead of repeating them', () => {
     const error = new ApiError(400, 'VALIDATION_ERROR', 'Ensure this value is less than 80000.', {
       load_lb: ['Ensure this value is less than 80000.'],

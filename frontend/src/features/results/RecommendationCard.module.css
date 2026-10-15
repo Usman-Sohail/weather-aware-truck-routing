@@ -1,0 +1,67 @@
+.card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5);
+  border-left: 6px solid var(--color-guide-green);
+  background: var(--color-surface);
+}
+
+.card[data-status='provisional'] {
+  border-left-color: #b88a12;
+}
+
+.card[data-status='no_safe_route'] {
+  border-left-color: #4f1a55;
+}
+
+.heading {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.leastRisky {
+  margin: 0;
+  font-weight: 650;
+}
+
+.explanation {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+
+.facts div {
+  display: grid;
+  gap: 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-rule);
+}
+
+.facts dt {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.facts dd {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}

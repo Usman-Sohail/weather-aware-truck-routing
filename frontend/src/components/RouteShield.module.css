@@ -1,0 +1,16 @@
+.shield {
+  flex: none;
+  overflow: visible;
+}
+
+.shield path {
+  fill: var(--color-surface);
+  stroke: var(--color-ink);
+  stroke-width: 2;
+}
+
+.shield text {
+  fill: var(--color-ink);
+  font-size: 14px;
+  font-weight: 800;
+}
