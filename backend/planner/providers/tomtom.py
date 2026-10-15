@@ -29,11 +29,22 @@ GEOCODE_LIMIT = 5
 class TomTomClient:
     """``RoutingProvider`` backed by the TomTom Routing and Geocoding APIs."""
 
-    def __init__(self, api_key: str, http: ProviderHttpClient | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str,
+        *,
+        routing_http: ProviderHttpClient | None = None,
+        geocode_http: ProviderHttpClient | None = None,
+    ) -> None:
         if not api_key:
             raise ValueError("A TomTom API key is required.")
         self._api_key = api_key
-        self._http = http or ProviderHttpClient()
+        # Long routes can take TomTom over 15 s; a retry would only double the wait, and 30 s
+        # still answers before the browser gives up at 45 s. Lookups are quick, so they fail fast.
+        self._routing_http = routing_http or ProviderHttpClient(
+            timeout=(5.0, 30.0), retry_timeouts=False
+        )
+        self._geocode_http = geocode_http or ProviderHttpClient(timeout=(5.0, 6.0))
 
     def find_routes(
         self, origin: LonLat, destination: LonLat, depart_at: datetime | None
@@ -51,7 +62,7 @@ class TomTomClient:
             "departAt": "now" if depart_at is None else depart_at.isoformat(timespec="seconds"),
         }
         try:
-            payload = self._http.get_json(
+            payload = self._routing_http.get_json(
                 f"{BASE_URL}/routing/1/calculateRoute/{locations}/json", params
             )
         except ProviderClientError as error:
@@ -69,7 +80,7 @@ class TomTomClient:
             "language": "en-US",
         }
         try:
-            payload = self._http.get_json(
+            payload = self._geocode_http.get_json(
                 f"{BASE_URL}/search/2/geocode/{quote(query, safe='')}.json", params
             )
         except ProviderClientError as error:

@@ -66,6 +66,16 @@ def test_timeouts_are_retried_then_reported() -> None:
 
 
 @responses.activate
+def test_timeouts_can_be_reported_without_a_retry() -> None:
+    responses.get(URL, body=requests.exceptions.ReadTimeout())
+    responses.get(URL, json={"ok": True})
+
+    with pytest.raises(ProviderTimeoutError):
+        ProviderHttpClient(backoff_s=0, retry_timeouts=False).get_json(URL, {})
+    assert len(responses.calls) == 1
+
+
+@responses.activate
 def test_connection_failures_report_the_service_as_unavailable() -> None:
     responses.get(URL, body=requests.exceptions.ConnectionError())
     responses.get(URL, body=requests.exceptions.ConnectionError())
