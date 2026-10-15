@@ -7,14 +7,12 @@ import styles from './CheckpointTable.module.css';
 
 interface CheckpointTableProps {
   route: RouteView;
-  /** Zone the arrival times are shown in, normally the trip's departure zone. */
   timeZone: string;
   onShowOnMap?: (checkpointId: string, trigger: HTMLElement) => void;
 }
 
 const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
-/** Where and when the truck meets each forecast on one route, the risk there and why. */
 export function CheckpointTable({ route, timeZone, onShowOnMap }: CheckpointTableProps) {
   const [hideLow, setHideLow] = useState(false);
   const headingId = useId();

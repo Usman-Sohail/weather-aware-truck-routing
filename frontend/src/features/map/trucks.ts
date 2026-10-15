@@ -13,7 +13,6 @@ export const TRUCK_SOURCE_ID = 'trucks';
 const DOT_LAYER_ID = 'trucks-dot';
 const LETTER_LAYER_ID = 'trucks-letter';
 
-/** Bottom to top, in the order `truckLayers` returns them. */
 export const TRUCK_LAYER_IDS = [DOT_LAYER_ID, LETTER_LAYER_ID] as const;
 
 // A type alias rather than an interface, so it fits GeoJSON's open properties type.

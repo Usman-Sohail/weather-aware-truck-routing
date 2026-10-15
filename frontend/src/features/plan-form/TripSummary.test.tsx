@@ -42,7 +42,7 @@ describe('TripSummary', () => {
     render(<TripSummary trip={TRIP} onEdit={() => {}} />);
 
     expect(screen.getByRole('group', { name: 'Trip summary' }).textContent).toContain(
-      'weather every 25 mi.',
+      'weather every 25\u00a0mi.',
     );
   });
 

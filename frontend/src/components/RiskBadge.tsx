@@ -5,7 +5,6 @@ import { RiskGlyph } from './RiskGlyph';
 
 interface RiskBadgeProps {
   level: RiskKey;
-  /** Small badges fit table cells and legends. */
   size?: 'regular' | 'small';
 }
 

@@ -29,7 +29,6 @@ const MAX_DEPARTURE_AHEAD_MS = 7 * 24 * 60 * 60 * 1000;
 
 interface PlanFormProps {
   onSubmit: (trip: Trip) => void;
-  /** The last API error; its field messages are shown next to the fields. */
   apiError: ApiError | null;
   now?: () => Date;
   search?: PlaceSearch;

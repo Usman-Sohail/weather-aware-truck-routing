@@ -1,7 +1,6 @@
 // The shared look of the trip map. MapLibre paints with literal colours, so the few it
 // needs mirror the design tokens in global.css; risk colours come from lib/risk.ts.
 
-/** OpenFreeMap's light basemap: free, no key, and its credits appear on the map. */
 export const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
 
 /** A font the basemap's glyph server provides, for every text label drawn on the map. */
@@ -20,7 +19,6 @@ export const MAP_COLORS = {
   halo: '#ffffff',
 } as const;
 
-/** The US and southern Canada, shown until the first plan arrives. */
 export const INITIAL_BOUNDS: [[number, number], [number, number]] = [
   [-125, 24],
   [-66, 50],

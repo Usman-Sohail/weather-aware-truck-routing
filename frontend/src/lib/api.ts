@@ -9,7 +9,6 @@ import type {
   WeatherRequest,
 } from '../types/api';
 
-/** A failed API call, carrying the backend's error code and any per-field messages. */
 export class ApiError extends Error {
   readonly status: number;
   readonly code: string;

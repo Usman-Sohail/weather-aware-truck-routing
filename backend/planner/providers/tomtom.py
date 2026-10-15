@@ -27,8 +27,6 @@ GEOCODE_LIMIT = 5
 
 
 class TomTomClient:
-    """``RoutingProvider`` backed by the TomTom Routing and Geocoding APIs."""
-
     def __init__(
         self,
         api_key: str,

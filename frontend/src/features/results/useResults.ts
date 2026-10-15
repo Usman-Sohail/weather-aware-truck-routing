@@ -7,9 +7,7 @@ import type { RouteView } from './model';
 export interface Results {
   plan: RoutesResponse;
   assessment: AssessResponse;
-  /** Best first. */
   routes: RouteView[];
-  /** The route the recommendation names, if any. */
   recommended: RouteView | null;
   /** The route whose details are open: the driver's choice, or the recommended one. */
   selected: RouteView | null;

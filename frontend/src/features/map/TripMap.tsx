@@ -26,7 +26,6 @@ export interface TripMapProps {
   planKey: string | null;
   selectedRouteId: string | null;
   onSelectRoute: (routeId: string) => void;
-  /** Layers drawn on the map, which reach it through `useTripMap`. */
   children?: ReactNode;
   /** Pixels hidden under overlays along each edge, measured when a plan is fitted. */
   coveredEdges?: () => Partial<PaddingOptions>;

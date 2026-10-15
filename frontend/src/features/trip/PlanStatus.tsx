@@ -11,7 +11,6 @@ const STEPS: { step: PlanStep; label: string }[] = [
 
 const SPOKEN_PROGRESS = { done: ' (done)', current: ' (in progress)', waiting: '' };
 
-/** Progress of a running plan, why it failed, or notices about a finished one. */
 export function PlanStatus({ state }: { state: PlanState }) {
   const failure = useRef<HTMLParagraphElement>(null);
 

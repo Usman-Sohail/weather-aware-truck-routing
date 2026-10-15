@@ -88,7 +88,6 @@ export function riskRuns(route: RouteView): RiskRun[] {
   return runs;
 }
 
-/** Round mile marks for an axis from 0 to ``maxMi``, at most ``maxIntervals`` apart. */
 export function mileTicks(maxMi: number, maxIntervals = 4): number[] {
   if (maxMi <= 0) return [0];
   const magnitude = 10 ** Math.floor(Math.log10(maxMi / maxIntervals));
