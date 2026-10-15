@@ -4,24 +4,28 @@
 const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 const oneDecimal = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
 
+// A non-breaking space, so a narrow column never wraps a unit away from its number.
+const NBSP = '\u00a0';
+
 export function formatMiles(miles: number): string {
-  return `${(miles >= 10 ? wholeNumber : oneDecimal).format(miles)} mi`;
+  return `${(miles >= 10 ? wholeNumber : oneDecimal).format(miles)}${NBSP}mi`;
 }
 
 /** Same wording as the backend's recommendation explanations, e.g. "13 h 54 min". */
 export function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const rest = Math.round(minutes % 60);
-  return hours > 0 ? `${hours} h ${String(rest).padStart(2, '0')} min` : `${rest} min`;
+  const text = hours > 0 ? `${hours} h ${String(rest).padStart(2, '0')} min` : `${rest} min`;
+  return text.replaceAll(' ', NBSP);
 }
 
 export function formatLoad(pounds: number): string {
-  return `${wholeNumber.format(pounds)} lb`;
+  return `${wholeNumber.format(pounds)}${NBSP}lb`;
 }
 
 /** A forecast reading exactly as provided, so a value never appears rounded across a threshold. */
 export function formatReading(value: number | null, unit: 'mph' | 'in/hr'): string {
-  return value === null ? 'No data' : `${value} ${unit}`;
+  return value === null ? 'No data' : `${value}${NBSP}${unit}`;
 }
 
 const clockFormats = new Map<string, Intl.DateTimeFormat>();
@@ -51,8 +55,8 @@ function formatWeekdayTime(date: Date, timeZone: string, withZone: boolean): str
 }
 
 /** Weekday, time and zone abbreviation in ``timeZone``, e.g. "Fri, 8:00 AM MDT". */
-export function formatClock(iso: string, timeZone: string): string {
-  return formatWeekdayTime(new Date(iso), timeZone, true);
+export function formatClock(iso: string, timeZone: string, withZone = true): string {
+  return formatWeekdayTime(new Date(iso), timeZone, withZone);
 }
 
 /** The wall-clock time in ``timeZone`` as "YYYY-MM-DDTHH:MM", the departure input's format. */

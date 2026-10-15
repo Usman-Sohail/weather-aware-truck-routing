@@ -4,10 +4,11 @@ import type {
   AssessResponse,
   CheckpointAssessment,
   PlannedCheckpoint,
+  RouteAssessment,
   RoutesResponse,
   RiskKey,
 } from '../../types/api';
-import { buildRouteViews, riskRuns } from './model';
+import { buildRouteViews, mileTicks, notableMiles, riskRuns } from './model';
 
 function planned(routeId: string, seq: number, mile: number, share: number): PlannedCheckpoint {
   return {
@@ -118,5 +119,45 @@ describe('riskRuns', () => {
       { level: 'moderate', startMi: 75, endMi: 110, checkpoints: 1 },
       { level: 'unknown', startMi: 110, endMi: 120, checkpoints: 1 },
     ]);
+  });
+});
+
+describe('mileTicks', () => {
+  it.each([
+    [1007, [0, 250, 500, 750, 1000]],
+    [412, [0, 100, 200, 300, 400]],
+    [60, [0, 20, 40, 60]],
+    [8.4, [0, 2, 4, 6, 8]],
+    [0, [0]],
+  ])('marks a %s mi axis at round distances', (maxMi, ticks) => {
+    expect(mileTicks(maxMi)).toEqual(ticks);
+  });
+});
+
+describe('notableMiles', () => {
+  function metrics(miles: Record<RiskKey, number>, display: Partial<Record<RiskKey, string>> = {}) {
+    const miles_display = Object.fromEntries(
+      Object.entries(miles).map(([key, value]) => [key, display[key as RiskKey] ?? String(value)]),
+    );
+    return { miles, miles_display } as unknown as RouteAssessment;
+  }
+
+  it('lists the miles above Low, worst first, then miles without a forecast', () => {
+    const route = metrics(
+      { low: 900, moderate: 120, high: 0.4, severe: 0, no_travel: 0, unknown: 15 },
+      { high: '<1' },
+    );
+
+    expect(notableMiles(route)).toEqual([
+      { level: 'high', display: '<1' },
+      { level: 'moderate', display: '120' },
+      { level: 'unknown', display: '15' },
+    ]);
+  });
+
+  it('is empty when the whole route is Low', () => {
+    const route = metrics({ low: 300, moderate: 0, high: 0, severe: 0, no_travel: 0, unknown: 0 });
+
+    expect(notableMiles(route)).toEqual([]);
   });
 });

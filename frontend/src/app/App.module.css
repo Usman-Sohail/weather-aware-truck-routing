@@ -27,6 +27,8 @@
 }
 
 .panel {
+  /* Keeps visually hidden controls inside the scroller instead of stretching the page. */
+  position: relative;
   display: grid;
   align-content: start;
   gap: var(--space-5);
@@ -34,6 +36,38 @@
   border-right: 1px solid var(--color-rule);
   background: var(--color-surface);
   overflow-y: auto;
+  scrollbar-gutter: stable;
+  /* Sticky headers stop at the padding unless they reach back over it. */
+  --sticky-top: calc(-1 * var(--space-5));
+}
+
+/* macOS hides overlay scrollbars until something scrolls, so a long panel looks cut off.
+   A styled scrollbar stays on screen in Chromium and Safari. */
+.panel::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+.panel::-webkit-scrollbar-track {
+  background: var(--color-paper);
+  border-left: 1px solid var(--color-rule);
+}
+
+.panel::-webkit-scrollbar-thumb {
+  border: 3px solid var(--color-paper);
+  border-radius: 999px;
+  background: var(--color-rule-strong);
+}
+
+.panel::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-muted);
+}
+
+/* Chromium ignores the rules above once these are set, so only Firefox gets them. */
+@supports not selector(::-webkit-scrollbar) {
+  .panel {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-strong) var(--color-paper);
+  }
 }
 
 .section {
@@ -71,6 +105,8 @@
   }
 
   .panel {
+    /* The page scrolls instead, so sticky headers pin to the top of the screen. */
+    --sticky-top: 0px;
     overflow-y: visible;
     border-right: none;
     border-bottom: 1px solid var(--color-rule);

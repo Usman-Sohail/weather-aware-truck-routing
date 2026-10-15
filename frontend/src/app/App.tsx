@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { PlanForm } from '../features/plan-form/PlanForm';
 import { TripSummary } from '../features/plan-form/TripSummary';
 import type { Trip } from '../features/plan-form/validation';
-import { buildRouteViews } from '../features/results/model';
+import { CheckpointTable } from '../features/results/CheckpointTable';
 import { RecommendationCard } from '../features/results/RecommendationCard';
+import { RouteComparison } from '../features/results/RouteComparison';
+import { useResults } from '../features/results/useResults';
 import { PlanStatus } from '../features/trip/PlanStatus';
 import { usePlanTrip } from '../features/trip/usePlanTrip';
 import styles from './App.module.css';
@@ -15,6 +17,7 @@ import { useServiceStatus } from './useServiceStatus';
 export function App() {
   const serviceStatus = useServiceStatus();
   const { state, submit } = usePlanTrip();
+  const results = useResults(state.plan, state.assessment);
   const [editing, setEditing] = useState(true);
   const formArea = useRef<HTMLDivElement>(null);
   const summary = useRef<HTMLDivElement>(null);
@@ -23,14 +26,6 @@ export function App() {
   // to edit the trip, and with the reason when planning fails.
   const showForm = editing || state.status === 'failed';
   const summaryTrip = showForm ? null : state.trip;
-
-  const { plan, assessment } = state;
-  const routes = useMemo(
-    () => (plan && assessment ? buildRouteViews(plan, assessment) : null),
-    [plan, assessment],
-  );
-  const recommended =
-    routes?.find((route) => route.id === assessment?.recommendation.route_id) ?? null;
 
   // Focus follows the trip into the summary, so keyboard and screen reader users keep their place.
   useEffect(() => {
@@ -68,16 +63,28 @@ export function App() {
             {summaryTrip && <TripSummary ref={summary} trip={summaryTrip} onEdit={editTrip} />}
             <PlanStatus state={state} />
           </section>
-          {routes && assessment && (
+          {results && (
             <section className={styles.section} aria-labelledby="results-heading">
               <h2 id="results-heading" className="visually-hidden">
                 Results
               </h2>
               <RecommendationCard
-                route={recommended}
-                recommendation={assessment.recommendation}
-                loadLb={assessment.load_lb}
+                route={results.recommended}
+                recommendation={results.assessment.recommendation}
+                loadLb={results.assessment.load_lb}
               />
+              <RouteComparison
+                routes={results.routes}
+                recommendation={results.assessment.recommendation}
+                selectedId={results.selected?.id ?? null}
+                onSelect={results.select}
+              />
+              {results.selected && (
+                <CheckpointTable
+                  route={results.selected}
+                  timeZone={results.plan.departure.time_zone}
+                />
+              )}
             </section>
           )}
         </div>
