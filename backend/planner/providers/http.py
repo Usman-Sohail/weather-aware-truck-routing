@@ -50,12 +50,14 @@ class ProviderHttpClient:
         *,
         timeout: tuple[float, float] = (5.0, 15.0),
         retries: int = 1,
+        retry_timeouts: bool = True,
         backoff_s: float = 0.5,
         session: requests.Session | None = None,
         sleep: Callable[[float], None] = time.sleep,
     ) -> None:
         self._timeout = timeout
         self._retries = retries
+        self._retry_timeouts = retry_timeouts
         self._backoff_s = backoff_s
         self._session = session or requests.Session()
         self._sleep = sleep
@@ -76,6 +78,8 @@ class ProviderHttpClient:
             response = self._session.get(url, params=params, timeout=self._timeout)
         except requests.Timeout:
             self._log_failure(url, params, "timed out")
+            if not self._retry_timeouts:
+                raise ProviderTimeoutError() from None
             raise _RetryableError(ProviderTimeoutError()) from None
         except requests.RequestException:
             self._log_failure(url, params, "connection failed")
