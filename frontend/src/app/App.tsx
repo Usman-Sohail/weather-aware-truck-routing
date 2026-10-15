@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
+import { MapPanel } from '../features/map/MapPanel';
 import { PlanForm } from '../features/plan-form/PlanForm';
 import { TripSummary } from '../features/plan-form/TripSummary';
 import type { Trip } from '../features/plan-form/validation';
@@ -91,7 +92,7 @@ export function App() {
           <DataCredits />
         </div>
         <section className={styles.map} aria-label="Route map">
-          <p className={styles.placeholder}>Map</p>
+          <MapPanel results={results} />
         </section>
       </main>
     </div>
