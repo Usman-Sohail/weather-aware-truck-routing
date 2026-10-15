@@ -19,12 +19,9 @@ describe('parseClock', () => {
     expect(parseClock(typed)).toBe(expected);
   });
 
-  it.each(['', 'noon', '25:00', '6:75 pm', '13 pm', '0 pm', 'half six'])(
-    'refuses %s',
-    (typed) => {
-      expect(parseClock(typed)).toBeNull();
-    },
-  );
+  it.each(['', 'noon', '25:00', '6:75 pm', '13 pm', '0 pm', 'half six'])('refuses %s', (typed) => {
+    expect(parseClock(typed)).toBeNull();
+  });
 });
 
 describe('clockLabel', () => {

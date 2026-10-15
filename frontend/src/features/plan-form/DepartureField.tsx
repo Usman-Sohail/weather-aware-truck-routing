@@ -1,7 +1,8 @@
-import { useId, useState } from 'react';
+import { useId } from 'react';
 
-import { clockLabel, parseClock, timeSlots } from './clock';
+import { timeSlots } from './clock';
 import styles from './DepartureField.module.css';
+import { TimeField } from './TimeField';
 
 interface DepartureFieldProps {
   /** "YYYY-MM-DDTHH:MM", local time at the starting place. */
@@ -26,19 +27,8 @@ export function DepartureField({
   describedBy,
 }: DepartureFieldProps) {
   const groupName = useId();
-  const timeId = useId();
-  const slotsId = useId();
   const [date, time] = splitLocal(value);
   const options = dayOptions(today, days);
-  // What the driver is typing, until it parses or the field is left.
-  const [typing, setTyping] = useState<{ text: string; at: string } | null>(null);
-  const shown = typing?.at === time ? typing.text : clockLabel(time);
-
-  function handleTime(text: string) {
-    const parsed = parseClock(text);
-    setTyping({ text, at: parsed ?? time });
-    if (parsed) onChange(`${date}T${parsed}`);
-  }
 
   return (
     <div className={styles.field}>
@@ -64,26 +54,13 @@ export function DepartureField({
           </label>
         ))}
       </div>
-      <div className={styles.time}>
-        <label htmlFor={timeId}>Time</label>
-        <input
-          id={timeId}
-          type="text"
-          list={slotsId}
-          autoComplete="off"
-          className={styles.slot}
-          value={shown}
-          onChange={(event) => handleTime(event.target.value)}
-          onBlur={() => setTyping(null)}
-          aria-invalid={invalid ? true : undefined}
-          aria-describedby={describedBy}
-        />
-        <datalist id={slotsId}>
-          {timeSlots(date === today ? earliestToday : '00:00', time).map((slot) => (
-            <option key={slot} value={clockLabel(slot)} />
-          ))}
-        </datalist>
-      </div>
+      <TimeField
+        value={time}
+        slots={timeSlots(date === today ? earliestToday : '00:00', time)}
+        onChange={(slot) => onChange(`${date}T${slot}`)}
+        invalid={invalid}
+        describedBy={describedBy}
+      />
     </div>
   );
 }
