@@ -81,6 +81,9 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
     "DEFAULT_AUTHENTICATION_CLASSES": [],
+    # The hosting platform appends the caller's address to X-Forwarded-For, so throttles
+    # count the caller rather than the whole chain, which a client could vary at will.
+    "NUM_PROXIES": int(os.environ.get("API_NUM_PROXIES", "1")),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "UNAUTHENTICATED_USER": None,
     "EXCEPTION_HANDLER": "planner.errors.api_exception_handler",

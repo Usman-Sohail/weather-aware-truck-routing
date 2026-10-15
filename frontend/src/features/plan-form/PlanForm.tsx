@@ -1,10 +1,10 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useRef, useState } from 'react';
 
 import type { ApiError } from '../../lib/api';
 import { nextQuarterHour, wallClockInZone, zoneAbbreviation } from '../../lib/format';
 import type { IntervalMi, PlaceCandidate } from '../../types/api';
 import { DepartureField } from './DepartureField';
-import { PlaceField, type PlaceSearch } from './PlaceField';
+import { PlaceField, type PlaceFieldHandle, type PlaceSearch } from './PlaceField';
 import styles from './PlanForm.module.css';
 import {
   type Trip,
@@ -45,6 +45,8 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
     loadLb: '',
     intervalMi: 25,
   }));
+  const originField = useRef<PlaceFieldHandle>(null);
+  const destinationField = useRef<PlaceFieldHandle>(null);
   const [departureEdited, setDepartureEdited] = useState(false);
   const [clientErrors, setClientErrors] = useState<TripErrors>({});
 
@@ -79,9 +81,19 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
     }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const { trip, errors } = validateTrip(values, now());
+    // A place typed but never looked up is resolved first, so the click is not wasted.
+    const [origin, destination] = await Promise.all([
+      originField.current?.resolve(),
+      destinationField.current?.resolve(),
+    ]);
+    const submitted = {
+      ...values,
+      origin: origin ?? values.origin,
+      destination: destination ?? values.destination,
+    };
+    const { trip, errors } = validateTrip(submitted, now());
     setClientErrors(errors);
     if (!trip) {
       const first = FIELD_ORDER.find((field) => errors[field]);
@@ -108,6 +120,7 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
       )}
 
       <PlaceField
+        ref={originField}
         id="origin"
         label="Starting place"
         value={values.origin}
@@ -116,6 +129,7 @@ export function PlanForm({ onSubmit, apiError, now = () => new Date(), search }:
         search={search}
       />
       <PlaceField
+        ref={destinationField}
         id="destination"
         label="Destination"
         value={values.destination}

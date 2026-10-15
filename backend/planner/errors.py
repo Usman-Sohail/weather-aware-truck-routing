@@ -130,7 +130,9 @@ def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
             error_body("VALIDATION_ERROR", first_message, fields), status.HTTP_400_BAD_REQUEST
         )
 
-    if isinstance(exc, exceptions.ParseError):
+    # A body nested deeper than the interpreter's limit exhausts the stack in the JSON
+    # parser, which DRF does not treat as a parse failure.
+    if isinstance(exc, (exceptions.ParseError, RecursionError)):
         return Response(
             error_body("VALIDATION_ERROR", "The request body is not valid JSON."),
             status.HTTP_400_BAD_REQUEST,

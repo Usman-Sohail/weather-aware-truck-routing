@@ -30,6 +30,17 @@ def test_validation_error_lists_messages_per_field(api_client: APIClient) -> Non
     assert error["message"] in error["fields"]["load_lb"] + error["fields"]["origin.lat"]
 
 
+def test_a_body_nested_past_the_parser_s_limit_is_a_validation_error(
+    api_client: APIClient,
+) -> None:
+    deep = "[" * 30_000 + "]" * 30_000
+
+    response = api_client.generic("POST", "/validation", deep, content_type="application/json")
+
+    assert response.status_code == 400
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
 def test_malformed_json_is_a_validation_error(api_client: APIClient) -> None:
     response = api_client.generic(
         "POST", "/validation", "{not json", content_type="application/json"
