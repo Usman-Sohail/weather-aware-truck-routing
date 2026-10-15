@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -61,8 +61,12 @@ describe('PlaceField', () => {
     await user.tab();
 
     expect(search).toHaveBeenCalledWith('Denver', expect.any(AbortSignal));
-    await user.click(await screen.findByText('1 other match for “Denver”'));
-    expect(screen.getByRole('radio', { name: 'Denver, CO, United States' })).toBeChecked();
+    const others = await screen.findByRole('group', { name: 'Other matches for “Denver”' });
+    expect(
+      within(others)
+        .getAllByRole('button')
+        .map((button) => button.textContent),
+    ).toEqual(['Denver, NC']);
     expect(onChange).toHaveBeenLastCalledWith(DENVER_CO);
     expect(screen.getByLabelText('Starting place')).toHaveValue('Denver, CO, United States');
   });
@@ -75,11 +79,11 @@ describe('PlaceField', () => {
     );
 
     await user.type(screen.getByLabelText('Starting place'), 'Denver{Enter}');
-    await user.click(await screen.findByText('1 other match for “Denver”'));
-    await user.click(screen.getByRole('radio', { name: 'Denver, NC, United States' }));
+    await user.click(await screen.findByRole('button', { name: 'Denver, NC' }));
 
     expect(onChange).toHaveBeenLastCalledWith(DENVER_NC);
     expect(screen.getByLabelText('Starting place')).toHaveValue('Denver, NC, United States');
+    expect(screen.getByRole('button', { name: 'Denver, CO' })).toBeVisible();
   });
 
   it('does not list choices when there is only one match', async () => {
@@ -89,8 +93,7 @@ describe('PlaceField', () => {
     await user.type(screen.getByLabelText('Starting place'), 'Denver, CO{Enter}');
 
     expect(await screen.findByLabelText('Starting place')).toHaveValue('Denver, CO, United States');
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
-    expect(screen.queryByText(/other match/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: /Other matches/ })).not.toBeInTheDocument();
   });
 
   it('clears the selection as soon as the text changes', async () => {

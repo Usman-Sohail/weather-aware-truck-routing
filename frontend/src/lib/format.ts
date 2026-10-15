@@ -132,3 +132,8 @@ export function formatWallClock(local: string): string {
   const asUtc = new Date(Date.UTC(year ?? 0, (month ?? 1) - 1, day ?? 1, hour ?? 0, minute ?? 0));
   return formatWeekdayTime(asUtc, 'UTC', false);
 }
+
+// "Denver, CO, United States" reads as "Denver, CO"; the country is always the US or Canada.
+export function shortPlaceName(name: string): string {
+  return name.split(',').slice(0, 2).join(',').trim();
+}

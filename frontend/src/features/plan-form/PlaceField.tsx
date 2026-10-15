@@ -1,6 +1,7 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { ApiError, geocode, isAbortError } from '../../lib/api';
+import { shortPlaceName } from '../../lib/format';
 import type { PlaceCandidate } from '../../types/api';
 import styles from './PlaceField.module.css';
 
@@ -100,6 +101,9 @@ export function PlaceField({
   const errorId = `${id}-error`;
   const describedBy = [hintId, statusId, error ? errorId : null].filter(Boolean).join(' ');
   const matches = lookup.status === 'found' && lookup.candidates.length > 1 ? lookup : null;
+  const alternatives = (matches?.candidates ?? []).filter(
+    (candidate) => candidate.lat !== value?.lat || candidate.lon !== value.lon,
+  );
 
   return (
     <div className={styles.field}>
@@ -126,27 +130,26 @@ export function PlaceField({
       <p id={statusId} role="status" className={styles.status}>
         {statusMessage(lookup)}
       </p>
-      {matches && (
-        <details className={styles.matches}>
-          <summary className={styles.matchesSummary}>
-            {matches.candidates.length - 1} other{' '}
-            {matches.candidates.length === 2 ? 'match' : 'matches'} for “{matches.query}”
-          </summary>
-          <fieldset className={styles.matchesList}>
-            <legend className="visually-hidden">Matches for “{matches.query}”</legend>
-            {matches.candidates.map((candidate) => (
-              <label key={`${candidate.lat},${candidate.lon}`} className={styles.match}>
-                <input
-                  type="radio"
-                  name={`${id}-match`}
-                  checked={value?.lat === candidate.lat && value.lon === candidate.lon}
-                  onChange={() => choose(candidate)}
-                />
-                <span>{candidate.name}</span>
-              </label>
-            ))}
-          </fieldset>
-        </details>
+      {alternatives.length > 0 && matches && (
+        <div
+          className={styles.alternatives}
+          role="group"
+          aria-label={`Other matches for “${matches.query}”`}
+        >
+          <span className={styles.alternativesLabel} aria-hidden="true">
+            Other matches:
+          </span>
+          {alternatives.map((candidate) => (
+            <button
+              key={`${candidate.lat},${candidate.lon}`}
+              type="button"
+              className={styles.alternative}
+              onClick={() => choose(candidate)}
+            >
+              {shortPlaceName(candidate.name)}
+            </button>
+          ))}
+        </div>
       )}
       {error && (
         <p id={errorId} className={styles.error}>
